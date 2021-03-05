@@ -1,0 +1,129 @@
+### 第一章：Http/1.1协议
+
+>HTTP 协议定义：
+> 一种**无状态**、应用层的、**以请求/应答**方式运行的协议，它使用可拓展的语义和**字描述**消息格式，与基于网络的**超文本信息**系统灵活地互动。
+
+
+[RFC-7230](https://tools.ietf.org/html/rfc7230)
+
+
+
+##### HTTP 协议格式
+
+基于[ABNF语法](https://www.ietf.org/rfc/rfc5234.txt)定义的HTTP消息格式
+>巴科斯范式的英文缩写为 BNF，它是以美国人巴科斯 (Backus) 和丹麦人诺尔 (Naur) 的名字命名的一种形式化的语法表示方法，用来
+描述语法的一种形式体系，是一种典型的元语言。又称巴科斯 - 诺尔形式 (Backus-Naur form)。它不仅能严格地表示语法规则，而
+且所描述的语法是与上下文无关的。它具有语法简单，表示明确，便于语法分析和编译的特点。
+
+ABNF(扩充巴克斯-淖尔范式)操作符
+
+* 空白字符： 用来分隔定义中的各个元素
+    * method SP request-target SP HTTP-version CRLF
+
+* 选择/: 表示多个规则都是可供选择的规则
+    * start-line = request-line / status-line
+
+* 值范围 %c##-##:
+    * OCTAL = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7" 与 OCTAL = %x30-37 等价
+
+* 序列组合(): 将规则组合起来，视为单个元素
+* 不定量重复m*n:
+    * *元素表示零个或更多元素： *(header-field CRLF)
+    * 1* 元素表示一个或更多元素， 2*4表示两个至四个元素
+
+* 可选序列[]:
+    * [ Message-body ]
+
+
+##### 为什么要OSI分层: OSI 与 TCP/IP 模型
+
+分层是为了各层之间专注于相邻层级的数据互通，便于进行模块化管理。
+
+为什么实际没有7层分级，是因为分太细会导致数据传递延迟。
+
+* 应用层
+    DNS, WWW/HTTP, P2P, EMAIL/POP,SMTP,Telnet,FTP
+
+* 表示层
+    Recognizing data: HTML, DOC, JPEG, MP3, AVI, Sockets
+
+* 会话层
+    Session establishment in TCP, SIP, RTP , RPC-named pipes
+
+* 传输层
+    TCP,UDP,SCTP,SSL,TLS
+
+* 网络层
+    IP, ARP, IPsec, ICMP, IGMP, OSPF
+
+* 数据链路层
+    以太网：Ethernet 802.11, MAC/LLC, VALN, ATM, HDP , FIBRE CHANNEL
+
+* 物理层
+    RS-232, Rj45, v.34, 100BASE-TX, SDH, DSL,802.11
+
+
+TCP/IP:
+应用层 - 传输层 - 网络层 - 网络接口层
+
+
+##### HTTP 协议解决了什么问题？
+
+> Web's major goal was to be a shared information space through which **people and machines** could communicate. —— Tim Berners Lee
+
+解决WWW信息交互必须面对的需求：
+* 低门槛
+* 可扩展性：巨大的用户群体，超长的寿命
+* 分布式系统下的Hypermedia:大粒度数据的网络传输
+* Internet规模
+    * 无法控制的scalability(可伸缩性)
+        * 不可预测的负载、非法格式的数据、恶意消息
+        * 客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息
+    * 独立的组件部署：新老组件并存
+向前兼容：自1993年起HTTP0.9\1.0 (1996)已经被广泛使用
+
+
+
+##### 评估Web架构的7大关键属性
+
+**七大关键属性**
+1. 性能 Performance：影响高可用的关键因素。
+    * 网络性能 Network Performance
+        * Throughput 吞吐量： 小于带宽 bandwidth
+        * Overhead 开销： 首次开销，每次开销（keep-alive tcp 握手、sockets 等）
+
+    * 用户感知到的性能 User-perceived Performance
+        * Latency 延迟： 发起请求到接受到响应的时间
+        * Completion 完成时间： 完成一个应用动作所花费的时间
+
+    * 网络效率 Network Efficiency
+        * 重用缓存、减少交互次数(图片合成、雪碧图)、数据传输距离更近(建立CDN)、COD(按需代码)
+
+2. 可伸缩性 Scalability：支持部署可以互相交互的大量组件。
+3. 简单性 Simplicity：易理解、易实现、易验证。
+4. 可见性 Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等。
+5. 可移植性 Portability：在不同的环境下运行的能力。
+6. 可靠性 Reliability：出现部分故障时，对整体影响的程度。
+7. 可修改性 Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成。
+    * 可进化性 Evolvability: 一个组件独立上级而不影响其他组件
+    * 可扩展性 Extensibility: 想系统添加功能，而不会影响到系统的其他部分
+    * 可定制性 Customizability: 临时性、定制型地更改某一要素来提供服务，不对常规客户产生影响
+    * 可配置性 Configurability:应用部署后可通过修改配置提供新的功能
+    * 可重用性 Resusabilit:组件可以不做修改在其他应用中使用 
+
+
+##### 从物种架构风格推刀出HTTP的REST架构
+
+
+2021/3/5 08 | 从五种架构风格推导出HTTP的REST架构
+https://time.geekbang.org/course/detail/100026801-93593 1/1
+1. 数据流风格 Data-flow Styles
+优点：简单性、可进化性、可扩展性、可配置性、可重用性
+2. 复制风格 Replication Styles
+优点：用户可察觉的性能、可伸缩性，网络效率、可靠性也可以提到提升
+3. 分层风格 Hierarchical Styles
+优点：简单性、可进化性、可伸缩性
+4. 移动代码风格 Mobile Code Styles
+优点：可移植性、可扩展性、网络效率
+5. 点对点风格 Peer-to-Peer Styles
+优点：可进化性、可重用性、可扩展性、可配置性
