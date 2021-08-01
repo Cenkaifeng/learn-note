@@ -127,3 +127,55 @@ https://time.geekbang.org/course/detail/100026801-93593 1/1
 优点：可移植性、可扩展性、网络效率
 5. 点对点风格 Peer-to-Peer Styles
 优点：可进化性、可重用性、可扩展性、可配置性
+
+
+
+##### HTTP 的请求行
+
+request-line = method SP request-target Sp HTTP-version CRLF 
+
+常用四种格式
+**origin-form:**
+* = absolute-pash[ "?" query]
+* 向origin server（实际产生相应内容的服务器） 发起请求，path为空时必须传递/
+
+**absolute-form:**
+* 仅用于向正向代理proxy 发起请求时，详见正向代理与隧道
+
+**authority-form:**
+* 仅用与CONNECT方法，例如CONNECT www.example.com:80 HTTP/1.1
+
+**asterisk-form:**
+*仅用于OPTIONS方法
+
+
+HTTP-version 发展历史
+
+* HTTP/0.9: 只支持GET方法，过时
+* HTTP/1.0: RFC1945, 1996, 常见于代理服务器（例如Nginx默认配置）
+* HTTP/1.1: RFC2616,1999
+* http/2.0: 2015.5正式发布
+
+
+##### 常见方法
+
+* GET: 主要的获取信息方法，大量的性能优化都针对该方法，幂等方法
+* HEAD: 类似GET方法，但服务器不发生BODY,用以花去HEAD元数据，幂等方法
+* POST：常用于提交HTML FORM表单、新增资源等
+* PUT：更新资源，待条件时是幂等方法
+* DELETE: 删除资源，幂等方法
+* CONNECT: 建立tunnel睡到
+* OPTIONS: 显示服务器对访问资源支持的方法，幂等方法（主要用于跨域访问监测）
+* TRACE: 回显服务器收到的请求，用于定位问题。有安全风险（2007年时 nginx0.5.17对此方法不再支持）
+
+
+用于文档管理的WEBDAV方法（RFC2518)
+
+* PROPFIND: 从Web资源中检索以XML格式存储的属性。它也被重载，以允许一个检索远程系统的整合结构（也叫目录层次结构）
+* PROPPATCH: 在单个原子性活动中更改和删除资源的多个属性
+* MKCOL：创建集合或者目录
+* COPY: 将资源从一个URI复制到另一个URI
+* MOVE: 将资源从一个URI移动到另一个UIR
+* LOCK: 锁定一个资源。WebDAV 支持共享锁和互斥锁
+* UNLOCK：接触资源的锁定
+
