@@ -41,7 +41,7 @@
      function Course() {
         this.teacher: 'yy';
         this.leader: 'hxy';
-    }   
+    }    
 
     const course = new Course();
 ```
