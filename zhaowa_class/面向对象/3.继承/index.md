@@ -99,13 +99,13 @@ Parent.prototype.eat = function () {
 }
 
 function Child(id) {
-    Parent.apply(this, Array.from(arguments).slice(1));
+    Parent.apply(this, Array.from(arguments).slice(1)); // 1次
     this.id = id;
 }
 
 // 组合
 
-Child.prototype = new Parent();
+Child.prototype = new Parent(); // 2次
 Child.prototype.constructor = Child;
 
 const c1 = new Child(1, 'c1', ['hahaha']);
@@ -117,3 +117,86 @@ c2.eat()
 
 ### 隐含问题
 
+1. 调用了两次Parent构造函数，做了无意义的重复操作
+    1. `Parent.apply(this, Array.from(arguments).slice(1));`
+    2. `Child.prototype = new Parent();`
+
+## 寄生组合式继承
+
+### 实现
+
+```js
+function Parent(name, actions) {
+    this.name = name;
+    this.actions = actions;
+}
+
+Parent.prototype.eat = function () {
+    console.log(`${this.name} - eat`);
+}
+
+function Child(id) {
+    Parent.apply(this, Array.from(arguments).slice(1)); // 1次
+    this.id = id;
+}
+
+
+// Child.prototype = new Parent(); 
+// let TempFunction = function() {};
+// TempFunction.prototype = Parent.prototype;
+// Cild.prototype = new TempFunction(); // TempFunction 作为中间函数转移继承实例属性
+
+Child.prototype = Object.create(Parent.prototype);// 上面三行模拟实行了Object.create();
+
+Child.prototype.constructor = Child;
+
+const c1 = new Child(1, 'c1', ['hahaha']);
+const c2 = new Child(2, 'c2', ['xixixi']);
+
+c1.eat()
+c2.eat()
+```
+
+问题：为什么一定要通过桥梁的方式让Child.prototype 访问到 Parent.prototype.
+
+```js
+
+function Parent(name, actions) {
+    this.name = name;
+    this.actions = actions;
+}
+
+Parent.prototype.eat = function () {
+    console.log(`${this.name} - eat`);
+}
+
+function Child(id) {
+    Parent.apply(this, Array.from(arguments).slice(1)); // 1次
+    this.id = id;
+}
+
+
+// Child.prototype = new Parent(); 
+// let TempFunction = function() {};
+// TempFunction.prototype = Parent.prototype;
+// Cild.prototype = new TempFunction(); // TempFunction 作为中间函数转移继承实例属性
+
+// Child.prototype = Object.create(Parent.prototype);// 上面三行模拟实行了Object.create();
+
+Child.prototype = Parent.prototype;
+Child.prototype.constructor = Child;
+
+const c1 = new Child(1, 'c1', ['hahaha']);
+const c2 = new Child(2, 'c2', ['xixixi']);
+
+c1.eat()
+c2.eat()
+```
+
+
+## Questions
+
+1. new 做了什么？如何实现
+2. 4种继承方法的优缺点？如何实现？
+3. 如何判断一个函数是否用了同一块内存地址？
+4. 如何在原型链上去找一个属性？

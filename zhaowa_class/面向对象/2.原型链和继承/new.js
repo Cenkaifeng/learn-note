@@ -13,7 +13,8 @@ function Player(name) {
 }
 
 function objectFactory() {
-    let o = new Object();// {};
+    // let o = new Object();// {};
+    let o = Object.create(null);// {};
     let FunctionConstructor = [].shift.call(arguments);
     o.__proto__ = FunctionConstructor.prototype;
 

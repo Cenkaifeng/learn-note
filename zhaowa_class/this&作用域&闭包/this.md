@@ -175,7 +175,7 @@ ps: 上下文在执行时确定，作用域在定义时确定
     course.asyncTest();
 ```
 
-* 1. 罪行setTimeout时，传入匿名函数function执行，效果和全局执行函数效果相同
+* 1. 执行setTimeout时，传入匿名函数function执行，效果和全局执行函数效果相同
 * 2. 再追问，如何解决： 把function改为无独立上下文的箭头函数即可。
 
 #### 追问 bind原理 / 手写bind
