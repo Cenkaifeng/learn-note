@@ -149,7 +149,7 @@ class MPromise {
             let then = null;
 
             try{
-                 // 取x.then 复制给then
+                 // 取x.then 赋值给then 如果then是一个reject会触发报错
                 then = x.then;
             } catch(e) {
                 return reject(e);

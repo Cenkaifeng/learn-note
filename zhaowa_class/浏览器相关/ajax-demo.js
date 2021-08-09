@@ -56,15 +56,15 @@ function fetchTimeout(url, init, timeout = 3000) {
 
 function timeoutFn(fn, timeout) {
   if (typeof fn !== 'function') {
-    return
+    throw new Error('入参必须为异步函数')
   }
-  const timer;
+  let timer;
   return new Promise((resolve, reject) => {
     resolve(fn())
-    // clearTimeout(timer)
+    // 调用fn()
 
     timer = setTimeout(() => {
-      reject()
+      reject('timeout')
     }, timeout)
   })
 }
