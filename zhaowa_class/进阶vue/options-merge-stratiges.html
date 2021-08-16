@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        // 写一个生命周期
+        // optionMergeStrategies 合并策略
+        console.log(Vue.config.optionMergeStrategies)
+
+        // { a, b, c } & { a, b, c, d } -> 最终结果
+        // 1. 自己有默认的合并策略 2. 可以给用户自行拓展 3. 全局/局部使用
+        const originaLOptionsMergeStrategies =  Vue.config.optionMergeStrategies;
+        // exit
+        originaLOptionsMergeStrategies.exit = originaLOptionsMergeStrategies.created;
+
+        const notify = (name, vm) => {
+            const lifeCycles = vm.$options[name];
+            if (lifeCycles && lifeCycles.length) {
+                lifeCycles.forEach(lc => lc.call(vm));
+            }
+
+
+            const children = vm.$children;
+            if (children && children.length) {
+                children.forEach( child => notify(name, child));
+            }
+        }
+
+
+        const bind = vm => {
+            window.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden') {
+                    notify('exit', vm)
+                }
+            })
+        }
+
+        const vm = new Vue({
+            el: document.querySelector('#root'),
+            template: `<h1> hello world!</h1>`,
+            exit() {
+                alert('那我走？')
+            }
+        })
+
+        bind(vm);
+    </script>
+</body>
+</html>
