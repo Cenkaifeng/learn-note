@@ -16,7 +16,12 @@ Player.prototype = {
 
 const originPrototype = Player.prototype
 // Object.assign()
-{...originProtype, }
+Player.prototye = {
+    ...originProtype, 
+    xxx1: function() {},
+    xxx2: function() {}
+    }
+
 
 ```
 
@@ -26,7 +31,7 @@ const originPrototype = Player.prototype
 
 function Player(color) {
     this.color = color;
-}
+} 
 
 Player.prototype.start = function() {};
 

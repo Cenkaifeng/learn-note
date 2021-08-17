@@ -1,4 +1,4 @@
-// 1. 一个继承自Player.prototype 的新对象 p1/p1 被创建
+// 1. 一个将继承自Player.prototype 的新对象 p1/p1 被创建
 // 2. p1.__proto__ === Player.prototype, p1.__proto__ 指向Player.prototype.
 // 3. 将this指向新创建的对象p1/p2
 // 4. 返回一个新对象

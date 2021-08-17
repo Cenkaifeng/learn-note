@@ -9,7 +9,7 @@ function Player(color) {
 const white = new Player('white');
 // const black = new Player('black');
 
-// console.log(black.__proto__); // Player {}; 原型对象
+// console.log(black.__proto__); // Player prototype{}; 原型对象
 // console.log(Object.getPrototypeOf(black));
 // console.log(Player.prototype)
 // console.log(Player.__proto__)
