@@ -159,6 +159,7 @@ c2.eat()
 
 问题：为什么一定要通过桥梁的方式让Child.prototype 访问到 Parent.prototype.
 
+通过中间桥梁阻断对Parent.prototype 的影响
 ```js
 
 function Parent(name, actions) {
