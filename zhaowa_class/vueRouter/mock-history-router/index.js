@@ -43,7 +43,7 @@ function changeBgColor(color) {
     body.style.backgroundColor = color;
 }
 
-const Router = new BaseRouter();
+const Router = new BaseRouter(); 
 
 Router.route('/', function () {
     changeBgColor('white')
