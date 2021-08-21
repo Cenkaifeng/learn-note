@@ -76,3 +76,64 @@ for (let a of arr) {
     console.log(a);// 1 2 3 4
 }
 ```
+
+## iterator // 可迭代接口，遍历器
+
+Symbol.iterator
+```js
+// 手写迭代器
+var it = makeIterator(['a', 'b']);
+
+function makeIterator(array) {
+    var nextInde = 0;
+    return{
+        next: function() {
+            return nextIndex < array.length
+                ? {value: array[nextIndex++], done: false}
+                : {value: undefined, done: true}
+        }
+    }
+}
+
+it.next();
+
+
+let iterable = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    length: 3,
+    [Symbol.iterator]: Array.prototype[Symbol.iterator],
+}
+
+for (let item of iterable) {
+    console.log(item);
+}
+```
+
+## Proxy & reflect
+
+与defineproperty最大区别：不用添加特定代理,不用手动指定代理某个指定的key的结果
+
+```js
+var obj = new Proxy({}, {
+    get: function(target, propKey, reveiver) {
+        console.log(`getting ${propKey}`);
+        // return Reflect.get(target, propKey, reveiver) // 和直接返回target[key] 没什么区别，只是更符合元编程的规范
+        return target[propKey]
+    },
+    set: function(target, propKey, value, receiver) {
+        console.log(`setting ${propKey}`);
+        return Reflect.set(target, propKey, value, receiver);
+    }
+});
+
+obj.something = 1;
+console.log(obj.something);
+
+
+```
+
+## 装饰器语法
+多用于class 内置对象的处理，目前语法不算稳定。
+https://es6.ruanyifeng.com/#docs/decorator

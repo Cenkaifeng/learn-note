@@ -1,0 +1,11 @@
+{
+  "name": "dd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": "bin/index.js",
+  "devDependencies": {
+    "minimist": "^1.2.5",
+    "webpack": "^5.51.1"
+  }
+}

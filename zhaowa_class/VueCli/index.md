@@ -96,7 +96,6 @@ scripts 中以 `vue-cli-service` 、或者从终端中以 `./node_modules/.bin/v
 }
 npm run serve
 ```
-
 **************************************
 在package.json 用bin 配置将命令与脚本映射起来
 ## package.json 
