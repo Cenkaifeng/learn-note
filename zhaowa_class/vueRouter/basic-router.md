@@ -61,7 +61,7 @@ winow.hastory.back();// 后退一步 go(-1)
 window.history.foward();// 前进一步 go(1)
 window.history.go();
 window.history.pushState();// location.href 页面的浏览记录里会添加一个历史记录
-window.history.replaceState();// location.replace
+window.history.replaceState();// location.replace 代替
 
 ```
 
