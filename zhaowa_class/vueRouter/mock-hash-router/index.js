@@ -20,6 +20,11 @@ class BaseRouter {
     }
 }
 
+// 1. 数据存储，数据结构的选用？对象/Map
+// 2. refresh bind
+// 3. 页面首次加载的路由渲染怎么处理
+// 4. 页面路由改变的监听
+
 const body = document.querySelector('body');
 
 function changeBgColor(color) {

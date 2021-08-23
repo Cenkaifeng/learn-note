@@ -1,4 +1,4 @@
-class BaseRouter {
+class _BaseRouter {
     constructor() {
         this.routes = {}; 
         this.init(location.pathname);
@@ -63,3 +63,28 @@ container.addEventListener('click', e => {
         Router.go(e.target.getAttribute('href'));
     }
 })
+
+
+class BaseRouter {
+    constructor() {
+        this.routes = {};
+        this.bindPopstate = this.popState.bind(this);// TODO: 回看的时候看看怎么说的
+        this.bindPopstate();// 不用bind 因为window
+    }
+
+    route(path, callback) {
+        this.routes[path] = callback || function() {};
+        
+    }
+    popState() {
+        window.addEventListener('popstate', (e) => {
+            const path = e.state && e.state.path;;
+            console.log(path);
+            const cb = this.routes[path];
+
+            if (cb) {
+                cb();
+            }
+        })
+    }
+}
