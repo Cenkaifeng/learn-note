@@ -5,7 +5,7 @@
 ssr
 
 www.jervis.com/index => php服务器 => index.html
-            /parent => php服务器 => parent.html
+              /parent => php服务器 => parent.html
 
 缺点：
 1. 维护特别麻烦，没有点后端分离。
@@ -21,11 +21,20 @@ www.jervis.com/index => php服务器 => index.html
 现在前端状况：其实有点从服务端渲染的多页 -> 单页应用 -> ssr
 
 
+## 现阶段的路由
+
 单页应用 spa
 
-不仅在页面的交互中
-// TODO: 回放里把cdn 描述加上
+不仅在页面的交互中是不断刷新页面的，就连页面跳转`router.push`也是不刷新页面。
 
+www.demo.com/index => cdn => index.html app.js
+www.lubai.com/list => cdn => list.js
+
+路由访问
+webpack => 静态文件.js img html .css 上传到 oss => cdn
+
+cdn 根据Nginx 配置返回指定资源
+如果你的瞬发流量特别大，你要考虑瞬间极大并发量会不会击穿你的原服务器（504/503），会不会造成原服务器阻塞，由此产生大成本扩容机器，购买集群。如果你只是静态应用不走服务器，你只需要买cdn带宽（流量付费）
 
 ## 前端路由的特性
 
@@ -39,8 +48,12 @@ www.jervis.com/index => php服务器 => index.html
 1. 面试
 
 * hash 路由的改变，会在url上有什么表现吗？
+    * 会添加#path
 * hash 具体是怎么改变路由的 HTML 元素 ？ js?
+    * window.addEventlistener('hashchange', function(){})
 * 如何通过js监听hash路由改变呢？
+  * a标签
+  * js location.hash=''
 
 2. 特性
 * url中的hash值至少客户端/浏览器端的一种状态，向服务器发送请求的时候，hash部分是不会懈怠的
@@ -65,8 +78,8 @@ hash虽然能解决问题，但是带有#不太美观。
 window.history.back();
 window.history.forward();
 go(number)
-pushState 新增
-replaceState;   替代、覆盖
+pushState 新增 => A B => A B C
+replaceState 覆盖/代替 A B => A C
 
 1. 可以使用Popstate事件来监听url变化
 2. pushState 和 replaceState并不会触发Popstate变化
@@ -92,9 +105,34 @@ replaceState;   替代、覆盖
 * scrollBehavior
 
 2. router-view是什么？
-类似动态的组件。 所有路由的产出（路由出口）
+类似于动态的组件.
 
-找到当前路径对相应的component并展示出来
+找到当前路径对应的component, 并展示出来.
+
+所有路由的产出（路由出口）
+
+
+1. 异步加载about.vue
+
+首屏 app.js chunk-vendors 2.4MB 159kB
+About about.js 21kB
+
+2. 同步加载about.vue
+
+首屏 app.js chunk-vendors 2.4MB 180KB
+About  
+
+
+## 导航守卫的执行顺序
+
+1. [组件] 前一个组件的beforeRouteLeave
+2. [全局] router.beforeEach
+3. [路由参数变化] beforeRouteUpdate
+4. [配置文件里] beforeEnter
+5. [组件] beforeRouteEnter
+6. [全局] afterEach
+
+## scollBehavior生效的条件
 
 1. 异步加载组件
 
@@ -114,4 +152,5 @@ replaceState;   替代、覆盖
 ## scollBehavior生效的条件
 
 1. 浏览器支持的History api
-2. 
+2. 点击浏览器的返回/前进按钮
+3. router-link是不可以触发的
