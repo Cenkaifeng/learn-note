@@ -68,10 +68,17 @@ container.addEventListener('click', e => {
 class BaseRouter {
     constructor() {
         this.routes = {};
-        this.bindPopstate = this.popState.bind(this);// TODO: 回看的时候看看怎么说的
+        this.bindPopstate = this.popState.bind(this);// TODO: 回看的时候看看怎么说的 React 组件写法...
+        // 为了this获取的时候能正确花去到值
         this.bindPopstate();// 不用bind 因为window
     }
 
+    init(path) {
+        window.history.replaceState({
+            path
+        }, null, path);
+        this.execCallbackByPath(path)
+    }
     route(path, callback) {
         this.routes[path] = callback || function() {};
         
@@ -80,11 +87,14 @@ class BaseRouter {
         window.addEventListener('popstate', (e) => {
             const path = e.state && e.state.path;;
             console.log(path);
-            const cb = this.routes[path];
-
-            if (cb) {
-                cb();
-            }
+            this.execCallbackByPath(path);
         })
+    }
+    execCallbackByPath() {
+        const cb = this.routes[path];
+
+        if (cb) {
+            cb();
+        }
     }
 }

@@ -97,3 +97,21 @@ replaceState;   替代、覆盖
 找到当前路径对相应的component并展示出来
 
 1. 异步加载组件
+
+2. 同步加载
+
+
+## 导航收尾的执行顺序
+
+1. [组件] 前一个组件的beforeRouteLeave
+2. [全局] router.beforeEach
+3. [路由参数变化] beforeRouteUpdate
+4. [配置文件里] beforeEnter
+5. [组件] beforeRouteEnter
+6. [全局] agterEach
+// watch 最后
+
+## scollBehavior生效的条件
+
+1. 浏览器支持的History api
+2. 
