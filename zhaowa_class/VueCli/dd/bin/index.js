@@ -9,6 +9,7 @@ const args = minimist(process.argv.slice(2));
 // 这里只是为了好看代码，写一起了，正常是要做一下拆分的
 // class PluginManager {} <- 内聚到一个模块实现会好点
 const __commands = {};
+const __plugins= {};
 const fname = 'dd.config.js'
 
 
@@ -31,6 +32,12 @@ const api = {
         if (!command) {
             __commands[name] = impl
         }
+    },
+    chainWebpack() {
+
+    },
+    addWebpackPlugin(plugin) {
+        
     }
 }
 
