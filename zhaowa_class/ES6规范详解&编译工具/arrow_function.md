@@ -124,7 +124,7 @@ class Course {
         return `teacher: ${this._teacher}, couse:
         ${this.course}`;
     }
-    get tteacher() {
+    get teacher() {
         return this._teacher;
     }
     set teacher(val) {
