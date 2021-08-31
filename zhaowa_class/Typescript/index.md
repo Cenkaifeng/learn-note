@@ -180,3 +180,30 @@ type T0 = Extract<"a" | "b" | "c", "a" | "f"> // "a"
 
 type T1 = Extract<string | number | (() => void), Function>;// () => void // (() => void) 没有入参没有返回值的函数
 ```
+
+```ts
+
+interface UserInfo {
+    name: string;
+}
+// 约束接口返回值
+Axios.get<UserInfo>('/info').then( res => {
+    const name = res.data.name;
+})
+```
+
+15. declare 告诉ts 这是个模块，然后可以避免一些错误
+
+```ts
+
+declare module '*.png'
+// 模块声明
+```
+
+16. 全局声明
+
+```ts
+interface Window {
+    aa: boolean;
+}
+```
