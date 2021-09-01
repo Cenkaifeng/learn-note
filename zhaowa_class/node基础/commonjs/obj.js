@@ -20,3 +20,9 @@ key.key1 = 'hello world2';
 // key = 'hello world'; // 答：你没有通过引用来改变模块的值是没有变化的。
 
 console.log(obj)
+
+
+// var module = {
+//     exports: {}
+//   }
+//   var exports = module.exports
