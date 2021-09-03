@@ -97,3 +97,74 @@ function match(string) {
     return false;
 }
 ```
+
+
+### 练习题：在一个字符串中找到字符 abcdef
+
+
+```js
+const tpl = 'abcdef';
+const input = 'xxxx'
+
+class MatchString {
+    constructor(option = {}) {
+        this.tpl = option.tpl
+        this.tplType = []
+    }
+
+    toMatch(params) { // O(n^2)
+        const _tpl = this.tpl;
+        const _tplType = this.tplType;
+        let conti = true;
+        for(let i of params) {
+            for(let j = 0 ; j < _tpl.length ; j++) {
+                if (i === _tpl[i]) {
+                    // 匹配往表里推计数
+                    _tplType.push(true)
+                } else {
+                    conti = false;
+                }
+                // 列表数等于模板长度，连续不中断，全匹配，返回true
+                if(_tplType.length === _tpl.length && conti && _tplType.some( res => res)){
+                    return true;
+                }
+            }
+
+        }
+    }
+}
+
+const matchString = new MatchString(tpl)
+console.log(matchString.toMatch(input))
+
+// 老师的代码(非状态机版本)
+function match(string) {
+    let foundA = false
+    let foundB = false
+    let foundC = false
+    let foundD = false
+    let foundE = false
+    for( let c of string ) {
+        if (c == "a") 
+            foundA = true;
+        else if(foundA && c == "b")
+            foundB = true;
+        else if(foundB && c == "c")
+            foundC = true;
+        else if(foundD && c == "d")
+            foundD = true;
+        else if(foundE && c == "e")
+            foundE = true;
+        else if(foundE && c == "f")
+            return true;
+        else {
+            foundA = true
+            foundB = true
+            foundC = true
+            foundD = true
+            foundE = true
+        }
+    }
+    return false
+}
+```
