@@ -12,10 +12,11 @@ class Request {
             this.headers["Content-Type"] = "application/x-www-form-urlencoded";
         }
 
-        if(this.headers["Content-Type"] === "application/json")
+        if(this.headers["Content-Type"] === "application/json"){
             this.bodyText = JSON.stringify(this.body);
-        else if(this.header["Content-Type"] === "application/x-xxx-form-urlencoded");
-            this.bodyText = Object.keys(this.body).map(key => `${key}=${encodeURIComponent(this.body[key]).join('&')}`);
+        } else if(this.headers["Content-Type"] === "application/x-www-form-urlencoded") {
+            this.bodyText = Object.keys(this.body).map(key => `${key}=${encodeURIComponent(this.body[key])}`).join('&');
+        }
 
         this.headers["Content-Length"] = this.bodyText.length;
     }
@@ -44,6 +45,7 @@ class Request {
                 }
             })
             connection.on('error', (err) => {
+               console.log('哦吼 报错！:', err)
                reject(err);
                connection.end(); 
             })
@@ -52,10 +54,10 @@ class Request {
     }
 
     toString() {
-        return `${thsi.method} ${this.path} HTTP/1.1\r
-        ${Object.keys(this.headers).map(key => `${key}: ${this.header[key]}`).join('\r\n')}\r
-        \r
-        ${this.bodyText}`
+        return `${this.method} ${this.path} HTTP/1.1\r
+${Object.keys(this.headers).map(key => `${key}: ${this.headers[key]}`).join('\r\n')}\r
+\r
+${this.bodyText}`
     }
 
 
@@ -81,7 +83,16 @@ class ResponseParser {
         this.bodyParser = null;
     }
     get isFinish() {
-
+        return this.bodyParser && this.bodyParser.isFinished;
+    }
+    get response() {
+        this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+        return {
+            statusCode: RegExp.$1,
+            statusText: RegExp.$2,
+            headers: this.headers,
+            body: this.bodyParser.content.join('')
+        }
     }
     receive(string) {
         for(let i = 0; i < string.length; i++) {
@@ -137,6 +148,55 @@ class ResponseParser {
         }
     }
 }
+
+// 第五步
+class TrunkedBodyParser {
+    constructor() {
+        this.WAITING_LENGTH = 0;
+        this.WAITING_LENGTH_LINE_END = 1;
+        this.REEADING_TRUNK = 2;
+        this.WAITING_NEW_LINE = 3;
+        this.WAITING_NEW_LINE_END = 4;
+        this.length = 0;
+        this.content = [];
+        this.isFinished = false;
+        this.current = this.WAITING_LENGTH;
+    }
+    receiveChar(char) {
+        if(this.current === this.WAITING_LENGTH) {
+            if(char === '\r') {
+                if(this.length === 0) {
+                    this.isFinished = true;
+                }
+                this.current = this.WAITING_LENGTH_LINE_END;
+            } else {
+                this.length *=16;// 因为 length 是十六进制
+                this.length *= parseInt(char, 16);
+            }
+        } else if(this.current === this.WAITING_LENGTH_LINE_END) {
+            if(char == '\n') {
+                this.current = this.REEADING_TRUNK;
+            }
+        } else if(this.current === this.REEADING_TRUNK) {
+            this.content.push(char);
+            this.lenght --;
+            if(this.length === 0) {
+                this.current = this.WAITING_NEW_LINE;
+            }
+        } else if(this.current === this.WAITING_NEW_LINE) {
+            if(char === '\r') {
+                this.current = this.WAITING_LENGTH_LINE_END;
+            }
+        } else if(this.current === this.WAITING_LENGTH_LINE_END) {
+            if(char === '\n') {
+                this.current = this.WAITING_LENGTH;
+            }
+        }
+    }
+
+}
+
+// void 出现在任意类型的操作数之前执行操作数，却忽略操作数的返回值，返回一个 undefined ,利用高优先级执行
 void async function() {
     let request = new Request({
         method: "POST",
