@@ -5,13 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\AnewFrontEnd\\1_browser\\demo.js"
+            "name": "启动程序",
+            "program": "${workspaceFolder}/AnewFrontEnd/week1_browser/nodeClient.js"
         }
     ]
 }
