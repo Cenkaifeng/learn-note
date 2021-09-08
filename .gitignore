@@ -1,3 +1,4 @@
 *.[oa]
 node_modules
 cache_log.txt
+.vscode
