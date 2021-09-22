@@ -1,0 +1,20 @@
+{
+  "name": "module-lesson",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "cbbfcd",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.13.12",
+    "rollup": "^2.44.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "scripts": {
+    "build": "rm -rf dist && rollup -c"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
