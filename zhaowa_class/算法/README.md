@@ -82,7 +82,7 @@ append(element) {
 insert(position, element) {
     if (position < 0 || position > this.length) return false;
 
-    let node = new Node(element);\
+    let node = new Node(element);
 
     if (position === 0 ) {
         node.next = this.head;
@@ -93,6 +93,108 @@ insert(position, element) {
         node.next = previous.next;
         previous.next = node;
     }
-    
+    this.length++;
+    return true;
+}
+
+removeAt(position) {
+    if (position < 0 || position > this.length) return false;
+
+    let current = this.head;
+    if (position === 0 ) {
+        this.head = current.next;
+    } else {
+        let previous = this.getElementAt(position -1);
+
+        current = previous.next;
+        previous.next = current.next;
+    }
+    this.length--;
+    return current.element;
+}
+
+indexOf(element) {
+    let current = this.head;
+    for(let i = 0; i < this.length; i++) {
+        if(current.element === element) return i;
+
+        current = current.next;
+    }
+    return -1;
+}
+
+// 双向列表
+// head <=> node1 <=> node2 <=> ... <=> null(tail)
+// tail、prev
+class DoubleLink extends Linklist {
+//  
 }
 ```
+
+
+栈：先入后出（更像个盒子）
+
+队列：先入先出（像流水线、管道）
+
+
+##### 面试题 实现一个栈
+```js
+//stack_queue
+
+class Stack {
+    constructor() {
+        this.items = [];
+    }
+
+    // 添加新元素到栈
+    push(element) {
+        this.items.push(element);
+    }
+
+    // 移出栈顶元素
+    pop() {
+        return this.items.pop();
+    }
+
+    // 获取栈顶元素
+    peek() {
+        return this.item[this.items.length - 1];
+    }
+
+    // 判断空
+    isEmpty() {
+        return this.items.length === 0;
+    }
+
+    clear() {
+        this.items = [];
+    }
+
+    size() {
+        return this.items.length;
+    }
+}
+
+// 栈可以看做是个阉割版本的数组操作...
+
+// 拓展
+// 如何判断括号有效性 （自闭合)
+// '[]{}' ture, '{{}[]' false, '[{()}]' true;
+
+const isValid = function() {
+    // 涉及使用数据结构 - 栈
+    const stack = new Stack();
+    const map = {
+        '}': '{',
+        ']': '[',
+        ')':'(',
+        '>':'<'
+    }
+    ~~~~
+}
+```
+#### 堆
+
+前端对于这个概念了解的相对会比较少，这个涉及到了js的运行与存储。js 中 stack 存储kv值. heap 存的是v作为引用类型具体位置
+
+堆是可以在运行时拿到的，效率相对会低一些。
