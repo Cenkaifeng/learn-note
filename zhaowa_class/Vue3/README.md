@@ -323,7 +323,7 @@ computed
 
 基于响应式数据生成衍生数据，且衍生数据会同步响应式数据的变化，效果与 vue2 的 computed 属性一样。 
 
-provide，inject 
+provide，injectsdfas 
 
 跨组件传递数据的方案。 
 
@@ -336,5 +336,4 @@ mounted -> onMounted
 beforeUpdate -> onBeforeUpdate 
 updated -> onUpdated 
 beforeUnmount -> onBeforeUnmount 
-unmounted -> onUnmounted 
-errorCaptured -> onErrorCaptured // 错误上报钩子，仅做了解 renderTracked -> onRenderTracked // { key, target, type } 仅做了解 renderTriggered -> onRenderTriggered // { key, target, type } 仅做了解
+unmounted -> onUnmounted errorCaptured -> onErrorCaptured // 错误上报钩子，仅做了解 renderTracked -> onRenderTracked // { key, target, type } 仅做了解 renderTriggered -> onRenderTriggered // { key, target, type } 仅做了解
