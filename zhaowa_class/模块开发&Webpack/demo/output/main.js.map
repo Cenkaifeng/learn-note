@@ -1,0 +1,1 @@
+{"version":3,"file":"main.js","mappings":";;;;;AAAA;AACA;AACA;AACA;AACA","sources":["webpack://webpack/./src/index.js"],"sourcesContent":["function test(content) {\n  document.querySelector(\"#app\").innerHTML = content;\n}\n\ntest(\"something\");\n"],"names":[],"sourceRoot":""}
