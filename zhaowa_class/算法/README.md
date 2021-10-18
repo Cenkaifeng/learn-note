@@ -181,7 +181,7 @@ class Stack {
 // 如何判断括号有效性 （自闭合)
 // '[]{}' ture, '{{}[]' false, '[{()}]' true;
 
-const isValid = function() {
+const isValid = function(s: string) {
     // 涉及使用数据结构 - 栈
     const stack = new Stack();
     const map = {
@@ -190,7 +190,24 @@ const isValid = function() {
         ')':'(',
         '>':'<'
     }
-    ~~~~
+    
+    for(let i = 0; i < s.length; i++ ) {
+        const char = s[i];
+
+        stack.push(char);
+
+        if (stack.size < 2 ) continue;
+
+        const theLastOne = stack[stack.size - 1];
+        const theLastTwo = statck[stack.size - 2];
+
+        if (map[theLastTwo] === this.theLastTwo) {
+            stack.pop();
+            stack.pop();
+        }
+
+    }
+    return stack.size === 0;
 }
 ```
 #### 堆
@@ -198,3 +215,54 @@ const isValid = function() {
 前端对于这个概念了解的相对会比较少，这个涉及到了js的运行与存储。js 中 stack 存储kv值. heap 存的是v作为引用类型具体位置
 
 堆是可以在运行时拿到的，效率相对会低一些。
+
+
+#### 哈希 map
+
+快速查找和定位
+密码、罗马文、回文
+
+```js
+
+const MAP = {
+    'I': 1,
+    'V': 5,
+    'X': 10,
+    'L': 50,
+    'C': 100,
+    'D': 500,
+    'M': 1000
+}
+// IV 4
+// VI 6
+const romanToInt = function(s: string) {
+    let len = s.length;
+    let res = 0;
+    let max = 0;
+
+    while( len --) {
+        let num = MAP[s[len]];
+        // IV 颠倒值不直接相加，用大的减小的
+        if (max > num) { // 判断大小、然后考虑特殊情况 （左边比右边小）
+            res -= num;
+            continue;
+        }
+
+        max = num;
+        res += num;
+    }
+
+
+    return res;
+}
+```
+
+#### 数
+
+
+深度优先、广度优先
+
+
+前序遍历：（中左右）
+中序遍历：（左中右）
+后序遍历：（左右中）
