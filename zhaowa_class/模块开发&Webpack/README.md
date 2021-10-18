@@ -25,7 +25,7 @@ Webpack 把一切静态资源视为模块，所以又叫做静态模块打包器
    2. happypack (电脑支持多核可以用这个)
    3. HardSourceWebpackPlugin（官推）构建速度变快，但是页面代码更改后对应的编译会变慢
    4. worker = thread-loader  https://webpack.docschina.org/loaders/thread-loader/#examples 通过将loader 新增为新进程来提速
-   5. configIgnoreWebapck: {watchOptioins: {ignored: /node_modules/}} 写在config里
+   5. configureWebpack: {watchOptioins: {ignored: /node_modules/}} 写在config里 (vue-cli vue.config.js 配置)
    
 3. 减小打包体积
 

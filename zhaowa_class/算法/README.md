@@ -1,6 +1,6 @@
-## 算法与数据结构
+# 算法与数据结构
 
-##### 上
+#### 数据结构
 
 *****
 关于算法押题：
@@ -138,7 +138,7 @@ class DoubleLink extends Linklist {
 
 
 ##### 面试题 实现一个栈
-```js
+```javascript
 //stack_queue
 
 class Stack {
@@ -210,14 +210,14 @@ const isValid = function(s: string) {
     return stack.size === 0;
 }
 ```
-#### 堆
+##### 堆
 
 前端对于这个概念了解的相对会比较少，这个涉及到了js的运行与存储。js 中 stack 存储kv值. heap 存的是v作为引用类型具体位置
 
 堆是可以在运行时拿到的，效率相对会低一些。
 
 
-#### 哈希 map
+##### 哈希 map
 
 快速查找和定位
 密码、罗马文、回文
@@ -257,7 +257,9 @@ const romanToInt = function(s: string) {
 }
 ```
 
-#### 数
+#### 树图
+
+##### 树结构
 
 
 深度优先、广度优先
@@ -266,3 +268,432 @@ const romanToInt = function(s: string) {
 前序遍历：（中左右）
 中序遍历：（左中右）
 后序遍历：（左右中）
+
+```js
+// 树结构
+const PreOrder = function(node) {
+    if(node !== null) {
+        console.log(node.val);
+        PreOrder(node.left);
+        PreOrder(node.right);
+    }
+}
+
+const InOrder = function(node) {
+    if(node !== null) {
+        InOrder(node.left);
+        console.log(node.val);
+        InOrder(node.right);
+    }
+}
+
+const PostOrder = function(node) {
+    if(node !== null) {
+        PostOrder(node.left);
+        PostOrder(node.right);
+        console.log(node.val)
+    }
+}
+
+// 查找最大值，偶数层、拍平（树结构拍平成为对象或者数组）
+```
+
+算法
+1. 数据结构
+2. 常用基础算法
+   1. 分治
+   2. 贪心算法
+   3. 动态规划
+   4. 二分法
+   5. ...
+3. 树图
+4. 排序
+
+##### 图 graph
+图与图算法：
+
+构成：边集合 + 顶点集合
+分类：
+    1. 有向图（有序）
+    2. 无向图（无序）
+    3. 构造图（符合引用）
+
+试题：实现图类
+
+```js
+class Graph {
+    constructor(v) {
+        this.vertices = v; // 确定顶点个数
+        this.edge = 0; // 边集合数
+        this.arr = [];
+        // 初始化描述数组 - 多少个顶点就有多少元素可以进行连接
+
+        for(let i = 0; i < this.vertices; i ++) {
+            this.arr[i] = [];
+        }
+    }
+    // 边操作
+    addEdge(v, w) {
+        this.arr[v].push(w);
+        this.arr[w].push(v);
+        this.edges++;
+    }
+
+    // 绘图
+    showGraph() {
+        let str;
+        for(let i = 0; i < this.vertices; i++ ) {
+            str = i + '->';
+            for (let j = 0; j < this.certices; j++ ) {
+                if(this.arr[i][j] !== undefined) {
+                    str += this.arr[i][j];
+                }
+            }
+        }
+        console.log(str)
+    }
+}
+```
+
+图来解决（什么时候用图） - 路径类问题、查找类问题
+
+**树和图本质上都是对节点结构的一种系统描述**
+
+// 图解决深度优先问题
+// 起始点开始查找直到最末的顶点，在返回追溯，直到没有路径为止
+
+```js
+constructor() {
+    //...
+    this.marked = []; // 已经被访问过的节点
+    for(let i = 0; i < this.vertices; i ++) {
+        this.marked[i] = false;
+    }
+}
+dfs(v) {
+    this.marked[v] = true;
+    if(this.arr[v] !== undefined) {
+        console.log('dfs visited' + v);
+    }
+    this.arr[v].forEach(w => {
+        if(!this.marked[w]) {
+            this.dfs(w);
+        }
+    })
+}
+
+bfs(s) { // 广度优先 - 最相邻节点遍历
+    let queue = [];
+    this.marked[s] = true;
+    queue.push(s);
+
+    while(queue.length > 0) {
+        let v = queue.shift();
+
+        if(v !== undefined) {
+            console.log('bfs visited' + v)
+        }
+
+        this.arr[v].forEach(w => {
+            if(!thsi.marked[w]) {
+                queue.push(w);
+                this.marked[w] = true;
+            }
+        })
+    }
+
+}
+
+// 面试题 - 最短路径方法
+
+// 利用广度优先天然临近查找的优势
+// 1. 需要一个数组用来保存所有执行路径
+// 2. 除了标记节点是否被访问过之外，添加一条边来描述顶点到当前顶点的路径
+
+constructor() {
+    // ...
+    this.edgeTo = [];
+}
+
+bfs() {
+    let queue = [];
+    this.marked[s] = true;
+    queue.push(s);
+
+    while(queue.length > 0) {
+        let v = queue.shift();
+
+        if(v !== undefined) {
+            console.log('bfs visited' + v)
+        }
+
+        this.arr[v].forEach(w => {
+            if(!thsi.marked[w]) {
+                queue.push(w);
+                this.marked[w] = true;
+                this.edgeTo[w] = v; // 做一个连接顶点记录，记录一下连接路径
+            }
+        })
+    }
+}
+
+function pathTo(t, v) {
+    let source = t;
+
+    for(let i = 0; i < this.vertices; i++) {
+        this.marked[i] = false;// 重置标识集合
+    }
+
+    this.bfs(source);
+
+    if(!this.marked[v]) {
+        return undefined;
+    }
+
+    let path = [];
+
+    for(let i = v; i !== source; i = this.edgeTo[i]) {
+        path.unshift(i);
+    }
+
+    path.unshift(source);
+
+    let str = '';
+
+    for(let i in path) {
+        if (i < path.length - 1 ) {
+            str += path[i] + '->';
+        } else {
+            str += path[i];
+        }
+    }
+    console.log(str);
+
+    return path;
+}
+
+let g = new Graph(5);
+g.addEdge(0, 1);
+g.addEdge(1, 3);
+g.addEdge(0, 4);
+g.pathTo();
+```
+
+****
+
+
+#### 算法复杂度 complexity
+
+##### 时间复杂度
+
+1. 关注点在循环次数最多的代码块
+2. 最大值原则 - 存在多个循环，总复杂度等于最大的代码块复杂度
+3. 乘法原则 - 嵌套代码复杂度等于嵌套内外代码块复杂度的乘积
+
+example
+```js
+function total(n) {
+    let sum = 0; //t
+    for(let i = 0; i < n; i++ ) {//nt
+        sum += i; // nt
+    }
+    return sum;//t
+}
+// 执行了 t + nt + nt = 2(n + 1)t 长时间
+
+function total(n) {
+    let sum = 0; //t
+    for(let i = 0; i < n; i++ ) {//nt
+    for (let j = 0; j < n; j ++) {// n*n*t
+        sum = sum + i + j;// n*n*t
+    }
+    }
+    return sum;//t
+}
+// 执行了 t + nt + n*n*t + n*n*t + t = (2n*n + n + 2)t 长时间
+
+// n => 无穷大  O(n) \ O(n*n)
+
+// 常数阶 O(1)
+// 对数阶 O(logN)
+// 平方阶...
+
+// 复杂度用例
+
+const sum_plus = function() {
+    let i = 1;
+    let j = 2;
+
+    ++ i;
+    j++;
+    return i + j;
+}// o(1);
+
+const foo2 = function(n) {
+    for(let i = 1; i<= n; ++i ) {
+        let j = i;
+        j ++;
+    }
+} // o(n)
+
+const foo3 = function(n) {
+    let i = 1;
+    while(i < n) {
+        i = i * 2;
+    }
+}// i 等比变化
+// 2 的 x 此房等于n, 那么 x = log2^n
+// 循环log2^n次以后，结束
+// o(logN)
+
+const foo3 = function(n) {
+    for(Let m = 1; m < n ; m ++) {
+        let i = 1;
+        while(i < n) {
+            i = i * 2;
+        }        
+    }
+
+}// o(nlogN)
+
+function total(n) {
+    let sum = 0;
+    for (let i = 0; i< n; i++ ) {
+        for (let j = 0; j < n; j++ ) {
+            sum = sum + i + j;
+        }
+    }
+    return sum;
+}// O(n^2)
+
+
+
+
+```
+
+##### 空间复杂度
+
+判断存储
+最后看的是中间执行的变量的增长方式
+
+1. 常量
+```js
+let j = 0;
+for(let i = 0; i< n ; i++) {
+    j ++;
+}// O(1)
+
+// 线性增长
+let j = [];
+
+for (let i = 0; i< n; j ++) {
+    j.push(i);
+}// O(n); 线性增长
+
+```
+
+#### 常用基础算法
+
+##### D&C 分治
+分治法
+
+工作原理（如何确定case 适用分治）：
+
+1. 可以明确设定一条基线
+2. 根据此基线可以不听将问题进行分解，直到所有内容符合基线标准
+
+快排
+
+```js
+const quickSort = function(arr) {
+    // 校验
+     if(arr.length <= 1 ) {
+         return arr;
+     }
+    // 1. 找到基线，并对基线左右做声明
+     let pivotIndex = Math.floor(arr.length / 2);
+     let pivot = arr.splice(pivotIndex, 1)[0];
+     let left = [];
+     let right = [];
+    // 2. 遍历当前的内容，按照基线去划分左右
+     for(let i  = 0; i < arr.length; i++ ){
+         if(arr[i] < pivot) {
+             left.push(arr[i]);
+         } else {
+             right.push(arr[i]);
+         }
+     }
+    // 3. 递归处理，不断根据新的基线生成新内容，并进行连接
+     return quickSort(left).concat([pivot], quickSort(right));
+}
+```
+
+##### 贪心
+
+核心：利益最大化,始终查找最大的项目，尽可能快满足需求
+
+何时适用贪婪：需要查找最大项目等类型，同时满足利益最大化
+
+```js
+
+// 给定一个整数数组nums,找一个具有最大和的连续子数组（子数组必须包含一个元素），返回其最大和
+
+const maxSubArray = function(nums) {
+    // 入参判断
+    if(nums.length <= 1) return nums;
+
+    let ans = nums[0];
+
+    let sum = 0;
+    for (const num of nums) {
+        // 最快扩充当前数据量 or 最短途径满足需求
+        if(sum > 0) {
+            sum += num;
+        } else {
+            sum = num;
+        }
+        ans = Math.max(ans, sum);
+    }
+
+    return ans;
+}
+
+```
+
+##### 动态规划
+何时适用：将待求解的问题分解成若干子问题；子问题之间相互有联系（分治无联系）
+
+逐个分解
+将上一步的结论作为下一步条件传入
+
+```js
+// 斐波那契
+// F(0) = 0， F(1) = 1
+// F(n) = F(n - 1) + F(n - 2), 其中 n > 1
+
+const fib = function(n) {
+    // 传入校验
+    if( n < 2 ) return n;
+
+    // 1. 确定分界
+    let pre = 0;
+    let next = 0;
+    let res = 1;
+
+    // 2. 遍历所有内容进行运算执行
+    for (let i = 2; i <= n; i++) {
+        // 3. 所有内容项目进行关联与格力
+        pre = next;
+        next = res;
+        res = pre + next;
+    }
+    return r;
+}
+
+// git diff (怎么判断代码，处理分支？ 本质上还是动态规划)
+
+
+```
+
+##### dfs & bfs 深度优先和广度优先参考 graph 那个部分
+
