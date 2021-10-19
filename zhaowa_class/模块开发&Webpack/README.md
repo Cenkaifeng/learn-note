@@ -48,13 +48,13 @@ Webpack 把一切静态资源视为模块，所以又叫做静态模块打包器
 
 更新：
 
-源码修改 => 层梁编译（compiler) => HMR（基于新内容生成`[hash].update.js(on)`) => 想浏览器推送消息（包括新的hash) => 浏览器创建 script 标签下载`[hash].update.js` => 调用页面更新的方法（module.hot.accept)
+源码修改 => 增量编译（compiler) => HMR（基于新内容生成`[hash].update.js(on)`) => 想浏览器推送消息（包括新的hash) => 浏览器创建 script 标签下载`[hash].update.js` => 调用页面更新的方法（module.hot.accept)
 
 ### loader & plugin
 
 #### Plugin 
 
-特点：需要导入并实例化，通过狗子可以涉及整个构建流程，因此贯穿整个构建范围。
+特点：需要导入并实例化，通过钩子可以涉及整个构建流程，因此贯穿整个构建范围。
 
 本质：原型上具有apply 方法的居民构造函数或类。
 
