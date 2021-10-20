@@ -36,6 +36,7 @@ Webpack 把一切静态资源视为模块，所以又叫做静态模块打包器
 ## part 2 plugin & loader
 
 ### 模块化 umd 
+单独放一个markdown来写
 
 ### Hmr
 
