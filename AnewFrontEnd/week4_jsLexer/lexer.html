@@ -22,7 +22,7 @@
         // this.table.set($1, start + length);
         
         ++length;
-        let r = this.compileRegExp(source, $1, length);
+        let r = this.compileRegExp(source, $1, start + length);
         
         length += r.length;
         return "(" + r.source + ")";
@@ -37,11 +37,11 @@
       let r = this.regexp.exec(string);
       for(let i = 1; i < r.length; i++) {
         if(r[i] !== void 0) {
-          console.log(this.table.get(i - 1))// 
+          r[this.table.get(i - 1)] = r[i]
         }
       }
       console.log(r)
-      return r[0]
+      return r
     }
 
     get lastIndex() {
@@ -56,20 +56,20 @@
   function scan(str) {
     let regexp = new XRegExp({
       InputElement: "<Whitespace>|<LineTerminator>|<Comments>|<Token>",
-      // InputElement: "<Whitespace>|<LineTerminator>|<Comments>",
       Whitespace: / /,
-      LineTerminator:/\n/,
-      Comments:/\/\*([^*]|\*[^\/])*\*\/|\/\/[^\n]*/,
-      Token:"<Literal>|<Keywords>|<Identifer>|<Punctuator>",
-      Literal: "<NumericLiteral>|<BooleanLiteral>|<StringLiteral>|<NullLiteral>",
-      NumericLiteral:/(?:[1-9][0-9]*|0)(?:\.[0-9]*)?|\.[0-9]+/,
+      LineTerminator: /\n/,
+      Comments: /\/\*(?:[^*]|\*[^\/])*\*\/|\/\/[^\n]*/,
+      Token: "<Literal>|<Keywords>|<Identifer>|<Punctuator>",
+      Literal:
+        "<NumericLiteral>|<BooleanLiteral>|<StringLiteral>|<NullLiteral>",
+      NumericLiteral: /(?:[1-9][0-9]*|0)(?:\.[0-9]*)?|\.[0-9]+/,
       BooleanLiteral: /true|false/,
       // 下面忽略了反斜杠转译、unicode转译等多现象
-      StringLiteral:/\"(?:[^"\n]|\\[\s\S])*\"|\'(?:[^'\n]|\\[\s\S])*\'/,
+      StringLiteral: /\"(?:[^"\n]|\\[\s\S])*\"|\'(?:[^'\n]|\\[\s\S])*\'/,
       NullLiteral: /null/,
-      Identifer:/[a-zA-Z_$][a-zA-Z0-9_$]*/,
-      Keywords:/if|else|for|function/,
-      Punctuator: /\+|\,|\?|\:|\{|\}|\.|\(|\=|\<|\+\+|\=\=|\=\>|\*|\)|\[|\]|;/
+      Identifer: /[a-zA-Z_$][a-zA-Z0-9_$]*/,
+      Keywords: /if|else|for|function|let|var/,
+      Punctuator: /\+|\,|\?|\:|\{|\}|\.|\(|\=|\<|\+\+|\=\=|\=\>|\*|\)|\[|\]|;/,
     }, "g", "InputElement") 
 
     // let r = regexp.exec("(a)");
@@ -79,7 +79,8 @@
       let r = regexp.exec(str)
       console.log(JSON.stringify(r[0]));
 
-      document.write(r[0]);
+      // document.write(r[0]);
+      console.log(r)
 
       if(!r[0].length)
         break;

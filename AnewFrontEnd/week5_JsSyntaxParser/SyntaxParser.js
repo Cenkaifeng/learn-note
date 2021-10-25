@@ -1,3 +1,4 @@
+import { scan } from "./LexParser.js";
 // 用数组做出生产式关系
 let syntax = {
   Program: ["Statement", "EOF"],
@@ -10,7 +11,10 @@ let syntax = {
     // ["Block"]
   ],
   IfStatement: [["if", "(", "Expression", ")", "Statement"]],
-  VariableDeclaration: [["var", "Identifier"]],
+  VariableDeclaration: [
+    ["var", "Identifier", ";"],
+    ["let", "Identifier", ";"],
+  ],
   FunctionDeclaration: [
     ["function", "Identifier", "(", ")", "{", "StatementList", "}"],
   ],
@@ -27,7 +31,14 @@ let syntax = {
     ["MultiplicativeExpression", "/", "PrimaryExpression"],
   ],
   PrimaryExpression: [["(", "Expression", ")"], ["Literal"], ["Identifier"]],
-  Literal: [],
+  Literal: [
+    // js 中7中基本类型，中只有4中有词法意义
+    ["Number"],
+    ["String"],
+    ["Boolean"],
+    ["Null"],
+    ["RegularExpression"],
+  ],
 };
 
 let hash = {};
@@ -37,12 +48,13 @@ function closure(state) {
   hash[JSON.stringify(state)] = state;
   let queue = [];
   for (let symbol in state) {
+    if (symbol.match(/^\$/)) {
+      return;
+    }
     queue.push(symbol);
   }
   while (queue.length) {
     let symbol = queue.shift();
-    console.log(symbol);
-    // if (syntax[symbol] && !state[symbol]) {
     if (syntax[symbol]) {
       // 终结符判断
       for (let rule of syntax[symbol]) {
@@ -54,12 +66,16 @@ function closure(state) {
           if (!current[part]) current[part] = {};
           current = current[part];
         }
-        current.isRuleEnd = true;
+        current.$reduceSymbol = symbol;
+        current.$reduceLength = rule.length;
       }
     }
   }
 
   for (let symbol in state) {
+    if (symbol.match(/^\$/)) {
+      return;
+    }
     if (hash[JSON.stringify(state[symbol])])
       state[symbol] = hash[JSON.stringify(state[symbol])];
     else closure(state[symbol]);
@@ -70,8 +86,85 @@ let end = {
   isEnd: true,
 };
 let start = {
-  // Program: end,
-  IfStatement: end,
+  Program: end,
 };
 
 closure(start);
+
+function parse(source) {
+  // TODO: 第4节课 debugger
+  let stack = [start];
+  function reduce() {
+    let state = stack[stack.length - 1];
+
+    if (state.$reduceType) {
+      let children = [];
+      for (let i; i < state.$reduceLength; i++) {
+        children.push(stack.pop());
+      }
+      // create a non-terminal symbol and shift it
+      shift({
+        type: state.$reduceType,
+        children: children.reverse(),
+      });
+    } else {
+      throw new Error("unexpected token");
+    }
+  }
+  function shift(symbol) {
+    let state = stack[stack.length - 1];
+
+    if (symbol.type in state) {
+      stack.push(state[symbol.type]);
+    } else {
+      /*reduce non-terminal symbols*/
+      reduce();
+      shift(symbol);
+    }
+  }
+
+  for (let symbol /* terminal symbols*/ of scan(source)) {
+    shift(symbol);
+    console.log(symbol);
+  }
+  return reduce();
+}
+
+let evaluator = {
+  Program(node) {
+    console.log(node);
+    return evaluate(node.children[0]);
+  },
+  StatementList(node) {
+    if (node.children.length === 1) {
+      return evaluate(node.children[0]);
+    } else {
+      evaluate(node.children[0]);
+      return evaluate(node.children[1]);
+    }
+  },
+  Statement(node) {
+    return evaluate(node.children[0]);
+  },
+  VariableDeclaration() {
+    return evaluate(node.children[0]);
+  },
+  EOF() {
+    return null;
+  },
+};
+function evaluate(node) {
+  if (evaluator[node.type]) {
+    return evaluator[node.type](node);
+  }
+}
+
+// ///////////////////////////////////////////////////////
+let source = `
+  let a;
+  a + 1;
+`;
+
+let tree = parse(source);
+
+evaluate(tree);
