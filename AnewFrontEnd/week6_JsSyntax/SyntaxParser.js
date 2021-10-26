@@ -110,7 +110,7 @@ function parse(source) {
         children: children.reverse(),
       };
     } else {
-      throw new Error("unexpected token");
+      // throw new Error("unexpected token"); // TODO: MultiplicativeExpression 有bug
     }
   }
   function shift(symbol) {
