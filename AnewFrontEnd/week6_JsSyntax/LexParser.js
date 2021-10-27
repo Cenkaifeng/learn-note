@@ -58,7 +58,8 @@ export function* scan(str) {
       Token: "<Literal>|<Keywords>|<Identifier>|<Punctuator>",
       Literal:
         "<NumericLiteral>|<BooleanLiteral>|<StringLiteral>|<NullLiteral>",
-      NumericLiteral: /0b[01]+|(?:[1-9][0-9]*|0)(?:\.[0-9]*)?|\.[0-9]+/,
+      NumericLiteral:
+        /0x[0-9a-zA-Z]+|0o[0-7]+|0b[01]+|(?:[1-9][0-9]*|0)(?:\.[0-9]*)?|\.[0-9]+/,
       BooleanLiteral: /true|false/,
       // 下面忽略了反斜杠转译、unicode转译等多现象
       StringLiteral: /\"(?:[^"\n]|\\[\s\S])*\"|\'(?:[^'\n]|\\[\s\S])*\'/,

@@ -181,13 +181,75 @@ let evaluator = {
   NumericLiteral(node) {
     // 十进制计算
     let str = node.value;
-    let l = value.lenght; // 先把长度储存
+    let l = str.length; // 先把长度储存
     let value = 0;
-    while (--l) {
-      value =
-        value * 10 + str.charCodeAt(str.length - l - 1) - "0".charCodeAt(0);
+    let n = 10;
+
+    if (str.match(/^0b/)) {
+      n = 2;
+      l -= 2;
+    } else if (str.match(/^0o/)) {
+      // 八进制
+      n = 8;
+      l -= 2;
+    } else if (str.match(/^0x/)) {
+      // 十六进制
+      n = 16;
+      l -= 2;
     }
+    while (l--) {
+      let c = str.charCodeAt(str.length - l - 1);
+      if (c >= "a".charCodeAt(0)) {
+        // a - f 的转换
+        c = c - "a".charCodeAt(0) + 10;
+      } else if (c >= "A".charCodeAt(0)) {
+        c = c - "A".charCodeAt(0) + 10;
+      } else if (c >= "0".charCodeAt(0)) {
+        c = c - "0".charCodeAt(0);
+      }
+      value = value * n + c;
+    }
+    console.log(value);
     return Number(node.value);
+    //return evaluator[node.type](node);
+  },
+  StringLiteral(node) {
+    // 处理码点、字符集
+    console.log(node.value);
+    let i = 1;
+    let result = [];
+
+    for (let i = 1; i < node.value.length - 1; i++) {
+      // 对字符遍历处理
+      if (node.value[i] === "\\") {
+        // 转译反斜杠
+        ++i;
+        let c = node.value[i];
+        let map = {
+          '"': '"',
+          "'": "'",
+          "\\": "\\",
+          0: String.fromCharCode(0x0000),
+          b: String.fromCharCode(0x0008),
+          f: String.fromCharCode(0x000c),
+          n: String.fromCharCode(0x000a),
+          r: String.fromCharCode(0x000d),
+          t: String.fromCharCode(0x0009),
+          v: String.fromCharCode(0x000b),
+        };
+
+        if (c in map) {
+          console.log(c);
+          result.push(map[c]);
+        } else {
+          result.push(c);
+        }
+      } else {
+        result.push(node.value[i]);
+      }
+    }
+    console.log(result);
+    return result.join("");
   },
   EOF() {
     return null;
@@ -199,12 +261,7 @@ function evaluate(node) {
   }
 }
 
-// /////////////////////////////////////////////////////// client
-
-let source = `
-  10;
-`;
-
-let tree = parse(source);
-// console.log("tree", tree);
-evaluate(tree);
+window.js = {
+  evaluate,
+  parse,
+};
