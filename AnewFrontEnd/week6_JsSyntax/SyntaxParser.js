@@ -92,7 +92,6 @@ let start = {
 closure(start);
 
 function parse(source) {
-  // TODO: 第4节课 debugger
   let stack = [start];
   let symbolStack = [];
   function reduce() {
@@ -104,13 +103,13 @@ function parse(source) {
         stack.pop();
         children.push(symbolStack.pop());
       }
-      // create a non-terminal symbol and shift it
+
       return {
         type: state.$reduceType,
         children: children.reverse(),
       };
     } else {
-      // throw new Error("unexpected token"); // TODO: MultiplicativeExpression 有bug
+      throw new Error("unexpected token");
     }
   }
   function shift(symbol) {
@@ -128,10 +127,8 @@ function parse(source) {
 
   for (let symbol /* terminal symbols*/ of scan(source)) {
     shift(symbol);
-    // console.log(symbol);
   }
-  console.log("???", reduce());
-  reduce();
+  return reduce();
 }
 
 let evaluator = {
@@ -150,8 +147,47 @@ let evaluator = {
   Statement(node) {
     return evaluate(node.children[0]);
   },
-  VariableDeclaration() {
+  VariableDeclaration(node) {
+    console.log("Declare variable", node.children[0]);
+  },
+  ExpressionStatement(node) {
     return evaluate(node.children[0]);
+  },
+  Expression(node) {
+    return evaluate(node.children[0]);
+  },
+  AdditiveExpression(node) {
+    if (node.children.length === 1) {
+      // 此时无加减号
+      return evaluate(node.children[0]);
+    } else {
+      // TODO:
+    }
+  },
+  MultiplicativeExpression(node) {
+    if (node.children.length === 1) {
+      // 此时无乘除
+      return evaluate(node.children[0]);
+    } else {
+      // TODO:
+    }
+  },
+  PrimaryExpression(node) {
+    if (node.children.length === 1) return evaluate(node.children[0]);
+  },
+  Literal(node) {
+    if (node.children.length === 1) return evaluate(node.children[0]);
+  },
+  NumericLiteral(node) {
+    // 十进制计算
+    let str = node.value;
+    let l = value.lenght; // 先把长度储存
+    let value = 0;
+    while (--l) {
+      value =
+        value * 10 + str.charCodeAt(str.length - l - 1) - "0".charCodeAt(0);
+    }
+    return Number(node.value);
   },
   EOF() {
     return null;
@@ -163,12 +199,12 @@ function evaluate(node) {
   }
 }
 
-// ///////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////// client
+
 let source = `
-  let a;
-  a + 1;
+  10;
 `;
 
 let tree = parse(source);
-console.log(tree);
+// console.log("tree", tree);
 evaluate(tree);
