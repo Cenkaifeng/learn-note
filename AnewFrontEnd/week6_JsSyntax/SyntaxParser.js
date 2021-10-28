@@ -37,7 +37,10 @@ let syntax = {
     ["StringLiteral"],
     ["BooleanLiteral"],
     ["NullLiteral"],
-    ["RegularExpression"],
+    // 以下三种都算object literal
+    ["RegularExpressionLiteral"],
+    ["ObjectLiteral"],
+    ["ArrayLiteral"],
   ],
 };
 
