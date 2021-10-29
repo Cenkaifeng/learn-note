@@ -42,6 +42,15 @@ let syntax = {
     ["ObjectLiteral"],
     ["ArrayLiteral"],
   ],
+  ObjectLiteral: [
+    ["{", "}"], // TODO： 与空语句块有冲突
+    ["{", "PropertyList", "}"],
+  ],
+  PropertyList: [["Property"], ["PropertyList", ",", "Property"]],
+  Property: [
+    ["StringLiteral", ":", "AdditiveExpression"],
+    ["Identifier", ":", "AdditiveExpression"],
+  ],
 };
 
 let hash = {};
@@ -135,6 +144,7 @@ function parse(source) {
 }
 
 let evaluator = {
+  // 运行时
   Program(node) {
     console.log(node);
     return evaluate(node.children[0]);
@@ -253,6 +263,16 @@ let evaluator = {
     }
     console.log(result);
     return result.join("");
+  },
+  ObjectLiteral(node) {
+    if (node.children.length === 2) {
+      return {};
+    }
+    if (node.children.length === 3) {
+      let object = new Map();
+      // object.prototype =
+      return object;
+    }
   },
   EOF() {
     return null;

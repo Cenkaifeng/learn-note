@@ -8,7 +8,12 @@
   <script type="module" src="./SyntaxParser.js"></script>
 </head>
 <body>
-  <textarea id='source'>"ab\\bc";</textarea>
+  <textarea id='source'>
+    {
+      a:1,
+      b:2
+    };
+  </textarea>
   <button onclick="js.evaluate(js.parse(document.getElementById('source').value))">run</button>
 </body>
 </html>
