@@ -19,17 +19,55 @@ class Carousel extends Component {
       this.root.appendChild(child);
     }
 
+    let position = 0;
+
     this.root.addEventListener("mousedown", event => {
-      console.log("mousedown");
+      // 坐标逻辑
+      let children = this.root.children;
+      let startX = event.clientX;
 
       let move = event => {
-        console.log("mousemove");
+        // 鼠标移动距离
+        let x = event.clientX - startX;
+
+        let current = position - (x - (x % 500)) / 500;
+
+        for (let offset of [-1, 0, 1]) {
+          // 处理屏幕当前，前一个，后一个元素
+          let pos = current + offset;
+          pos = (pos + children.length) % children.length; // 处理pos 可能是负数的情况
+          console.log("children.length:", children.length);
+          console.log("move pos:", pos); // 这个地方取余还是有概率出现负数
+          if (offset === 0) {
+            position = pos;
+          }
+          children[pos].style.transition = "none";
+          children[pos].style.transform = `translateX(${
+            -pos * 500 + offset * 500 + (x % 500)
+          }px)`; // 位置 * 图片长度 从第 position + 1 张开始
+        }
       };
 
       let up = event => {
-        console.log("mouseup");
+        let x = event.clientX - startX;
+
+        position = position - Math.round(x / 500);
+
+        for (let offset of [
+          0,
+          -Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x)),
+        ]) {
+          // 处理屏幕当前，前一个，后一个元素
+          let pos = position + offset;
+          pos = (pos + children.length) % children.length; // 处理pos 可能是负数的情况
+
+          children[pos].style.transition = "none";
+          children[pos].style.transform = `translateX(${
+            -pos * 500 + offset * 500
+          }px)`; // 位置 * 图片长度 从第 position + 1 张开始
+        }
         document.removeEventListener("mousemove", move);
-        document.removeEventListener("mouseup", move);
+        document.removeEventListener("mouseup", up);
       };
 
       document.addEventListener("mousemove", move);
@@ -71,7 +109,7 @@ let d = [
   "https://static001.geekbang.org/resource/image/bb/21/bb38fb7c1073eaee1755f81131f11d21.jpg",
   "https://static001.geekbang.org/resource/image/1b/21/1b809d9a2bdf3ecc481322d7c9223c21.jpg",
   "https://static001.geekbang.org/resource/image/b6/4f/b6d65b2f12646a9fd6b8cb2b020d754f.jpg",
-  "https://static001.geekbang.org/resource/image/73/e4/730ea9c393def7975deceb48b3eb6fe4.jpg]",
+  "https://static001.geekbang.org/resource/image/73/e4/730ea9c393def7975deceb48b3eb6fe4.jpg",
 ];
 let a = <Carousel src={d} />;
 a.mountTo(document.body);
