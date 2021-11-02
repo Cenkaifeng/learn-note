@@ -20,6 +20,32 @@
       justify-content: center;
       font-weight: bold;
       font-size: 16px;
+      color: white;
+    }
+    .left-demo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: left-move 3s ese infinite alternate;
+    }
+
+    @keyframes left-move {
+      100% {
+        left: 400px;
+      }
+    }
+
+    .transform-demo {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      animation: transform-move 3s ese infinite alternate;
+    }
+
+    @keyframes transform-move {
+      100% {
+        transform:  translateX(400px);
+      }
     }
   </style>
 </head>
