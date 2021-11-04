@@ -143,6 +143,38 @@ function parse(source) {
   return reduce();
 }
 
+class Realm {
+  constructor() {
+    this.global = new Map();
+    this.Object = new Map();
+    this.Object.call = function () {};
+    this.Object_prototype = new Map();
+  }
+}
+
+class EenvironmentRecord {
+  constructor() {
+    this.thisValue;
+    this.variables = new Map();
+    this.outer = null;
+  }
+}
+
+// 需要存储变量的手段，处理 Identifier
+class ExecutionContext {
+  // 执行上下文
+  constructor() {
+    this.lexicalEnvironment = {};
+    this.variableEnvironment = {};
+    this.realm = {
+      global: {},
+      Object: {},
+      Object_prototype: {},
+    };
+  }
+  // LexicalEnvironment: {}; // 词法环境
+}
+
 let evaluator = {
   // 运行时
   Program(node) {
@@ -270,14 +302,41 @@ let evaluator = {
     }
     if (node.children.length === 3) {
       let object = new Map();
+      this.PropertyList(node.children, object);
       // object.prototype =
       return object;
     }
+  },
+  PropertyList(node, object) {
+    if (node.children.length === 1) {
+      this.Property(node.object);
+    } else {
+      this.PropertyList(node.children[0], object);
+      this.Property(node.children[2], object);
+    }
+  },
+  Property(node, object) {
+    let name;
+    if (node.children[0].type === "Identifier") {
+      name = node.children[0].name;
+    } else if (node.children[0].type === "StringLiteral") {
+      name = evaluate(node.children[0]);
+    }
+    object.set(name, {
+      value: evaluate(node.children[2]),
+      writable: true,
+      enumerable: true,
+      configable: true,
+    });
   },
   EOF() {
     return null;
   },
 };
+
+let realm = new Realm();
+let ecs = [new ExecutionContext()];
+
 function evaluate(node) {
   if (evaluator[node.type]) {
     return evaluator[node.type](node);
