@@ -1,77 +1,79 @@
-const fs = require('fs');
-const babylon = require('babylon')
-const traverse = require('babel-traverse').default;
+const fs = require("fs");
+const babylon = require("babylon");
+//Babylon 是Babel 中使用的 JavaScript 解析器。
+const traverse = require("babel-traverse").default;
 // const { create } = require('lodash');
-const path = require('path');
-const babel = require('babel-core');
+const path = require("path");
+const babel = require("babel-core");
 
+let ID = 0; // 因为需要所有文件的依赖，所以需要用id来对所有文件进行标识
 
-
-let ID = 0;
+// 获取entry.js 的依赖
 function createAsset(filename) {
-    const content = fs.readFileSync(filename, 'utf-8');
+  const content = fs.readFileSync(filename, "utf-8");
 
-    const ast = babylon.parse(content, {
-        sourceType: "module"
-    })
+  const ast = babylon.parse(content, {
+    sourceType: "module",
+  });
 
-    const dependencies = [];
-    traverse(ast, {
-        ImportDeclaration: ({node}) => {
-            // console.log(node)
-            dependencies.push(node.source.value)
-        }
-    })
+  const dependencies = [];
+  traverse(ast, {
+    // 第二个参数是对每个节点要做的事
+    ImportDeclaration: ({ node }) => {
+      // console.log(node)
+      dependencies.push(node.source.value);
+    },
+  });
 
-    const id = ID++;
+  const id = ID++;
 
-    const { code } = babel.transformFromAst(ast, null, {
-        presets: ['env']
-    })
+  const { code } = babel.transformFromAst(ast, null, {
+    presets: ["env"],
+  });
 
-    return {
-        id,
-        filename,
-        dependencies,
-        code
-    }
+  return {
+    id,
+    filename,
+    dependencies,
+    code,
+  };
 }
 
 function createGraph(entry) {
-    const mainAsset = createAsset(entry);
-    const allAsset = [mainAsset];
+  const mainAsset = createAsset(entry);
+  const allAsset = [mainAsset];
 
-    for ( let asset of allAsset) {
-        const dirname = path.dirname(asset.filename);
-        
-        asset.mapping = {};
+  for (let asset of allAsset) {
+    const dirname = path.dirname(asset.filename);
 
-        asset.dependencies.forEach(relativePath => {
-            const absolutePath = path.join(dirname, relativePath);
+    asset.mapping = {};
 
-            const childAsset = createAsset(absolutePath);
+    asset.dependencies.forEach(relativePath => {
+      const absolutePath = path.join(dirname, relativePath);
 
-            asset.mapping[relativePath] = childAsset.id;
+      const childAsset = createAsset(absolutePath);
 
-            allAsset.push(childAsset);// 快遍历后就推入新依赖
-        })
-    }
+      asset.mapping[relativePath] = childAsset.id;
 
-    return allAsset;
+      allAsset.push(childAsset); // 快遍历后就推入新依赖
+    });
+  }
+
+  return allAsset;
 }
 
 function bundle(graph) {
-    let modules = '';
+  let modules = "";
 
-    graph.forEach(module => {
-        modules += `${module.id}:[
+  graph.forEach(module => {
+    modules += `${module.id}:[
             function(require, module, exports) {
                 ${module.code}
             },
             ${JSON.stringify(module.mapping)},
-        ],`
-    });
-    const result = `
+        ],`;
+  });
+  const result = `
         (function(modules){
             function require(id) {
                 const [fn, mapping] = modules[id]
@@ -88,11 +90,11 @@ function bundle(graph) {
             require(0);
         })({${modules}})
     `;
-    return result;
+  return result;
 }
 
-const graph = createGraph('./source/entry.js');
+const graph = createGraph("./source/entry.js");
 // console.log(graph)
 const result = bundle(graph);
 
-console.log(result)
+console.log(result);
