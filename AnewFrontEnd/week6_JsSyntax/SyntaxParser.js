@@ -19,17 +19,44 @@ let syntax = {
     ["function", "Identifier", "(", ")", "{", "StatementList", "}"],
   ],
   ExpressionStatement: [["Expression", ";"]],
-  Expression: [["AdditiveExpression"]],
+  Expression: [["AssignmentExpression"]],
+  AssignmentExpression: [
+    ["LeftHandSideExpression", "=", "LogicalORExpression"], // 从这列也了解到，等号是右结合的 , 这边先用Identifier 代替 LeftHandSideExpression
+    ["LogicalORExpression"],
+  ],
+  LogicalORExpression: [
+    ["LogicalANDExpression"],
+    ["LogicalORExpression", "||", "LogicalANDExpression"],
+  ],
+  LogicalANDExpression: [
+    ["AdditiveExpression"],
+    ["LogicalANDExpression", "&&", "AdditiveExpression"],
+  ],
   AdditiveExpression: [
     ["MultiplicativeExpression"],
     ["AdditiveExpression", "+", "MultiplicativeExpression"],
     ["AdditiveExpression", "-", "MultiplicativeExpression"],
   ],
   MultiplicativeExpression: [
-    ["PrimaryExpression"],
-    ["MultiplicativeExpression", "*", "PrimaryExpression"],
-    ["MultiplicativeExpression", "/", "PrimaryExpression"],
+    ["LeftHandSideExpression"],
+    ["MultiplicativeExpression", "*", "LeftHandSideExpression"],
+    ["MultiplicativeExpression", "/", "LeftHandSideExpression"],
   ],
+  LeftHandSideExpression: [["CallExpression"], ["NewExpression"]],
+  CallExpression: [
+    // Call he new 其实是同一个优先级
+    ["MemberExpression", "Arguments"],
+    ["CallExpression", "Arguments"],
+  ], // new a()
+  NewExpression: [["MemberExpression"], ["new", "NewExpression"]], //new a
+  MemberExpression: [
+    ["PrimaryExpression"],
+    ["PrimaryExpression", ".", "Identifier"],
+    ["PrimaryExpression", "[", "Expression", "]"],
+  ], // new a.b()
+  /**
+   * new f()()
+   */
   PrimaryExpression: [["(", "Expression", ")"], ["Literal"], ["Identifier"]],
   Literal: [
     // js 中7中基本类型，中只有4中有词法意义
@@ -61,7 +88,7 @@ function closure(state) {
   let queue = [];
   for (let symbol in state) {
     if (symbol.match(/^\$/)) {
-      return;
+      continue;
     }
     queue.push(symbol);
   }
@@ -86,7 +113,7 @@ function closure(state) {
 
   for (let symbol in state) {
     if (symbol.match(/^\$/)) {
-      return;
+      continue;
     }
     if (hash[JSON.stringify(state[symbol])])
       state[symbol] = hash[JSON.stringify(state[symbol])];
@@ -103,7 +130,7 @@ let start = {
 
 closure(start);
 
-function parse(source) {
+export function parse(source) {
   let stack = [start];
   let symbolStack = [];
   function reduce() {
@@ -142,208 +169,3 @@ function parse(source) {
   }
   return reduce();
 }
-
-class Realm {
-  constructor() {
-    this.global = new Map();
-    this.Object = new Map();
-    this.Object.call = function () {};
-    this.Object_prototype = new Map();
-  }
-}
-
-class EenvironmentRecord {
-  constructor() {
-    this.thisValue;
-    this.variables = new Map();
-    this.outer = null;
-  }
-}
-
-// 需要存储变量的手段，处理 Identifier
-class ExecutionContext {
-  // 执行上下文
-  constructor() {
-    this.lexicalEnvironment = {};
-    this.variableEnvironment = {};
-    this.realm = {
-      global: {},
-      Object: {},
-      Object_prototype: {},
-    };
-  }
-  // LexicalEnvironment: {}; // 词法环境
-}
-
-let evaluator = {
-  // 运行时
-  Program(node) {
-    console.log(node);
-    return evaluate(node.children[0]);
-  },
-  StatementList(node) {
-    if (node.children.length === 1) {
-      return evaluate(node.children[0]);
-    } else {
-      evaluate(node.children[0]);
-      return evaluate(node.children[1]);
-    }
-  },
-  Statement(node) {
-    return evaluate(node.children[0]);
-  },
-  VariableDeclaration(node) {
-    console.log("Declare variable", node.children[0]);
-  },
-  ExpressionStatement(node) {
-    return evaluate(node.children[0]);
-  },
-  Expression(node) {
-    return evaluate(node.children[0]);
-  },
-  AdditiveExpression(node) {
-    if (node.children.length === 1) {
-      // 此时无加减号
-      return evaluate(node.children[0]);
-    } else {
-      // TODO:
-    }
-  },
-  MultiplicativeExpression(node) {
-    if (node.children.length === 1) {
-      // 此时无乘除
-      return evaluate(node.children[0]);
-    } else {
-      // TODO:
-    }
-  },
-  PrimaryExpression(node) {
-    if (node.children.length === 1) return evaluate(node.children[0]);
-  },
-  Literal(node) {
-    if (node.children.length === 1) return evaluate(node.children[0]);
-  },
-  NumericLiteral(node) {
-    // 十进制计算
-    let str = node.value;
-    let l = str.length; // 先把长度储存
-    let value = 0;
-    let n = 10;
-
-    if (str.match(/^0b/)) {
-      n = 2;
-      l -= 2;
-    } else if (str.match(/^0o/)) {
-      // 八进制
-      n = 8;
-      l -= 2;
-    } else if (str.match(/^0x/)) {
-      // 十六进制
-      n = 16;
-      l -= 2;
-    }
-    while (l--) {
-      let c = str.charCodeAt(str.length - l - 1);
-      if (c >= "a".charCodeAt(0)) {
-        // a - f 的转换
-        c = c - "a".charCodeAt(0) + 10;
-      } else if (c >= "A".charCodeAt(0)) {
-        c = c - "A".charCodeAt(0) + 10;
-      } else if (c >= "0".charCodeAt(0)) {
-        c = c - "0".charCodeAt(0);
-      }
-      value = value * n + c;
-    }
-    console.log(value);
-    return Number(node.value);
-    //return evaluator[node.type](node);
-  },
-  StringLiteral(node) {
-    // 处理码点、字符集
-    console.log(node.value);
-    let i = 1;
-    let result = [];
-
-    for (let i = 1; i < node.value.length - 1; i++) {
-      // 对字符遍历处理
-      if (node.value[i] === "\\") {
-        // 转译反斜杠
-        ++i;
-        let c = node.value[i];
-        let map = {
-          '"': '"',
-          "'": "'",
-          "\\": "\\",
-          0: String.fromCharCode(0x0000),
-          b: String.fromCharCode(0x0008),
-          f: String.fromCharCode(0x000c),
-          n: String.fromCharCode(0x000a),
-          r: String.fromCharCode(0x000d),
-          t: String.fromCharCode(0x0009),
-          v: String.fromCharCode(0x000b),
-        };
-
-        if (c in map) {
-          console.log(c);
-          result.push(map[c]);
-        } else {
-          result.push(c);
-        }
-      } else {
-        result.push(node.value[i]);
-      }
-    }
-    console.log(result);
-    return result.join("");
-  },
-  ObjectLiteral(node) {
-    if (node.children.length === 2) {
-      return {};
-    }
-    if (node.children.length === 3) {
-      let object = new Map();
-      this.PropertyList(node.children, object);
-      // object.prototype =
-      return object;
-    }
-  },
-  PropertyList(node, object) {
-    if (node.children.length === 1) {
-      this.Property(node.object);
-    } else {
-      this.PropertyList(node.children[0], object);
-      this.Property(node.children[2], object);
-    }
-  },
-  Property(node, object) {
-    let name;
-    if (node.children[0].type === "Identifier") {
-      name = node.children[0].name;
-    } else if (node.children[0].type === "StringLiteral") {
-      name = evaluate(node.children[0]);
-    }
-    object.set(name, {
-      value: evaluate(node.children[2]),
-      writable: true,
-      enumerable: true,
-      configable: true,
-    });
-  },
-  EOF() {
-    return null;
-  },
-};
-
-let realm = new Realm();
-let ecs = [new ExecutionContext()];
-
-function evaluate(node) {
-  if (evaluator[node.type]) {
-    return evaluator[node.type](node);
-  }
-}
-
-window.js = {
-  evaluate,
-  parse,
-};

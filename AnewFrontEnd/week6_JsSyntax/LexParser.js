@@ -65,8 +65,9 @@ export function* scan(str) {
       StringLiteral: /\"(?:[^"\n]|\\[\s\S])*\"|\'(?:[^'\n]|\\[\s\S])*\'/,
       NullLiteral: /null/,
       Identifier: /[a-zA-Z_$][a-zA-Z0-9_$]*/,
-      Keywords: /if|else|for|function|let|var/,
-      Punctuator: /\+|\,|\?|\:|\{|\}|\.|\(|\=|\<|\+\+|\=\=|\=\>|\*|\)|\[|\]|;/,
+      Keywords: /if|else|for|function|let|var|new/,
+      Punctuator:
+        /\|\||\&\&|\+|\,|\?|\:|\{|\}|\.|\(|\=|\<|\+\+|\=\=|\=\>|\*|\)|\[|\]|;/, // 通常来说，符号越长优先级越高，用于优先匹配，比如 / 肯定比 /= 更靠后
     },
     "g",
     "InputElement"

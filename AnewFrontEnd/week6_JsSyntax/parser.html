@@ -6,14 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script type="module" src="./SyntaxParser.js"></script>
+  <script type="module" src="./evaluator.js"></script>
 </head>
 <body>
   <textarea id='source'>
-    {
-      a:1,
-      b:2
-    };
+    0 || 2;
   </textarea>
-  <button onclick="js.evaluate(js.parse(document.getElementById('source').value))">run</button>
+  <button id="run">run</button>
 </body>
+<script type="module" src="./run.js"></script>
 </html>
