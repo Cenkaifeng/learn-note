@@ -232,9 +232,15 @@ export class Evaluator {
       return this.evaluate(node.children[0]);
     }
     if (node.children.length === 3) {
-      debugger;
-      let obj = this.evaluate(node.children[0]);
-      return obj.get(node.children[1].name);
+      // debugger;
+      let obj = this.evaluate(node.children[0]).get();
+      let prop = obj.get(node.children[2].name);
+      if ("value" in prop) {
+        return prop.value;
+      }
+      if ("get" in prop) {
+        return prop.get.call(obj);
+      }
     }
   }
   Identifier(node) {
