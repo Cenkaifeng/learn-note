@@ -241,14 +241,20 @@ Etag/ if-none-match 如果签名一致则认为文件没有变化
 可以在本地缓存，可以在代理服务器缓存，但是这个缓存要服务器验证才可以使用
 
 这里描述建议使用下面这段
-> 标识为 no-cache 的响应实际上是可以存储在本地缓存区中的。只是在于原始服务器进行新鲜度在验证之 前，缓存不能将其提供给客户端使用。这个首部使用 do-not-serve-from-cache-without-revalidation 这个名字会更恰当一点。
+> 标识为 no-cache 的响应实际上是可以存储在本地缓存区中的。只是在于原始服务器进行新鲜度在验证之 前，缓存不能将其提供给客户端使用。这个首部使用 do-not-serve-from-cache-without-revalidation 这个名字会更恰当一点。 ———— 《HTTP 权威指南》
 
 所以这个头可以理解为，缓存下来了，而且每次都请求验证新鲜度。
 
 - no-store :真正的不缓存，压根没缓存 （不会两个都写）
 
 > 禁止缓存对相应进行复制。缓存通常会像非缓存代理服务器一样，向客户端转发一条no-cache响应，然后删除对象。
+> ———— 《HTTP 权威指南》
 
 优先级：cache-control > Expires
 Etag > last-modified
 
+
+### 问题
+即使有“Last-modified”和“ETag”，强制刷新（Ctrl+F5）也能够从服务器获取最新数据（返回 200 而不是 304），请你在实验环境里试一下，观察请求头和响应头，解释原因
+
+强刷新下的请求头字段 If-None-Match 变成了 Cache-Control: no-cache
