@@ -17,6 +17,7 @@ export function createElement(type, attributes, ...children) {
   }
   return element;
 }
+
 export class Component {
   constructor(type) {}
 
@@ -29,15 +30,18 @@ export class Component {
   mountTo(parent) {
     parent.appendChild(this.root);
   }
+  render() {}
 }
 
 class ElementWrapper extends Component {
   constructor(type) {
+    super();
     this.root = document.createElement(type);
   }
 }
 class TextWrapper extends Component {
   constructor(content) {
+    super();
     this.root = document.createTextNode(content);
   }
 }

@@ -1,5 +1,7 @@
-import { Component, createElement } from "./framework";
-import { Carousel } from "./carousel.js";
+import { createElement } from "./framework.js";
+import { Carousel } from "./Carousel.js";
+import { Timeline, Animation } from "./animation.js";
+// import { Button } from "./Button.js";
 
 // document.body.appendChild(a);
 let d = [
@@ -10,3 +12,6 @@ let d = [
 ];
 let a = <Carousel src={d} />;
 a.mountTo(document.body);
+
+// let tl = new Timeline();
+// tl.start()

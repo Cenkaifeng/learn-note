@@ -56,7 +56,7 @@ https 做了三件事
 
 - CA认证之后...
 
-> 淘宝没有使用RSA 用的DHCHE算法， cipher suit: TLS(协议)_ECDHE(秘钥交换协议)_RSA(签名算法)_WITH_AES_256_CBC(对称加密算法)_SHA(消息认证码)
+> 淘宝没有使用RSA 用的 DHCHE算法， cipher suit: TLS(协议)_ECDHE(秘钥交换协议)_RSA(签名算法)_WITH_AES_256_CBC(对称加密算法)_SHA(消息认证码)
 
 下面是DHCHE 的过程
 - 客户端给服务端传递了一个随机数
