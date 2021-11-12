@@ -1,3 +1,5 @@
+import { linear } from "./ease";
+
 const TICK = Symbol("tick");
 const TICK_HANDLER = Symbol("tick-handler");
 const ANIMATIONS = Symbol("animations");
@@ -7,11 +9,16 @@ const PAUSE_TIME = Symbol("pause-time");
 
 export class Timeline {
   constructor() {
+    this.start = "Inited"; // 组件状态管理
     this[ANIMATIONS] = new Set();
     this[START_TIME] = new Map();
   }
 
   start() {
+    if (this.state !== "Inited") {
+      return;
+    }
+    this.state = "Started";
     let startTime = Date.now();
     this[PAUSE_TIME] = 0;
     this[TICK] = () => {
@@ -19,15 +26,18 @@ export class Timeline {
       for (let animation of this[ANIMATIONS]) {
         let t;
         if (this[START_TIME].get(animation) < startTime) {
-          t = now - startTime - this[PAUSE_TIME];
+          t = now - startTime - this[PAUSE_TIME] - animation.delay;
         } else {
           t = now - this[START_TIME].get(animation) - this[PAUSE_TIME];
         }
-        if (animation.duraion > t) {
+        if (animation.duraion < t) {
           this[ANIMATIONS].delete(animation);
           t = animation.duration; // 用t 限制 t 防止超出范围
         }
-        animation.receive(t);
+
+        if (t > 0) {
+          animation.receive(t);
+        }
       }
       this[TICK_HANDLER] = requestAnimationFrame(this[TICK]);
     };
@@ -35,16 +45,33 @@ export class Timeline {
   }
 
   pause() {
+    if (this.state !== "Started") {
+      return;
+    }
+    this.state = "Paused";
     this[PAUSE_START] = Date.now();
     cancelAnimationFrame(this[TICK_HANDLER]);
   }
 
   resume() {
+    if (this.state !== "Paused") {
+      return;
+    }
+    this.state = "Started";
     this[PAUSE_TIME] += Date.now() - this[PAUSE_START];
     this[TICK]();
   }
 
-  reset() {}
+  reset() {
+    this.pause();
+    this.state = "Inited";
+    let startTime = Date.now();
+    this[PAUSE_TIME] = 0;
+    this[PAUSE_START] = 0;
+    this[ANIMATIONS] = new Set();
+    this[START_TIME] = new Map();
+    this[TICK_HANDLER] = null;
+  }
 
   add(animation, startTime) {
     if (arguments.length < 2) {
@@ -67,6 +94,8 @@ export class Animation {
     timingFunction,
     template
   ) {
+    timingFunction = timingFunction || (v => v);
+    template = template || (v => v);
     // Object.assign(this, arguments)
     this.object = object;
     this.property = property;
@@ -79,8 +108,9 @@ export class Animation {
   }
   receive(time) {
     let range = this.endValue - this.startValue;
+    let progress = this.timingFunction(time / this.duraion);
     this.object[this.property] = this.template(
-      this.startValue + (range * time) / this.duraion
+      this.startValue + range * progress
     );
   }
 }
