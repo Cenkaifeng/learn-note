@@ -60,3 +60,22 @@
 #### Coding
 
 1. 给你一段数据结构，将其转换为真实的dom
+
+#### Coding
+
+1. 具体如何让一个对象可遍历呢？
+
+2. JSON.stringify 会忽略 symbol? 除了这个，还会忽略什么呢？
+
+3. 如果对象有循环引用，可以用 JSON.stringify 来处理吗？
+
+4. 确定是 stringify 会报错，而不是 parse 会报错吗？
+
+5. 实现一个深拷贝
+
+### 4. 平时都如何判断对象类型的呀？，分别适合哪些场景呢？
+
+* typeof
+* instanceof
+* Object.prototype.toString.call(obj)
+* Array.isArray
