@@ -26,7 +26,7 @@ render
 
 ###### 面试题x：
 在vue-cli新建项目的时候，runtime only or runtime + compiler ,这两个版本有什么区别？分别在哪个文件里做了区分，到底有何区别？
-
+https://www.jianshu.com/p/466510d84e36
 #### core: vue核心代码
 vue实例
 内置组件
@@ -188,3 +188,4 @@ ps: 小技巧，从模块返回值开始往回找。
 
 #### dom diff
 
+#### 了解 computed 缓存的实现和原理么？

@@ -14,3 +14,5 @@ f(state) -> View
 key: 特殊 attribut 主要用在 Vue 的Vdom 算法， 在新旧 nodes 对比时辨识 VNodes, 如果不使用key, Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改、复用相同类型元素的算法。
 
 vue 会判断 sameNode, 假如你删掉第一个，有可能是最后一个被删掉了。
+
+// TODO: vue 相关面试题合集
