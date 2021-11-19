@@ -72,7 +72,7 @@ vm是当前实例
 
 1. $set
    1. 会调用 set 方法，会把对象遍历一般。
-2. $delete
+2. $deletegit
 3. $watch: 新建watcher 实例，对特定目标进行观察
    1. watcher
    2. 依赖搜集
