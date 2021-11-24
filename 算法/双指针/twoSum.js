@@ -26,6 +26,7 @@ var twoSum = function (numbers, target) {
   let sum = numbers[i] + numbers[j]; // 初始化
   while (i < j && sum != target) {
     if (sum < target) {
+      // 指针移动
       i++;
     } else {
       j--;
