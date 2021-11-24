@@ -136,7 +136,7 @@ Q:data 函数如果没有返回值会报错吗？
 A:会（框架报错）
 
 ##### stateMixin
-// TODO: 为什么不建议使用 $set? 会在什么场景需要使用？ 替代方案是什么？
+TODO: 为什么不建议使用 $set? 会在什么场景需要使用？ 替代方案是什么？
 $set 
 $delete
 $watch
@@ -223,13 +223,64 @@ parser
 
 
 
-## 深入原理
+
+## Part2 深入原理
 
 #### 数据驱动
 
+```js
+// 我们首先在实例化过程中会先做实例挂载
+if(vm.$options.el) {
+  vm.$mount(vm.$options.el)// 这里的el 一般来说是实例化里的 #app
+}
+```
+
 ###### 面试题6： vue 的实例为何不能挂载在body或者html根节点上，如果挂了会报错吗？
+会报错，非生产环境下会报错：
+> Do not mount Vue to <html> or <body> - mount to normal elements instead.
+因为后续vnode 节点更新是对原本挂载节点的替换，如果挂载在根节点会对原本节点的结构造成破坏。
+
+**$mount 做了什么？**
+
+简单来讲就是，把实例上的 `render` 或者 `template` 或者是 `el` 节点统一转化成render方法然后挂载在 `options` 上。
+**SFC 最后会汇合成render方法**
+`entry-runtime-with-compiler.js`
+
+```js
+if(!options.render){...
+  // 里面还有 if(template) 这种细节判断
+  ...
+  const { render, staticRenderFns} = compileToFunctions(template, {
+    ...
+  }, this)
+  options.render = render
+  options.staticRenderFns = staticRenderFns
+}
+```
+[!-_- 懒得写了 上这里找吧](https://github.com/vuejs/vue/blob/dev/src/platforms/web/entry-runtime-with-compiler.js)
+
+延伸：runtime/index.js 里有 Vue.prototype.$mount 方法，为什么要在 `entry-runtime-with-compiler.js` 覆写一份？
+因为不同的模式下，前者能被 runtime only 这个模式直接使用 主要用了 `mountComponent`。
+
+同样的设计方式可以在未来项目设计、多平台多端设计做类似的抽象，分基础方法和复杂方法。
+
 
 ###### 面试题7： beforeMount 和 mounted 之间做了什么？
+
+```js
+// call beforeMount
+new Watcher();
+// call mounted
+```
+Watcher 内回调使用了 `updateComponent` 其中使用了两个方法
+- `vm._update`: 更新、生成 dom
+- `vm._render`: 生成vdom
+```js
+updateComponent = () => {
+  vm._update(vm._render(), hydrating);// 这里可以看出用了虚拟vdom作为参数生成实际dom
+}
+```
+
 
 ###### 面试题： 什么是虚拟节点，简书虚拟dom构成？vue 和 react 虚拟dom的区别？
 - 虚拟节点是一种对真实dom的抽象描述，吧dom的一些真实定义做了描述。  
