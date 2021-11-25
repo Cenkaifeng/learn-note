@@ -1,4 +1,4 @@
-# Vue.js v2.x核心模块源码解析 - 云隐
+# Vue.js v2.x核心模块源码解析 - 云隐主讲
 
 [](./1634991014692.jpg);
 ###### 面试题1：
@@ -226,7 +226,7 @@ parser
 
 ## Part2 深入原理
 
-#### 数据驱动
+### 2-1：数据驱动、数据更新
 
 ```js
 // 我们首先在实例化过程中会先做实例挂载
@@ -264,16 +264,30 @@ if(!options.render){...
 
 同样的设计方式可以在未来项目设计、多平台多端设计做类似的抽象，分基础方法和复杂方法。
 
+然后底层还是调用 `createElement` 唯一区别是模板调用最后传参 false 手写 render 后面是 true
+```js
+// https://github.com/vuejs/vue/blob/dev/src/core/instance/render.js
+vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
+
+vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
+// createElement 内对子节点也做了一些规范，然后根据节点打tag.... new vNode
+// 内置节点直接创建 vNode 已注册组件名用createComponents 创建组件，未知：创建一个位置标签类型（vNode)
+```
 
 ###### 面试题7： beforeMount 和 mounted 之间做了什么？
 
 ```js
+// 接着前面调用$mount() 挂载后
 // call beforeMount
 new Watcher();
 // call mounted
 ```
 Watcher 内回调使用了 `updateComponent` 其中使用了两个方法
-- `vm._update`: 更新、生成 dom
+- `vm._update`: 更新、生成 dom （写在` lifecycle.js` 中，因为整个生命周期中会不断调用）
+  - `vm.__patch__` : `patch.js` 中有接个关键步骤
+    - createElm : 生成实际dom
+      - native dom createElement (调用原生，生成实际dom)
+    - createChildren 遍历子节点（每个子节点遍历的调用createElm）ps. 这里会执行 `invokeCreateHooks(vnode, insertedVnodeQueue)` 在生成dom后会触发这个queue里的所有东西，所有 nextTick 里的东西就是这个时候被调用的(callbackQueue)
 - `vm._render`: 生成vdom
 ```js
 updateComponent = () => {
@@ -282,31 +296,100 @@ updateComponent = () => {
 ```
 
 
-###### 面试题： 什么是虚拟节点，简书虚拟dom构成？vue 和 react 虚拟dom的区别？
-- 虚拟节点是一种对真实dom的抽象描述，吧dom的一些真实定义做了描述。  
+###### 面试题： 什么是虚拟节点，简述一下虚拟dom构成？vue 和 react 虚拟dom的区别？
+1. 虚拟节点是一种对真实dom的抽象描述，把dom的一些真实定义做了描述。  
+2. 这些描述性的东西，类似metadate ,有自己的规范
 
-ps: 小技巧，从模块返回值开始往回找。
+ps: 源码阅读小技巧，从模块返回值开始往回找。
 
-#### 组件化
+
+
+### 2-2：组件化
 
 - 组件渲染
+  - createComponet `core/vdom/create-components.js`
+    - new vNode(... 中间很多特异化参数)
+
 - 组件配置
+  - mergeOptions
+  - initInternalComponent 内部组件的初始化
+  ```js
+  //https://github.com/vuejs/vue/blob/dev/src/core/instance/init.js
+  
+  vm._isVue = true
+  if (options && options._isComponent) {
+    initInternalComponent(vm, options) 
+  } else {
+    vm.$options = mergeOptions(
+      resolveConstructorOptions(vm.constructor),
+      options || {},
+      vm
+    )
+  }
+  // 具体可以看 core/util/options.js
+  ```
 
+### 2-3：响应式原理
 
-#### 响应式原理
+###### 面试题: 对于被监听数据他的`__ob__`是在什么时候被加上的？
+在执行 Observer 方法时候、或者说 defineReactive 的时候添加的
+```js
+//https://github.com/vuejs/vue/blob/dev/src/core/instance/observer/index.js G:46
+def(value, '__ob__', this) // def 也是一个 defineReactive 简化版的
+```
+作用是：告诉我们当前的组件，这个数据是被监听了的。
+
 - 依赖收集
   1. initState => initProps/ initData;
-  2. defineReactive 
-     1. 
-面试题: 对于被监听数据他的`__ob__`是在什么时候被加上的？
+  2. defineReactive 可以看做是对 defineProperty 高等级的封装 
+    ```js
+    //https://github.com/vuejs/vue/blob/dev/src/core/instance/observer/index.js G:135
+    ```
+     1. 依赖：new Dep() // dependencies
+     2. 观察：observe `let childOb = !shallow && observe(val)` 
+      - new Watcher
+        - pushTarget()
+        - depend => addDep
+          - 把 this 挂载到 Dep 的 subs 列表
+          - 通过 dependArray 把子元素不断挂载监听
+
+Dep 如何维护全局唯一性的？
+用静态属性 target
 
 - 派发更新
+  - dep.notify() // defineReactive 中的set
+    - 执行subs 中每个watcher.update()
+    ```js
+      /**
+       * Subscriber interface.
+       * Will be called when a dependency changes.
+       */
+      update () {
+        /* istanbul ignore else */
+        if (this.lazy) {
+          this.dirty = true
+        } else if (this.sync) {
+          this.run()
+        } else {
+          queueWatcher(this)
+        }
+      }
+    ```
+
+  - 派发更新本质是调用 queueWatcher
+    他不会在每个节点更新的时候立即更新，他会把需要更新的若干更新放到队列里，是vue中一个很厉害的优化点。
+    最后指向 vm._update() //形成循环
 
 
 #### dom diff
 
+
+
 #### 了解 computed 缓存的实现和原理么？
 
+#### 为什么不建议 v-key 使用 index?
+https://juejin.cn/post/6844903577215827982
+key的作用主要是为了高效的更新虚拟DOM。另外vue中在使用相同标签名元素的过渡切换时，也会使用到key属性，其目的也是为了让vue可以区分它们，否则vue只会替换其内部属性而不会触发过渡效果。
 
 #### 补充：
 
@@ -324,3 +407,5 @@ ps: 小技巧，从模块返回值开始往回找。
 #### 考点拓展：
 
 1. computed & watch 监听了什么，做了什么事？
+
+TODO： 根据文档再走一遍源码流程。

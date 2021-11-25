@@ -5,13 +5,15 @@
  * @param {number} k
  * @return {number[]}
  */
-var maxSlidingWindow = function (nums, k) {
+function maxSlidingWindow(nums, k) {
   let wl = 0;
   let wr = wl + k - 1;
   let res = [];
   while (wr <= nums.length - 1) {
     let focus = [];
-    if (wr > nums.length - 1) break; // 窗口终止
+    if (wr > nums.length - 1) {
+      break;
+    } // 窗口终止
     for (let i = wl; i <= wr; i++) {
       focus.push(nums[i]);
       if (i === wr) {
@@ -22,4 +24,4 @@ var maxSlidingWindow = function (nums, k) {
     wr++;
   }
   return res;
-};
+}
