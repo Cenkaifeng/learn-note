@@ -98,3 +98,35 @@ function makeListNode(arr) {
 
   return res;
 }
+
+function addTwoNumbers(l1, l2) {
+  //  俩指针分别指向两个链表，同时移动俩指针
+  let cur1 = l1;
+  let cur2 = l2;
+  let left = 0; // 其他题解里的 pre listNode 具体可以看官方题解
+  let head;
+  let result = (head = new ListNode());
+  while (cur1 != null || cur2 != null) {
+    let count1 = cur1 ? cur1.val : 0;
+    let count2 = cur2 ? cur2.val : 0;
+    let total = count1 + count2 + left;
+    left = total >= 10 ? 1 : 0; // 对两个指针指向的数求和，判断和10的大小，记录进位
+    result.next = new ListNode(total % 10);
+    result = result.next;
+
+    if (cur1 != null && cur2 != null) {
+      // 分别判断两个链表是否已经到结尾，根据是否结尾进行移动对应链表的指针
+      cur1 = cur1.next;
+      cur2 = cur2.next;
+    } else if (cur1 == null) {
+      cur2 = cur2.next;
+    } else {
+      cur1 = cur1.next;
+    }
+  } // 边界判断最后是否还有进位，如果有则追加进位节点
+  if (left) {
+    result.next = new ListNode(left);
+  }
+
+  return head.next;
+}
