@@ -386,6 +386,7 @@ Dep 如何维护全局唯一性的？
 
 
 #### 了解 computed 缓存的实现和原理么？
+https://juejin.cn/post/6844904120290131982
 
 #### 为什么不建议 v-key 使用 index?
 https://juejin.cn/post/6844903577215827982
@@ -409,3 +410,5 @@ key的作用主要是为了高效的更新虚拟DOM。另外vue中在使用相�
 1. computed & watch 监听了什么，做了什么事？
 
 TODO： 根据文档再走一遍源码流程。
+
+TODO： BOBY 深入源码上、下
