@@ -1,4 +1,5 @@
 function binarySearch(arr, value, start = 0, end = arr.length) {
+  // 这个解法LeetCode过不了，会超时
   if (start >= end) {
     return start;
   }
@@ -20,7 +21,7 @@ function sort(list, val) {
   let left = 0,
     right = list.length;
   while (left < right) {
-    let mid = (right + left) >> 1;
+    let mid = (right + left) >> 1; // 这个位运算有点骚，相当于 Math.floor() 的效果了
     let value = list[mid];
     if (value === val) {
       return mid;
@@ -32,3 +33,21 @@ function sort(list, val) {
   }
   return left + 1;
 }
+// 双指针 + 二分while解
+var search = function (nums, target) {
+  let left = 0;
+  let right = nums.length - 1; //
+  while (left <= right) {
+    let mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] > target) {
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else {
+      return mid;
+    }
+  }
+
+  return -1;
+};
