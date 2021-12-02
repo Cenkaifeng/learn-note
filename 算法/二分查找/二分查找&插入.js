@@ -51,3 +51,26 @@ var search = function (nums, target) {
 
   return -1;
 };
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var searchInsert = function (nums, target) {
+  // 边界处理
+  if (target < nums[0]) return 0;
+  if (target > nums[nums.length - 1]) return nums.length;
+  let left = 0;
+  let right = nums.length - 1;
+  let mid;
+  while (left < right) {
+    mid = (left + right) >> 1;
+    if (nums[mid] == target) {
+      return mid;
+    } else {
+      nums[mid] > target ? (right = mid) : (left = mid + 1);
+    }
+  }
+
+  return left;
+};
