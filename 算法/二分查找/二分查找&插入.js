@@ -55,7 +55,8 @@ var search = function (nums, target) {
  * @param {number[]} nums
  * @param {number} target
  * @return {number}
- */
+  剑指Offer II 68
+*/
 var searchInsert = function (nums, target) {
   // 边界处理
   if (target < nums[0]) return 0;
