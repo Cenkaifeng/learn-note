@@ -1,4 +1,3 @@
-// TODO;
 /**
  * 求最长上升子序列的长度
  * LeetCode：300.
@@ -25,9 +24,38 @@ var lengthOfLIS = function (nums) {
     }
   }
   return Math.max(...dp);
-
-  // 2. 贪心 + 二分查找
 };
+// 2. 贪心 + 二分查找 // 执行效率上比动态规划的要高
+// 时间复杂度O(nlogn)，n为nums的长度，每次二分查找需要logn，所以是总体的复杂度是O(nlogn)。空间复杂度是O(n) ,tail数组的开销
+const lengthOfList = function (nums) {
+  let n = nums.length;
+  if (n <= 1) return n;
+
+  let tail = [nums[0]]; // 存放最长上升子序列数组
+  for (let i = 0; i < n; i++) {
+    if (nums[i] > tail[tail.length - 1]) {
+      // 当nums 整的元素比tail中最后一个大时，可以push进tail
+      tail.push(nums[i]);
+    } else {
+      // 否则进行二分查找
+      let l = 0;
+      let r = tail.length - 1; // 以tail 末值作为右边界
+
+      while (l < r) {
+        let mid = (l + r) >> 1; // 取中值
+        if (tail[mid] < nums[i]) {
+          l = mid + 1; // 移动指针
+        } else {
+          r = mid;
+        }
+      }
+      // 将nums[i] 放置到合适位置，此时前面的元素都比nums[i] 小
+      tail[l] = nums[i];
+    }
+  }
+  return tail.length;
+};
+
 /**
  * 求多个最长上升子序列个数
  * LeetCode：673.
