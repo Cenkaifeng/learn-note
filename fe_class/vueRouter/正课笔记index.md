@@ -127,10 +127,11 @@ About
 
 1. [组件] 前一个组件的beforeRouteLeave
 2. [全局] router.beforeEach
-3. [路由参数变化] beforeRouteUpdate
-4. [配置文件里] beforeEnter
+3. [路由参数变化] beforeRouteUpdate (如果有路由参数的变化)
+4. [配置文件里] (下一个组件的) beforeEnter
 5. [组件] beforeRouteEnter
 6. [全局] afterEach
+
 
 ## scollBehavior生效的条件
 
@@ -146,7 +147,7 @@ About
 3. [路由参数变化] beforeRouteUpdate
 4. [配置文件里] beforeEnter
 5. [组件] beforeRouteEnter
-6. [全局] agterEach
+6. [全局] afterEach
 // watch 最后
 
 ## scollBehavior生效的条件
