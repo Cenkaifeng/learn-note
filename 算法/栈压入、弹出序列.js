@@ -9,12 +9,12 @@
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
 
-function validateStackSequences(pushed, popped) {
+var validateStackSequences = function (pushed, popped) {
   let stack = [];
-
-  for (let i = 0, len = pushed; i < len; ) {
-    stack.push(pushed[i]);
-
+  let i = 0;
+  for (const item of pushed) {
+    stack.push(item);
+    console.log(stack);
     while (stack.length > 0 && stack[stack.length - 1] === popped[i]) {
       // 如果栈不为空，判断栈顶和 popped 值
       stack.pop();
@@ -23,4 +23,4 @@ function validateStackSequences(pushed, popped) {
   }
 
   return stack.length > 0 ? false : true;
-}
+};
