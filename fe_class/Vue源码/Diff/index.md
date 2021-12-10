@@ -1,3 +1,5 @@
+# Vue 的 Diff 原理
+
 1. 为什么需要 diff? 
 
 
@@ -68,3 +70,4 @@ createElement()
 f(oldVnodeTree, newVnodeTree, parent) -> 调度 ？ -> view
 
 // TODO: vue 相关面试题合集
+// TODO: 课件复习
