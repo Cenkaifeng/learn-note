@@ -47,7 +47,7 @@ var addTwoNumbers = function (l1, l2) {
 // 来源：力扣（LeetCode）
 // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
-// 我的解法到测试用例 1566 就会崩，涉及到大数位运算
+// 我的解法到测试用例   就会崩，涉及到大数位运算
 /**
  * Definition for singly-linked list.
  * function ListNode(val, next) {
