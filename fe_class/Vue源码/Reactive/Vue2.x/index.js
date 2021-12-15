@@ -58,6 +58,10 @@ class Dep {
   }
 }
 
+// html -> <h1>{{ count }}</h1> -> compiler 发现有个 {{ count }}
+// -> new Watcher(vm, 'count', () => renderToView(count)) -> count getter 被触发
+// -> dep.add(watcher 实例) -> this.count++ -> count setter -> dep.notify
+// -> () => renderToView(count) -> 页面改变
 class Watcher {
   constructor(vm, key, cb) {
     // 一般来说，watcher 我们会在 compiler 的时候调用

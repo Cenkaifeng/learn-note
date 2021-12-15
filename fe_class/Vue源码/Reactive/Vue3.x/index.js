@@ -36,14 +36,22 @@ function trigger(target, key) {
   if (!depsMap) return;
   depsMap.get(key).forEach(e => e && e());
 }
+// 这个 demo 中的流程
+// effect 执行 -> activeEffect 有值了（更新页面）
+// -> 触发 getter -> track()
+// -> activeEffect 存储依赖 -> setter (count.value++) -> trigger -> activeEffect() -> 更新页面
 
+// 总结一下发布订阅模型：
+// 收集副作用 -> 收集的时间(getter) -> 触发副作用执行(setter)
 function effect(fn, options = {}) {
+  // effect 做的事就相当于 2.x 中的 compiler + watcher,只是本例子用 render 直接把模板渲染了
   // 看起来有点绕，但是实际上就是 声明 1. __effect; 2. 把 __effect 挂在 activeEffect 上; 然后执行 fn
   const __effect = function (...arg) {
     activeEffect = __effect;
     return fn(...arg);
   };
   if (!options.lazy) {
+    // 没有lazy 立即执行 , 除此之外源码里还有 derty 等边界状态的处理
     __effect();
   }
   return __effect;
@@ -58,7 +66,7 @@ export function reactive(data) {
 
   return new Proxy(data, {
     get(target, key, receiver) {
-      // 反射 target[key] -> 继承关系情况下有坑 :FIX
+      // :FIXME 反射 target[key] -> 继承关系情况下有坑
       const ret = Reflect.get(target, key, receiver);
       track(target, key); // 依赖收集
       return isObject(ret) ? reactive(ret) : ret;
