@@ -27,12 +27,16 @@ f(state) -> View
 
 补充: 不管是 Vue 还是 React , 在写 v-for 这类遍历的时候一定是不建议用下标来做 key 的
 
+vue 会判断 sameNode, 假如你删掉第一个，有可能是最后一个被删掉了。
+[参考](Vue2.x核心模块源码/README.md/为什么不建议 v-key 使用 index?)
+
+
 ## 这里插入一条说烂了的面试题，v-key 的作用是什么？
 
 key: 特殊 attribut 主要用在 Vue 的Vdom 算法， 在新旧 nodes 对比时辨识 VNodes, 如果不使用key, Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改、复用相同类型元素的算法。
 
 
-vue 会判断 sameNode, 假如你删掉第一个，有可能是最后一个被删掉了。
+
 
 
 ## 虚拟 DOM 5 步创建虚拟dom diff 方法
