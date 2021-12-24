@@ -1,0 +1,3 @@
+test scp command
+scp -P 8999 -r ./* jervis@127.0.0.1:/home/jervis/          
+jervis@127.0.0.1's password: 
