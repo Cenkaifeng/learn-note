@@ -66,7 +66,7 @@ class PromiseQueue {
     if (this.currentCount === this.concurrency) {
       return;
     }
-
+    this.currentCount++;
     const { fn } = this.pendingList
       .sort((a, b) => b.priority - a.priority)
       .shift();
