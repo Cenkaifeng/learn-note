@@ -85,11 +85,11 @@ function inorderTraversal(root, res = []) {
   return res;
 }
 
-// TODO: 压栈后序
+//  压栈后序
 // 入栈 左 -> 右
 // 出栈 中 -> 右 -> 左 结果翻转
 
-后序遍历: var postorderTraversal = function (root, res = []) {
+var postorderTraversal = function (root, res = []) {
   if (!root) return res;
   const stack = [root];
   let cur = null;
@@ -101,3 +101,9 @@ function inorderTraversal(root, res = []) {
   } while (stack.length);
   return res.reverse();
 };
+// Morris 中序
+// 见题解 https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/er-cha-shu-de-zhong-xu-bian-li-by-leetcode-solutio/
+function inorderTraversalByMorris(root) {
+  const res = [];
+  let predecessor = null; // 指针x 的前驱节点 x 为当前遍历到的节点
+}
