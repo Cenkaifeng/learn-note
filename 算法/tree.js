@@ -34,6 +34,11 @@ function traverser(node, vec) {
 }
 
 //  压栈法，
+
+/*Tips:栈是一种 先进后出的结构，出栈顺序为左，中，右
+那么入栈顺序必须调整为倒序，也就是 右，中，左
+同理，如果是前序遍历，入栈顺序为 右，左，中；后序遍历，入栈顺序中，右，左
+*/
 // 前序
 
 // 入栈顺序 右 —> 左
@@ -103,7 +108,51 @@ var postorderTraversal = function (root, res = []) {
 };
 // Morris 中序
 // 见题解 https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/er-cha-shu-de-zhong-xu-bian-li-by-leetcode-solutio/
+
+/**
+ *
+ * Morris 伪代码逻辑
+ *
+ * x not left child
+ *  x 加入 res
+ *  x = x.right
+ * x has left child. 找 predecessor
+ *  predecessor right 为 null , 指向 x, x = x.left
+ *  predecessor right 不为空， x 加入 res, x = x.right
+ */
 function inorderTraversalByMorris(root) {
   const res = [];
-  let predecessor = null; // 指针x 的前驱节点 x 为当前遍历到的节点
+  let predecessor = null;
+  //predecessor 指针x 的前驱节点
+  //x 为当前遍历到的节点root
+
+  while (root) {
+    if (root.left) {
+      // 作为前驱节点，就是 x 左移的一步
+      predecessor = root.left;
+
+      // 节点向左走一步，然后不断向右
+      while (predecessor.right && predecessor.right !== root) {
+        predecessor = predecessor.right;
+      }
+
+      // 让 predecessor 的右指针指向 root (x), 继续遍历左树
+
+      if (!predecessor.right) {
+        predecessor.right = root;
+        root = root.left;
+      } else {
+        // 左树访问完了，我们要断开连接
+        res.push(root.val);
+        predecessor.right = null;
+        root = root.right;
+      }
+    } else {
+      // 没有左子树直接访问右
+      res.push(root.val);
+      root = root.right;
+    }
+  }
+
+  return res;
 }
