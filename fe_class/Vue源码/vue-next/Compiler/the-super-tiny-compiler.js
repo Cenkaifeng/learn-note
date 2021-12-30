@@ -59,6 +59,16 @@ function tokenizer(input) {
 }
 
 function traverser() {
+  /**
+   * 允许我们遍历一个数组，并调用接下来的 tarverseNode
+   * @param {*} array
+   * @param {*} parent
+   */
+  function tarverseArray(array, parent) {
+    array.forEach(child => {
+      traverseNode(child, parent);
+    });
+  }
   function traverseNode(node, parent) {
     let methods = visitor[node.type];
     // DFS 访问器 进
@@ -66,10 +76,22 @@ function traverser() {
       methods.enter(node, parent);
     }
 
-    switch (
-      node.type
-      // TODO: 分治递归
-    ) {
+    switch (node.type) {
+      // TODO: 分治递归 可以理解为词法状态机
+      case "Program":
+        tarverseArray(node.body, node);
+        break;
+
+      case "CallExxpression":
+        tarverseArray(node.params, node);
+        break;
+
+      case "NumberLiteral":
+      case "StringLiteral":
+        break;
+
+      default:
+        throw new TypeError(node.type);
     }
 
     if (methods && methods.exit) {
@@ -115,7 +137,19 @@ function parser(tokens) {
   return ast;
 }
 
-function transformer() {}
+// tansformer 接受 lisp 抽象语法树对象，
+function transformer(ast) {
+  let newAst = {
+    type: "Program",
+    body: [],
+  };
+
+  ast._context = newAst.body;
+
+  traverser(ast, {
+    // 这里是transformer 的真正逻辑，讲 Lisp 转换成目标语法规则
+  });
+}
 
 function codeGenerator() {}
 
