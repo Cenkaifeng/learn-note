@@ -10,7 +10,7 @@
 
 3. 节流
 
-4. eatMan
+4. eatMan [Jump to demo](./eatMan.js)
 
 5. 实现一个发布订阅
 
@@ -21,7 +21,21 @@
 8. 字符串替换
 ## api 实现类
 
-9. 深拷贝浅拷贝
+1. 实现一个new
+  new 的优先级 [ref](https://www.jianshu.com/p/412ccd8c386e)
+```js
+function foo() {
+    getName = function () { console.log (1); };
+    return this;
+}
+foo.getName = function () { console.log(2);};
+foo.prototype.getName = function () { console.log(3);};
+var getName = function () { console.log(4);};
+function getName () { console.log(5);}
+new foo.getName ();      // 第一种       
+new foo().getName ();         // 第二种
+new new foo().getName ();       // 第三种
+```
 
 
 
@@ -33,6 +47,16 @@
 2. 完全无延迟的定时器
 
 3. 0.1 + 0.2 = 0.3 怎么处理
+```js
+//JavaScript为此引入了Math.abs。这将帮助你比较两个数字之间的绝对差。
+
+function almostEqual(numOne, numTwo) {
+  return Math.abs( numOne - numTwo ) < Number.EPSILON;
+}
+console.log(almostEqual(0.1 + 0.2, 0.3));
+```
+
+4. 深拷贝浅拷贝 [Jum to demo](./deepClone.js)
 
 ## 事件循环类
 
