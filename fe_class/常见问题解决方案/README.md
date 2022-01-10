@@ -171,3 +171,10 @@ startOffset, 通过css来控制（偏移）
 startOffset = scrollTop - (scrollTop % itemSize);
 
 ### 无限滚动
+
+
+// 疑问，虚拟列表读取 scrollTop 数据是需要不断引发回流的操作，那么怎么处理这种情况？
+
+针对渲染问题，其实是可以通过调整预估尺寸、overscan 大小来调整的，如果有图文的话，还可以加上 scrolling placeholder。性能肯定还是比不上 native 的
+
+还有缓存 scrollTop 异步读取 相关数据
