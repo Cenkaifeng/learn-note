@@ -7,10 +7,10 @@ function currying(fn, ...args) {
     allArgs = [...allArgs, ...newArgs];
 
     if (allArgs.length === originFnArgumentLength) {
-      // 超长怎么办？
-      // 参数个数和原函数齐平
       return fn(...allArgs);
     } else {
+      // 超长怎么办？
+      // 参数个数和原函数齐平
       return resFn;
     }
   };

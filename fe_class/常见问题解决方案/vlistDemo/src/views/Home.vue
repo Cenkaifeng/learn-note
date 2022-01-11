@@ -82,13 +82,11 @@ export default class VirtualList extends Vue {
     if (this.listData.length >= 200) {
       return [];
     }
-    return new Array(10)
-      .fill({})
-      .map(item => ({
-        id: Faker.random.uuid(),
-        title: Faker.name.title(),
-        content: Faker.random.words(),
-      }));
+    return new Array(10).fill({}).map(item => ({
+      id: Faker.random.uuid(),
+      title: Faker.name.title(),
+      content: Faker.random.words(),
+    }));
   }
 
   created() {
@@ -97,6 +95,7 @@ export default class VirtualList extends Vue {
 
   scrollToTop() {
     this.$refs.list.scrollTo({
+      // 这一块还是调用 window.scrollTo()这个api
       top: 0,
       left: 0,
       behavior: "smooth",
