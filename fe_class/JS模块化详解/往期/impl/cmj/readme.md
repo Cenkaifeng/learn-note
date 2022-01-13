@@ -1,4 +1,4 @@
-# CMJ
+# CMD
 
 文件是一个模块，私有。内置两个变量 module require (exports = module.exports)
 
