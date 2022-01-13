@@ -8,8 +8,10 @@ XSS/CSRF
 
 1. XSS
 2. CSRF
+  
 3. [HTTPS](./../../网络协议/https.md)
 4. CSP (内容安全策略，可以禁止加载外域的代码，禁止外域的提交)
+  服务器添加[content-secruity-policy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy)响应头来指定规则
   设置指令：
     key是资源，值是none，self（自身），eval，url（允许的域名），inline(内联)等
 5. HSTS (强制客户端使用HTTPS与服务端建立连接)
@@ -103,7 +105,7 @@ SYN攻击的防御：
     react dangerouslyHtml
     总之就是对输入严格控制
 
-  2. CSP Content Security Policy (这是个请求头，如果久版本不支持可以用 X-XSS-Protection 代替方案)
+  2. CSP Content Security Policy (这是个请求头，如果久版本不支持可以用 [X-XSS-Protection](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection) 代替方案)
 
   default-src 'self' 所有加载的内容必须来自站点的同一个源
   你可以加可信域名 *.jervis.com
@@ -186,7 +188,7 @@ CSRF一般都是发生在第三方域名，攻击者无法获取到cookie信息�
       2. a.com 下每个子域名都可以获取到这个cookie
       3. 一旦某个子域名遭到了XSS攻击，cookie很容易被窃取或者篡改
 
-## 本地文件操作 demo:static-server-dangerous.js
+## 本地文件操作 [demo:](./xssdemo/static-server-dangerous.js)
 
 比如我们提供一个静态服务，通过请求的参数url来返回给用户/前想要的资源.
 `localhost:8080/?/../../../`
