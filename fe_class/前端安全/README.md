@@ -8,8 +8,10 @@ XSS/CSRF
 
 1. XSS
 2. CSRF
-3. HTTPS
+3. [HTTPS](./../../网络协议/https.md)
 4. CSP (内容安全策略，可以禁止加载外域的代码，禁止外域的提交)
+  设置指令：
+    key是资源，值是none，self（自身），eval，url（允许的域名），inline(内联)等
 5. HSTS (强制客户端使用HTTPS与服务端建立连接)
 6. X-Frame-Options (针对当前，控制当前页面是否可以被嵌入到iframe中)
 7. SRI (subresource intergrity 子资源的完整性策略)(防止子资源被恶意篡改注入攻击脚本)
