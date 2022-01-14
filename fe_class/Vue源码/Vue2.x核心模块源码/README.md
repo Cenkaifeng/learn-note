@@ -20,9 +20,9 @@ render
 运行时编译
 
 ###### 面试题2：
-<template> 和 render() 它们是怎么生成dom?
+`<template>` 和 render() 它们是怎么生成dom?
   都会转成 render() 
-  template 中有很多优化算法，框架作者更推荐用template这块
+  template 中有很多优化算法，框架作者更推荐用template这块 // TODO: 去看这部分代码
 
 ###### 面试题x：
 在vue-cli新建项目的时候，runtime only or runtime + compiler ,这两个版本有什么区别？分别在哪个文件里做了区分，到底有何区别？
@@ -137,6 +137,9 @@ A:会（框架报错）
 
 ##### stateMixin
 TODO: 为什么不建议使用 $set? 会在什么场景需要使用？ 替代方案是什么？
+`this.$set(xxx,'value',1)` $set 的本质，因为一些对象初始化的时候，有的属性不在这个对象上。
+会影响性能。
+
 $set 
 $delete
 $watch
@@ -201,7 +204,7 @@ $props
    使用风险是什么？
 2. _render
 
-installRenderHelpers 迟加载用途
+`installRenderHelpers` 迟加载用途
 1. sdk
 2. initApp
 3. ui components 
@@ -217,7 +220,7 @@ weex(跨端跨平台)
 
 
 #### sfc .vue 文件的一个解析器
-parser
+parser .vue 文件，把vue 中script template style 分离出来
 
 #### shared 共享工具方法（与模块内的 utils 文件隔离开）
 
@@ -244,7 +247,7 @@ if(vm.$options.el) {
 
 简单来讲就是，把实例上的 `render` 或者 `template` 或者是 `el` 节点统一转化成render方法然后挂载在 `options` 上。
 **SFC 最后会汇合成render方法**
-`entry-runtime-with-compiler.js`
+`entry-runtime-with-compiler.js` 
 
 ```js
 if(!options.render){...
@@ -259,7 +262,7 @@ if(!options.render){...
 ```
 [!-_- 懒得写了 上这里找吧](https://github.com/vuejs/vue/blob/dev/src/platforms/web/entry-runtime-with-compiler.js)
 
-延伸：runtime/index.js 里有 Vue.prototype.$mount 方法，为什么要在 `entry-runtime-with-compiler.js` 覆写一份？
+延伸：runtime/index.js 里有 Vue.prototype.$mount 方法，为什么要在 `entry-runtime-with-compiler.js` 覆写一份？// TODO: 基础方法和复杂方法区别。
 因为不同的模式下，前者能被 runtime only 这个模式直接使用 主要用了 `mountComponent`。
 
 同样的设计方式可以在未来项目设计、多平台多端设计做类似的抽象，分基础方法和复杂方法。
@@ -287,7 +290,8 @@ Watcher 内回调使用了 `updateComponent` 其中使用了两个方法
   - `vm.__patch__` : `patch.js` 中有接个关键步骤
     - createElm : 生成实际dom
       - native dom createElement (调用原生，生成实际dom)
-    - createChildren 遍历子节点（每个子节点遍历的调用createElm）ps. 这里会执行 `invokeCreateHooks(vnode, insertedVnodeQueue)` 在生成dom后会触发这个queue里的所有东西，所有 nextTick 里的东西就是这个时候被调用的(callbackQueue)
+    - createChildren 遍历子节点（每个子节点遍历的调用createElm）ps. 这里会执行 `invokeCreateHooks(vnode, insertedVnodeQueue)` 在生成dom后会触发这个queue里的所有东西，所有 `nextTick` 里的东西就是这个时候被调用的(callbackQueue) **所以nextTick 是在实际渲染 dom 的时候触发**
+    `invokeCreateHooks`在patch的过程中生成实际dom之后调用；
 - `vm._render`: 生成vdom
 ```js
 updateComponent = () => {
@@ -297,11 +301,11 @@ updateComponent = () => {
 
 
 ###### 面试题： 什么是虚拟节点，简述一下虚拟dom构成？vue 和 react 虚拟dom的区别？
+先看在 Vue 中的定义： src/core/vdom/vnode.js
 1. 虚拟节点是一种对真实dom的抽象描述，把dom的一些真实定义做了描述。  
 2. 这些描述性的东西，类似metadate ,有自己的规范
 
 ps: 源码阅读小技巧，从模块返回值开始往回找。
-
 
 
 ### 2-2：组件化
@@ -377,7 +381,7 @@ Dep 如何维护全局唯一性的？
     ```
 
   - 派发更新本质是调用 queueWatcher
-    他不会在每个节点更新的时候立即更新，他会把需要更新的若干更新放到队列里，是vue中一个很厉害的优化点。
+    他不会在每个节点更新的时候立即更新，他会把需要更新的若干更新放到队列里，是vue中一个很厉害的优化点。(TODO:异步调度描述补充)
     最后指向 vm._update() //形成循环
 
 
@@ -409,6 +413,19 @@ key的作用主要是为了高效的更新虚拟DOM。另外vue中在使用相�
 
 1. computed & watch 监听了什么，做了什么事？
 
-TODO： 根据文档再走一遍源码流程。
+TODO: 根据文档再走一遍源码流程。
 
-TODO： BOBY 深入源码上、下
+TODO:  画图
+
+TODO: BOBY 深入源码上、下 二刷
+
+
+
+
+// 为何这里用了函数对象而非class ?
+instance/index.js
+
+// 函数对象可读好拓展
+
+// 为何单独抽离 initMixin(Vue) 这些流程
+不仅仅是初始化流程，还生成了 vue 必要的参数属性
