@@ -15,4 +15,3 @@ git commit type
 3. mod: 复习、二刷、已有笔记上增加
 4. dir: 文章结构调整，移动位置
 
-test ssh
