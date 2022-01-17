@@ -71,6 +71,9 @@ class Watcher {
 
     Dep.target = this;
     this.__old = vm[key]; // 拿到当前key 对应的值 1.存下初始值，2.触发 getter
+    // (哪个？先触发ProxyData 代理实例, 获取 this.$data[key],
+    //  但是$data 已经被拦截了，优化触发defineReactive 的getter)
+    // 这样就能让 Dep.target $$ dep.add(Dep.target) 执行起来
     Dep.target = null; // 移除 target 实例 (毕竟已经在getter触发完了)
   }
 
