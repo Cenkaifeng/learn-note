@@ -210,6 +210,12 @@ $props
 3. ui components 
    总而言之就是一个延迟加载，减少用户感知的加载时间
 
+### nextTick 用什么来判断用宏任务还是微任务？
+nextTick 内部会通过一系列的边界条件来执行 `flushCallbacks` 有可能是用 promise.then() 也有可能用 `setImmediate` 或者 `setTimeout` 至于当前 nextTick 调度放在宏任务还是微任务里，看 `isUsingMicroTask `就好了
+https://github.com/vuejs/vue/blob/dev/src/core/util/next-tick.js
+
+而最后 `flushCallbacks` 任务队列出栈时执行的是宏任务还是微任务，取决于入栈状态本身。
+
 #### platform 跨平台代码
 web
 weex(跨端跨平台)
