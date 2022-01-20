@@ -78,6 +78,6 @@ console.log(almostEqual(0.1 + 0.2, 0.3));
 4. 深拷贝浅拷贝 [Jum to demo](./deepClone.js)
 
 ## 事件循环类
-
+TODO:
 - Promise
-  1. 实现 Promise.all
+  1. 实现 Promise.all 

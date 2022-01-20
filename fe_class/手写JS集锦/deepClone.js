@@ -1,5 +1,4 @@
 // 编写一个深度克隆函数，满足以下需求（此题考察面较广，注意细节）
-function deepClone(obj) {}
 
 // deepClone 函数测试效果
 const objA = {
@@ -17,9 +16,18 @@ console.log(objA, objB); // 对象内容一样
 // 解答
 
 // 深拷贝：对对象内部进行深拷贝，支持 Array、Date、RegExp、DOM
+
+// hash表，记录所有的对象的引用关系
+let map = new WeakMap();
 const deepCopy = sourceObj => {
   // 如果不是对象则退出（可停止递归）
   if (typeof sourceObj !== "object") return;
+  let existobj = null;
+  existobj = map.get(sourceObj);
+  //如果这个对象已经被记录则直接返回 解决循环引用问题
+  if (existobj) {
+    return existobj;
+  }
 
   // 深拷贝初始值：对象/数组
   let newObj = sourceObj instanceof Array ? [] : {};
