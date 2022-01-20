@@ -1,6 +1,6 @@
 const fs = require("fs");
 const babylon = require("babylon");
-//Babylon 是Babel 中使用的 JavaScript 解析器。
+//Babylon 是Babel 中使用的 JavaScript 解析器。所以这里用 const { parse } = require("babel-core")一个意思
 const traverse = require("babel-traverse").default;
 // const { create } = require('lodash');
 const path = require("path");
@@ -12,6 +12,7 @@ let ID = 0; // 因为需要所有文件的依赖，所以需要用id来对所有
 function createAsset(filename) {
   const content = fs.readFileSync(filename, "utf-8");
 
+  //生成入口文件的 Ast
   const ast = babylon.parse(content, {
     sourceType: "module",
   });
@@ -20,15 +21,18 @@ function createAsset(filename) {
   traverse(ast, {
     // 第二个参数是对每个节点要做的事
     ImportDeclaration: ({ node }) => {
+      // ImportDeclaration 是 import 引用语句的声明
       // console.log(node)
       dependencies.push(node.source.value);
     },
   });
 
+  // 自增 id: 因为要获取所有文件的依赖，所以我们需要一个id来标识所有文件.
   const id = ID++;
 
+  // 把ast进行编译
   const { code } = babel.transformFromAst(ast, null, {
-    presets: ["env"],
+    presets: ["env"], // 需要 babel-preset-env 这个插件,作为babel导出格式的预设
   });
 
   return {
@@ -39,12 +43,13 @@ function createAsset(filename) {
   };
 }
 
+// 生成由 entry 开始遍历出的依赖图
 function createGraph(entry) {
   const mainAsset = createAsset(entry);
   const allAsset = [mainAsset];
 
   for (let asset of allAsset) {
-    const dirname = path.dirname(asset.filename);
+    const dirname = path.dirname(asset.filename); // 文件名转绝对路径
 
     asset.mapping = {};
 
