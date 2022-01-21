@@ -15,7 +15,7 @@ const createVnode = (type, props, key, $$) => {
 
 export const NODE_FLAG = {
   EL: 1, // 元素 element
-  TEXT: 1 << 1, // 2
+  TEXT: 1 << 1, // 2 
 };
 /**
  *  2 & 2 = 1 1 & 2 = 0

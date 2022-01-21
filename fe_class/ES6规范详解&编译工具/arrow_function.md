@@ -41,8 +41,8 @@ const obj2 = {
         return this.leader;
     }
 }
-obj2.getTeacher();
-obj2.getLeader();
+obj2.getTeacher(); // yy
+obj2.getLeader();  // undefined
 ```
 
 ## 追问为何箭头函数无法get到对象属性 => this 、箭头函数没有独立上下文，只能用上一层的上下文

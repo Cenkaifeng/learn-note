@@ -121,7 +121,9 @@ About about.js 21kB
 
 首屏 app.js chunk-vendors 2.4MB 180KB
 About  
-
+```js
+import(/* webpackChunkName: "about" */ "../views/About.vue");
+```
 
 ## 导航守卫的执行顺序
 
