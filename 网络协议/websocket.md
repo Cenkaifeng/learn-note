@@ -1,7 +1,7 @@
 # WebSocket
 [RFC6455](https://datatracker.ietf.org/doc/html/rfc6455)
 
-基于 TCP,协议头兼容http协议。全双工。
+基于 TCP,协议头兼容http协议。全双工。将TCP 全双工的能力暴露给应用层。
 
 兼容体现在端口复用
 http -> ws :80
