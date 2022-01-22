@@ -387,3 +387,24 @@ function flatDeep(arr, d = 1) {
 ```
 
 2. Array.includes
+判断有没有存在元素
+
+```js
+const arr = [1, 2, 3, 4, 5];
+
+console.log(arr.includes(6))// 返回 boolean
+```
+
+3. Array.from
+
+如何把一个类数组转成真数组
+
+```js
+console.log(Array.from([1, 2, 3], x => x + 1)); // 2, 3, 4
+
+```
+如何 把arguments 转换成真数组？
+
+  1. [...arguments]
+  2. Array.from(arguments)
+  3. Array.prototype.slice.call(arguments);// 换元操作 -> arguments.slice()
