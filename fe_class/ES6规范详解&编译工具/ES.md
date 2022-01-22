@@ -408,3 +408,5 @@ console.log(Array.from([1, 2, 3], x => x + 1)); // 2, 3, 4
   1. [...arguments]
   2. Array.from(arguments)
   3. Array.prototype.slice.call(arguments);// 换元操作 -> arguments.slice()
+
+  还可以通过 Array.from(new Set(arr)) 做数组去重

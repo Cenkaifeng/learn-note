@@ -7,6 +7,7 @@ const server = net.createServer(function (socket) {
   socket.on("end", function () {
     console.log("客户端关闭");
   });
+  // TODO: 人为粘包操作
 });
 
 server.on("error", function (err) {
