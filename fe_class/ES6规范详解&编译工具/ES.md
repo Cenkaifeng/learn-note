@@ -410,3 +410,7 @@ console.log(Array.from([1, 2, 3], x => x + 1)); // 2, 3, 4
   3. Array.prototype.slice.call(arguments);// 换元操作 -> arguments.slice()
 
   还可以通过 Array.from(new Set(arr)) 做数组去重
+
+
+// TODO: Generator / 生成器迭代器整合
+https://es6.ruanyifeng.com/#docs/generator
