@@ -67,8 +67,8 @@
 3. 状态提升
 4. 状态下降
 5. 同步、异步的处理
-6.  持久状态和临时状态如何区分维护
-7.  状态更新的事务如何管理
+6. 持久状态和临时状态如何区分维护
+7. 状态更新的事务如何管理
 8. 去中心化
 9. ...
 
@@ -95,6 +95,7 @@
 我们不直接硬生生的去分析源码，现在希望大家抛掉对 `vuex` 的所有记忆，让我们回到几年前`vuex`诞生的那个时间点，从头开始去思考基于 `FLUX` 思想，如何打造一个我们自己的状态管理工具
 
 a. 站在`FLUX` 的角度去思考
+FlUX思想：状态应该集中式的存储
 
 在开发中面临最多的场景是状态重复但是不集中
 
@@ -125,12 +126,12 @@ b. 如何去更改状态
 自由即代表了混乱，`FLUX` 推崇以一种可预测的方式发生变化，而且有且唯一一种，这样的好处是所有的行为可预测，可测试，对于之后做个` dev-tool` 去调试、时间旅行都很方便，现在的问题就是要去思考同步和异步的问题了，为了区分的更清楚，我们定义两种行为，`Actions` 用来处理异步状态变更（内部还是调用 `Mutations`），`Mutations` 处理同步的状态变更，整个链路应该是一个闭环，单向的，完美契合 `FLUX` 的思想
 
 「页面 dispatch/commit」-> 「actions/mutations」-> 「状态变更」-> 「页面更新」-> 「页面 dispatch/commit」...
-
+> 单一职责，单向流，约定大于配置
 
 
 现在，可以借用这个图了
 
-![vuex](https://i1.wp.com/user-gold-cdn.xitu.io/2020/4/2/171396e1d42df794?w=701&h=551&f=png&s=30808)
+![vuex](https://vuex.vuejs.org/vuex.png)
 
 c. 如何和 `vue` 集成呢？
 
@@ -145,7 +146,7 @@ d. 怎么让 `store` 是响应式的呢？
 利用 `vue` `data` 里的状态是响应式的啊～
 
 
-
+（a/b/c/d 其实是 vuex 的设计思路）
 
 # Vuex 手写实现
 
@@ -160,7 +161,7 @@ Step1 - store 注册
 * store.js - store 注册
 */
 let Vue
-
+// 这是 vue 插件写法
 // vue 插件必须要这个 install 函数
 export function install(_Vue) {
   // 拿到 Vue 的构造器，存起来
@@ -184,7 +185,7 @@ export function install(_Vue) {
 
 
 
-Step2 - 响应式
+Step2 - 响应式（怎样使 store是响应式的呢？）
 
 ```js
 /**
@@ -204,7 +205,7 @@ function resetStoreVM(store, state) {
   // 因为 vue 实例的 data 是响应式的，正好利用这一点，就可以实现 state 的响应式
   store._vm = new Vue({
     data: {
-      $$state: state
+      $$state: state // 这样，state的变更直接让Observer 接触到
     }
   })
 }
@@ -252,7 +253,7 @@ function resetStoreVM(store, state) {
 
 
 
-Step4 - Actions/Mutations
+Step4 - Actions/Mutations **
 
 ```js
 /**
