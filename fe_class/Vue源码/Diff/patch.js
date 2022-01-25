@@ -87,5 +87,18 @@ export const patchProps = (key, prev, next, el) => {
           el.style[k] = "";
         }
       }
+  } else if (key === "className") {
+    // class
+    if (!el.classList.contains(next)) {
+      el.classList.add(next);
+    }
+  } else if (key[0] === "o" && key[1] === "n") {
+    //event
+    prev && el.removeEventListener(key.slice(2).toLowerCase(), prev);
+    next && el.addEventListener(key.slice(2).toLowerCase(), next);
+  } else if (/\[A-Z]|^(?:value|checked|selected|muted)$/.test(key)) {
+    el[key] = next;
+  } else {
+    el.setAttribute && el.setAttribute(key, next);
   }
 };

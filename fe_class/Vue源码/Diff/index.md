@@ -27,11 +27,21 @@ vue借鉴了 [inferno](https://github.com/infernojs/inferno) 的diff
 
 > InfernoJS: InfernoJS 是一个非常快的、类似 React 的库，用于在客户端和服务器上构建高性能用户界面。项目的主要目标是为 Web 应用程序提供尽可能快的运行时性能。Inferno 擅长渲染实时数据视图或大型 DOM 树。
 
+inferno 能达到 O(mlogn) 最长上升子序列
+
+4. how O(n)?
+// TODO: 
+
 补充: 不管是 Vue 还是 React , 在写 v-for 这类遍历的时候一定是不建议用下标来做 key 的
 
+
+5. 
+
 vue 会判断 sameNode, 假如你删掉第一个，有可能是最后一个被删掉了。
+[0, 1, 2] -> [0, 1] diff 一下发现下标2就是多余的，直接没了
 [参考](Vue2.x核心模块源码/README.md/为什么不建议 v-key 使用 index?)
 
+React 不会有vue这样的问题，但是它直接把整个数组父节点重新渲染了，所以也不建议用数组下标做key 
 
 ## 这里插入一条说烂了的面试题，[v-key](https://cn.vuejs.org/v2/api/#key) 的作用是什么？
 
@@ -56,7 +66,7 @@ e.g
   },
   el: xxx
 }
-理论上就是个对象嵌套树
+ps:理论上就是个**对象嵌套树**
 
 2. 怎么创建虚拟 DOM
 
@@ -65,13 +75,43 @@ e.g
 3. 使用
 templete 语法
 
-JSX
+JSX:
+```html
+<div>
+  <ul className='padding-20'>
+    <li key='li-01'>this is li 01</li>
+  </ul>
+</div>
+```
 
-createElement()
+
+经过工具转换一下
+createElement('div', {
+  children: [
+    createElement('ul', {
+      className: 'padding-20'
+    },createElement('li', {key:'li-01'}, 'this is li 01'))
+  ]
+})
 
 4. 渲染(mount/render)
 
-5. diff 相关(patch)
+f(vnode) -> view
+需要实现这个f
+```jsx
+f(vnode) {
+  document.createElement();
+  ...
+
+  parent.inser90 // parent 相当于 el
+  .insertBefore.... //靠这个映射到真实dom
+}
+
+export const render = (vnode, parent) => { }
+
+<div id='app'></div>
+```
+5. 最后到 diff 相关(patch)
 
 f(oldVnodeTree, newVnodeTree, parent) -> 调度 ？ -> view
 

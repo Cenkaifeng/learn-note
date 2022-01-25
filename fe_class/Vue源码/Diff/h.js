@@ -15,7 +15,7 @@ const createVnode = (type, props, key, $$) => {
 
 export const NODE_FLAG = {
   EL: 1, // 元素 element
-  TEXT: 1 << 1, // 2 
+  TEXT: 1 << 1, // 2
 };
 /**
  *  2 & 2 = 1 1 & 2 = 0
@@ -47,7 +47,10 @@ export const h = (type, props, ...kids) => {
   props = props || {};
   let key = props.key || void 0;
   kids = normalize(props.children || kids);
-
+  // props.children三种情况
+  // void 0
+  // {type: 'div ', ...}
+  // [{xxx}, {xxx}]
   if (kids.length) props.children = kids.length === 1 ? kids[0] : kids;
 
   const $$ = {};
