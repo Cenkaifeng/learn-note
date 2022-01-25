@@ -30,7 +30,7 @@ https -> wss: 443
 
 ## websocket的协议头
 
-ABNF 描述的真个是
+ABNF 描述的帧格式
 - ws-frame = frame-fin; 1 bit in length
   - frame-rsv1; 1 bit in length
   - frame-rsv2; 1 bit in length // rsv 是协议的拓展保留位
@@ -41,7 +41,7 @@ ABNF 描述的真个是
   - [frame-masking-key]; 32 bits in length
   - frame-payload-data; n*8 bits in; length, where; n >= 0
 
-  [webpack数据格式](https://datatracker.ietf.org/doc/html/rfc6455#section-5.2)
+  [websocket数据格式](https://datatracker.ietf.org/doc/html/rfc6455#section-5.2)
 ``` 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
