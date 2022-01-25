@@ -3,8 +3,8 @@ import { patch } from "./patch.js";
 
 // [a, b, c, d]
 // [d, a, b, c]
-// 最快的 d 移动到第一个，a b c 不要动 （最长上升子序列算法）
-// 不动的 d，d a ... d a b  ... d a b c
+// 最快的 d 移动到第一个，a b c 不要动 （最长上升子序列算法）Vue3
+// 不动的 d，d a ... d a b  ... d a b c (React 就是这这个思路)
 
 export const odiff = (prevChildren, nextChildren, parent) => {
   // 前指针
@@ -20,6 +20,7 @@ export const odiff = (prevChildren, nextChildren, parent) => {
   // [a, b, c, d]   [a, b, c, d, e]
   //  j        👆    j           👆
   outer: {
+    // 前置计算
     while (prevNode.key === nextNode.key) {
       patch(prevNode, nextNode, parent);
       j++;
