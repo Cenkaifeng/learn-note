@@ -61,37 +61,37 @@ const proAll = PromiseAll([pro1, pro2, pro3]).then(res => {
   console.log(res);
 });
 
-
 function PromiseAllSettled(promiseArray) {
   return new Promise((resolve, reject) => {
-    if(!Array.isArray(promiseArray)) {
-      return reject(new TypeError('参数必须是一个数组'));
+    if (!Array.isArray(promiseArray)) {
+      return reject(new TypeError("参数必须是一个数组"));
     }
 
     let counter = 0;
     const promiseNum = promiseArray.length;
     const resolveArray = [];
 
-    for(let i = 0; i< promiseNum; i++) {
-      Promise.resolve(promiseNum[i]).then((value) => {
-        // 前面的和 Promise.all 一样，但是到这里就不同了,最大区别在于，要对每个状态进行记录
-        resolveArray[i] = {
-          status: 'fulfilled',
-          value
-        }
-      })
-      .catch((reason) => {
-        resolveArray[i] = {
-          status: 'rejected',
-          reason
-        };
-      })
-      .finally(() => {
-        counter++;
-        if(counter === promiseNum) {
-          resolve(resolvedArray)
-        }
-      })
+    for (let i = 0; i < promiseNum; i++) {
+      Promise.resolve(promiseNum[i])
+        .then(value => {
+          // 前面的和 Promise.all 一样，但是到这里就不同了,最大区别在于，要对每个状态进行记录
+          resolveArray[i] = {
+            status: "fulfilled",
+            value,
+          };
+        })
+        .catch(reason => {
+          resolveArray[i] = {
+            status: "rejected",
+            reason,
+          };
+        })
+        .finally(() => {
+          counter++;
+          if (counter === promiseNum) {
+            resolve(resolvedArray);
+          }
+        });
     }
-  })
+  });
 }
