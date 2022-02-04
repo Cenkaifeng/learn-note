@@ -122,6 +122,7 @@ c2.eat()
     2. `Child.prototype = new Parent();`
 
 ## 寄生组合式继承
+所谓的寄生，就是寄生在一个桥梁函数，阻断子类对父类原型链影响和减小二次调用父类构造函数开销
 
 ### 实现
 
@@ -142,11 +143,12 @@ function Child(id) {
 
 
 // Child.prototype = new Parent(); 
+
 // let TempFunction = function() {};
 // TempFunction.prototype = Parent.prototype;
 // Cild.prototype = new TempFunction(); // TempFunction 作为中间函数转移继承实例属性
-
-Child.prototype = Object.create(Parent.prototype);// 上面三行模拟实行了Object.create();
+// 上面三行模拟实行了Object.create(); 首先要绕过构造函数的调用，但是要把实例里的属性赋给Child.prototype
+Child.prototype = Object.create(Parent.prototype);
 
 Child.prototype.constructor = Child;
 
@@ -177,14 +179,13 @@ function Child(id) {
 }
 
 
-// Child.prototype = new Parent(); 
 // let TempFunction = function() {};
 // TempFunction.prototype = Parent.prototype;
 // Cild.prototype = new TempFunction(); // TempFunction 作为中间函数转移继承实例属性
 
 // Child.prototype = Object.create(Parent.prototype);// 上面三行模拟实行了Object.create();
 
-Child.prototype = Parent.prototype;
+Child.prototype = Parent.prototype; // 这是个错误逻辑，子类被修改会影响到父类
 Child.prototype.constructor = Child;
 
 const c1 = new Child(1, 'c1', ['hahaha']);

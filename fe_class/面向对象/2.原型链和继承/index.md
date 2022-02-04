@@ -20,9 +20,7 @@ Player.prototye = {
     ...originProtype, 
     xxx1: function() {},
     xxx2: function() {}
-    }
-
-
+}
 ```
 
 ## 怎么找到 Player 的原型对象
@@ -40,10 +38,10 @@ const black = new Player('black');
 ```
 
 
-可以看一下 prototype.png
+可以看一下 yy_prototype.png
 
 ## 那么 new 关键字做了什么就很明了了
-
+ 
 1. 一个继承自Player.prototype 的新对象 p1/p1 被创建
 2. p1.__proto__ === Player.prototype, p1.__proto__ 指向Player.prototype.
 3. 将this指向新创建的对象p1/p2
@@ -55,7 +53,6 @@ const black = new Player('black');
 ## 原型链又是什么
 
 当我们尝试读取原型链的属性时，如果找不到，会发生什么？
-
 
 1. 查找原型上的属性
 2. 去原型的原型上找
