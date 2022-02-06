@@ -185,7 +185,7 @@ var obj = {
 }
 obj.getName()()
 
-// 第五种 函数赋值也会改变 this 指向，下边练习题会有 case，react 中事件处理函数为啥要 bind 一下的原因
+// 第五种 函数赋值也会改变 this 指向（比如用优先级逗号之类），下边练习题会有 case，react 中事件处理函数为啥要 bind 一下的原因
 // 第六种 IIFE
 ```
 
@@ -339,6 +339,7 @@ b.a // console what ?
 
 箭头函数这种情况比较特殊，编译期间确定的上下文，不会被改变，哪怕你 `new`，指向的就是**上一层**的上下文,
 
+箭头函数是没有this的，它的this在解释器解释的时候就定了。
 
 
 > TIP 👉 箭头函数本身是没有 `this` 的，继承的是外层的
@@ -443,6 +444,7 @@ object.getName() // console what ?
 (object.getName)() // console what ?
 (object.getName = object.getName)() // console what ?
 (object.getName, object.getName)() // console what ?
+// 赋值、逗号 运算会导致 this 丢失
 
 // 3.
 var x = 3
@@ -452,7 +454,7 @@ var obj3 = {
     var x = 5
     return function() {
       return this.x
-    }(); // ⚠️
+    }(); // ⚠️ 立即执行表达式会丢 this
   }
 }
 console.log(obj3.getX()) // console what?
@@ -549,7 +551,8 @@ function main() {
   // ...
 }
 ```
-
+为啥 js 数组可以动态扩容？
+V8 底层通过组合的方式来实现数组存储（具体看V8的实现）
 
 
 
@@ -678,7 +681,7 @@ EC(foo) {
 
 特殊情况：
 
-- `Function`  构造的函数 `[[scope]]` 里只有全局的变量对象
+- **`Function`  构造的函数 `[[scope]]` 里只有全局的变量对象**
 
 ```js
 // 证明
@@ -696,7 +699,7 @@ function foo(){
     console.log(a, b);
   }
 
-  var f3 = Function('console.log(a,b)')
+  var f3 = Function('console.log(a,b)')// 构造函数只找全局
 
   f1(); // 10, 20
   f2(); // 10, 20
@@ -712,14 +715,14 @@ foo();
 
 
 
-> 本质上 `eval` 之类的恐怖之处是可以很方便的修改作用域链，**执行完后又回归最初状态**
+> 本质上 `eval` 之类的东西恐怖之处是可以很方便的修改作用域链，**执行完后又回归最初状态**
 
 ```js
 // 这样好理解
 Scope = [ withObj|catchObj ].concat( [ AO|VO ].concat( [[ scope ]] ) )
 // 初始状态 [VO(foo), VO(global)]
 // with 一下：[VO(with)❓, VO(foo), VO(global)]
-// with 完事儿了，还要恢复 👈
+// with 完事儿了，还要恢复 👈 [VO(foo), VO(global)]
 ```
 
 
