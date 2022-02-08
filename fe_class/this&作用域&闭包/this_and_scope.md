@@ -151,7 +151,7 @@ obj2.obj1.fn() // console what ?
 
 
 面试官一般问的是一些边界 `case`，比如隐式绑定失效（列举部分）：
-
+或者说丢this的情况
 ```js
 // 第一种 是前面提过的情况
 const obj1 = {
