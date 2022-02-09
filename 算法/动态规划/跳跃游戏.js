@@ -37,3 +37,40 @@ function canJump(nums) {
 
   return dp[nums.length - 1];
 }
+
+/**
+ * 45.跳跃游戏II
+ * https://leetcode-cn.com/problems/jump-game-ii/
+ */
+
+// 贪心解法
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var jump = function (nums) {
+  // 如果一定都能跳到最后，求所有解中最短
+  // 每个点
+  const n = nums.length;
+  if (n === 1) {
+    return 0;
+  }
+  let k = 0; // 记录，能达到的最远距离
+  let step = 0; // 步数
+  let end = 0; // 记录上一步 step 跳的最远距离
+  for (let i = 0; i < n; i++) {
+    k = Math.max(k, i + nums[i]); // 更新最大距离
+    if (k >= n - 1) {
+      return step + 1; // 如果k已经超过 nums 有边界，提前返回同时加上起跳的这一步
+    }
+
+    if (end == i) {
+      // 到达上一步最远距离，但是还没超越 nums 边界
+      step++;
+      end = k;
+    }
+  }
+
+  return step;
+};
