@@ -76,6 +76,7 @@ function maxProfit(prices) {
 }
 
 // 动态规划 时间复杂度 O(n) 空间复杂度 O(n)
+// 怎么把空间复杂度简化成 O(1)
 
 function maxProfitDp(prices) {
   let len = prices.length;
@@ -144,4 +145,61 @@ var maxProfit = function (prices) {
   // 最后最大利润是最后一天，不持有股票或者进入冷冻期的情况
   console.log(dp);
   return Math.max(dp[len - 1][0], dp[len - 1][2]);
+};
+
+/**
+ * 714. 买卖股票的最佳时机含手续费
+ * https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/submissions/
+ * https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/solution/jian-dan-dpmiao-dong-gu-piao-mai-mai-by-tejdo/
+ */
+
+/**
+ * @param {number[]} prices
+ * @param {number} fee
+ * @return {number}
+ */
+var maxProfit = function (prices, fee) {
+  // 每次交易都需要支付手续费
+
+  const len = prices.length;
+  if (len < 2) {
+    return 0;
+  }
+  // 递推方程 参考 leetCode.122 买卖股票最佳时机2 的dp解
+  const dp1 = new Array(len).fill(0); // 代表持有状态   与  在第 i 天买入股票比较
+  const dp2 = new Array(len).fill(0); // 代表不持有状态 与 在 第 i 天卖股票比较，需要扣除手续费
+  // 其实也可以二维数组，dp[i][j] i代表天数，j = 0 代表买入状态，1 代表卖出状态
+
+  dp1[0] = -prices[0]; // 假设第一天就买入
+  for (let i = 1; i < len; i++) {
+    dp1[i] = Math.max(dp1[i - 1], dp2[i - 1] - prices[i]);
+    dp2[i] = Math.max(dp2[i - 1], dp1[i - 1] + prices[i] - fee);
+  }
+
+  return dp2[len - 1];
+};
+// 优化空间 O(n) -> O(1)
+// 因为前者都是 i - 1 获得，所以可以以此简化
+
+var maxProfit = function (prices, fee) {
+  // 每次交易都需要支付手续费
+
+  const len = prices.length;
+  if (len < 2) {
+    return 0;
+  }
+  // 递推方程 参考 leetCode.122 买卖股票最佳时机2 的dp解
+  const dp = new Array(l2).fill(0);
+  //dp[0] 代表持有状态   与  在第 i 天买入股票比较
+  //dp[1] 代表不持有状态 与 在 第 i 天卖股票比较，需要扣除手续费
+
+  dp[0] = -prices[0]; // 假设第一天就买入
+  dp[1] = 0;
+  for (let i = 1; i < len; i++) {
+    let tmp = dp[1];
+    dp[1] = Math.max(dp[0], tmp - prices[i]);
+    dp[0] = Math.max(dp[1], dp[0] + prices[i] - fee);
+  }
+
+  return dp[1];
 };

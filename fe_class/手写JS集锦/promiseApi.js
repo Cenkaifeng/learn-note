@@ -12,7 +12,7 @@ function PromiseAll(promiseArray) {
       // 4. 注意数组元素类型
       Promise.resolve(promiseArray[i])
         .then(value => {
-          // 用 resolve强转Promise
+          // 用 resolve强转Promise (因为then会返回新的promise)
           counter++;
           //5. 不能用 push res.push(value); 返回结果和数组位置一一对应，所以不可以用 push
           res[i] = value;
