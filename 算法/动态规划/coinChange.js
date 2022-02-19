@@ -79,3 +79,49 @@ function coinChange(coins, amount) {
   // 返回金额结果
   return dp[amount] === amount + 1 ? -1 : dp[amount];
 }
+
+/**
+ * 518. 零钱兑换 II https://leetcode-cn.com/problems/coin-change-2/
+ * @param {number} amount
+ * @param {number[]} coins
+ * @return {number}
+ *
+ * 执行用时：60 ms 在所有 JavaScript 提交中击败了 97.43% 的用户
+ * 内存消耗：41.4 MB , 在所有 JavaScript 提交中击败了33.22%的用户
+ */
+var change = function (amount, coins) {
+  const dp = new Array(amount + 1).fill(0); // 将每个 index 当做一个价格,最后计算 dp[amount]
+
+  dp[0] = 1; // 设置起始状态
+
+  for (let coin of coins) {
+    // 记录添加不同面值零钱
+
+    for (let j = 1; j <= amount; j++) {
+      if (j >= coin) {
+        // j 作为当前叠加的总价，如果大于当前面值，就能继续加进去
+        dp[j] = dp[j] + dp[j - coin];
+      }
+    }
+  }
+
+  return dp[amount];
+};
+
+// 这个还有的改
+var change = function (amount, coins) {
+  const dp = new Array(amount + 1).fill(0); // 将每个 index 当做一个价格,最后计算 dp[amount]
+
+  dp[0] = 1; // 设置起始状态
+
+  for (let coin of coins) {
+    // 既然j < coin都是无用功，那么不如j= coin开始
+    for (let j = coin; j <= amount; j++) {
+      //if (j >= coins[i]){
+      dp[j] += dp[j - coin];
+      //}
+    }
+  }
+
+  return dp[amount];
+};
