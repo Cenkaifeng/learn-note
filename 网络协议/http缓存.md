@@ -68,3 +68,16 @@ Etag > last-modified
 即使有“Last-modified”和“ETag”，强制刷新（Ctrl+F5）也能够从服务器获取最新数据（返回 200 而不是 304），请你在实验环境里试一下，观察请求头和响应头，解释原因
 
 强刷新下的请求头字段 If-None-Match 变成了 Cache-Control: no-cache
+
+// TODO: meta 缓存
+浏览器缓存机制，其实主要就是HTTP协议定义的缓存机制（如： Expires； Cache-control等）。但是也有非HTTP协议定义的缓存机制，如使用HTML Meta 标签，Web开发者可以在HTML页面的`<head>`节点中加入`<meta>`标签，代码如下
+用于设定网页的到期时间，一旦过期则必须到服务器上重新调用。需要注意的是必须使用GMT时间格式；
+```html
+<meta http-equiv="Expires" contect="Mon,12 May 2001 00:20:00 GMT">
+```
+用于设定禁止浏览器从本地机的缓存中调阅页面内容，设定后一旦离开网页就无法从Cache中再调出；
+```html
+<meta http-equiv="Pragma" contect="no-cache">
+```
+使用上很简单，但只有部分浏览器可以支持，而且所有缓存代理服务器都不支持，因为代理不解析HTML内容本身。而广泛应用的还是 HTTP头信息 来控制缓存，
+// 代理缓存
