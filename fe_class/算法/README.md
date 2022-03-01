@@ -595,13 +595,14 @@ for (let i = 0; i< n; j ++) {
 
 #### 常用基础算法
 
-##### D&C 分治
+##### D&C 分治（二分法集大成...）
 分治法
 
 工作原理（如何确定case 适用分治）：
 
 1. 可以明确设定一条基线
-2. 根据此基线可以不听将问题进行分解，直到所有内容符合基线标准
+2. 根据此基线可以不停将问题进行分解，直到所有内容符合基线标准
+// 以上也是二分的前置条件
 
 快排
 
@@ -612,7 +613,7 @@ const quickSort = function(arr) {
          return arr;
      }
     // 1. 找到基线，并对基线左右做声明
-     let pivotIndex = Math.floor(arr.length / 2);
+     let pivotIndex = Math.floor(arr.length / 2); // arr.length >> 1
      let pivot = arr.splice(pivotIndex, 1)[0];
      let left = [];
      let right = [];
