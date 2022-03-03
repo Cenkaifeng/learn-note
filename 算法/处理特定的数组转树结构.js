@@ -1,5 +1,5 @@
 /**
- * 题干：假设有以下数据 [{pid: xx, id: xx}, {pid: xx, id: xx} ...]
+ * 题干：假设有以下数据 [{pid: 0, id: 12}, {pid: 12, id: 3} ...]
  *
  * pid 为父节点id, id为当前节点id
  *
@@ -15,6 +15,7 @@ function convert(list) {
     {}
   ); // 初始化对象
   // map 把所有节点挂上 chidren
+  //map {3: {…}, 12: {…}}
   for (const item of list) {
     if (item.pid === 0) {
       res.push(item);
@@ -27,4 +28,5 @@ function convert(list) {
       parent.children.push(item); // 推入节点
     }
   }
+  return res;
 }

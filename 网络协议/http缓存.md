@@ -55,13 +55,35 @@ last-modified 的问题在于
 
 所以这个头可以理解为，缓存下来了，而且每次都请求验证新鲜度。
 
-- no-store :真正的不缓存，压根没缓存 （不会两个都写)
+- `no-store` :真正的不缓存，压根没缓存 （不会两个都写)
 
 > 禁止缓存对相应进行复制。缓存通常会像非缓存代理服务器一样，向客户端转发一条no-cache响应，然后删除对象。
 > ———— 《HTTP 权威指南》
 
+
+## 缓存新鲜度
 优先级：cache-control > Expires
 Etag > last-modified
+
+## 什么样的 HTTP 响应会被缓存？ RFC7234
+
+
+### 使用缓存作为当前请求响应的条件
+- URI 是匹配的
+  - URI 作为主要的缓存关键字，当一个 URI 同事对应多份缓存时，选择日期最近的缓存
+    e.g. `Nginx` 中默认的缓存关键字: proxy_cache_key $scheme$proxy_host$request_uri
+
+- 缓存中的响应允许当前请求的方法使用缓存
+
+- 缓存中的响应 Vary 头部指定的头部必须与请求中的头部相匹配：(这个点比较冷门)
+  - Vary = "*"/ 1#field-name （Vary: *意味着一定匹配失败)
+
+- **当前请求及缓存中的响应都不包含 `no-cache` 头部**( Pragma: no-cache 或者 Cache-Control: no-cache)
+
+- 缓存中的响应必须是以下三者之一
+  1. 新鲜的（时间上未过期）
+  2. 缓存中的响应头部明确告知可以使用过期的响应（如Cache-Control: max-stale=60)
+  3. 使用天剑请求去服务器端验证请求是否过期，得到304响应
 
 
 ### 问题
@@ -80,4 +102,7 @@ Etag > last-modified
 <meta http-equiv="Pragma" contect="no-cache">
 ```
 使用上很简单，但只有部分浏览器可以支持，而且所有缓存代理服务器都不支持，因为代理不解析HTML内容本身。而广泛应用的还是 HTTP头信息 来控制缓存，
-// 代理缓存
+
+//代理缓存
+
+如果缓存在代理服务器上，不含`private` 和 `Authorization`
