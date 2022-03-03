@@ -292,7 +292,7 @@ Reflect 是什么？
 const obj = { name: 111};
 
 delete obj.name;// 命令式删除
-Reflect.deleteProperty(obj, name) // 函数式删除，把命令行为变成函数行为
+Reflect.deleteProperty(obj, name) // 函数式删除，把命令行为变成函数行为 (声明式)
 ```
 
 同时，Reflect 拥有所以 Proxy 的方法（一一对应，而且效果是一样的）
