@@ -21,3 +21,20 @@ new Promise((resolve, reject) => {
   });
 });
 console.log("end");
+
+button.addEventListener("click", () => {
+  Promise.resolve().then(() => console.log("Microtask 1"));
+  console.log("Listenner 1");
+});
+
+button.addEventListener("click", () => {
+  Promise.resolve().then(() => console.log("Microtask 2"));
+  console.log("Listenner 2");
+});
+
+// 上述代码 click 触发后执行顺序
+
+// 进阶：
+button.click();
+
+// 要是加这行呢？
