@@ -1,3 +1,8 @@
+/**
+ * Promise.all 等待所有都完成（或第一个失败）。---MDN
+ * @param {*} promiseArray
+ * @returns
+ */
 function PromiseAll(promiseArray) {
   // 2. return Promise
   return new Promise(function (resolve, reject) {
@@ -61,6 +66,11 @@ const proAll = PromiseAll([pro1, pro2, pro3]).then(res => {
   console.log(res);
 });
 
+/**
+ * Promise.allSettled()方法返回一个在所有给定的promise都已经fulfilled或rejected后的promise，并带有一个对象数组，每个对象表示对应的promise结果。
+ * @param {*} promiseArray
+ * @returns
+ */
 function PromiseAllSettled(promiseArray) {
   return new Promise((resolve, reject) => {
     if (!Array.isArray(promiseArray)) {

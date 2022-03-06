@@ -213,7 +213,8 @@ for(let key in obj) {
 
 2. for of
 用于遍历可迭代对象的 Value
-
+可迭代对象：数组，迭代器
+普通对象不能适用 for of
 - 可以用 break 中断
 
 
