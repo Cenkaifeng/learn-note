@@ -147,7 +147,7 @@ tips: [xss 攻击模拟网站](https://alf.nu/alert1)
     <form methdo="POST">
       <input type="hidden" name="account" value="jervis"/>
     </form>
-    <script>document.forms[0].submit()</>
+    <script>document.forms[0].submit()</script>
   ```
 
   * 诱导用户点击链接
@@ -166,9 +166,10 @@ CSRF一般都是发生在第三方域名，攻击者无法获取到cookie信息�
       referer 中也有不同的策略
     * [Referer-Policy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Referer)
     如果请求中没有referer相当于被安全策略`Referer-Policy`拦下了，所以可以不去访问这个请求
+    [Referer-Policy 的新默认值](https://cloud.tencent.com/developer/article/1748911)
     
     > Origin 属性只包含了域名信息，并没有包含具体的 URL 路径，这是 Origin 和 Referer 的一个主要区别。在这里需要补充一点，Origin 的值之所以不包含详细路径信息，是有些站点因为安全考虑，不想把源站点的详细路径暴露给服务器。因此，服务器的策略是优先判断 Origin，如果请求头中没有包含 Origin 属性，再根据实际情况判断是否使用 Referer 值。
-    
+
   2. Cookie SameSite (用于控制 Cookie 策略的请求头字段)
 
     Strict: 完全禁用第三方cookie
