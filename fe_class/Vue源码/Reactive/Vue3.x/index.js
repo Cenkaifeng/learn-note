@@ -67,7 +67,7 @@ export function reactive(data) {
   return new Proxy(data, {
     get(target, key, receiver) {
       // :FIXME 反射 target[key] -> 继承关系情况下有坑
-      const ret = Reflect.get(target, key, receiver);
+      const ret = Reflect.get(target, key, receiver); // receiver 是指定接收者的意思，可以理解成this
       track(target, key); // 依赖收集
       return isObject(ret) ? reactive(ret) : ret;
     },
