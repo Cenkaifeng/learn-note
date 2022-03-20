@@ -81,7 +81,7 @@ go(number)
 pushState 新增 => A B => A B C
 replaceState 覆盖/代替 A B => A C
 
-1. 可以使用Popstate事件来监听url变化
+1. 可以使用Popstate事件来监听url变化（onpopstate)
 2. pushState 和 replaceState并不会触发Popstate变化
 3. 哪些情况会触发popstate?
     1. 浏览器的前进、回退按钮
@@ -157,3 +157,73 @@ import(/* webpackChunkName: "about" */ "../views/About.vue");
 1. 浏览器支持的History api
 2. 点击浏览器的返回/前进按钮
 3. router-link是不可以触发的
+
+
+# Q: 用户在刷星浏览器时，会重新加载不存在的路径吗？ - 会
+a. 一定会重新请求 -> 必然会碰到请求到前端子路径问题
+b. 服务器对于未配置的子路由都指向根路径
+
+
+# Q: 如何让vue router 在刷新页面的时候保持上一次的传参?
+这种方式传递的参数会在地址栏的 url 后面显示 ?xx=xxx
+1. 通过 params 传参
+```js
+{ 
+    path: '/detail/:id',  //若id后面加?代表这个参数是可选的
+    name: 'detail', 
+    component: Detail 
+}
+```
+2. query
+```js
+// 路由配置
+{ 
+    path: '/detail', 
+    name: 'detail', 
+    component: Detail 
+}
+
+// 列表页
+goDetail(row) {
+    this.$router.push({
+        path: '/detail',
+        query: {
+            id: row.id
+        }
+    })
+}
+
+// 详情页
+this.$route.query.id
+```
+3. props 配合组件路由解耦
+```js
+// 路由配置
+{ 
+    path: '/detail/:id',
+    name: 'detail', 
+    component: Detail,
+    props: true // 如果props设置为true，$route.params将被设置为组件属性
+}
+
+// 列表页
+goDetail(row) {
+    this.$router.push({
+        path: '/detail',
+        query: {
+            id: row.id
+        }
+    })
+}
+
+// 详情页
+export default {
+    props: {
+        // 将路由中传递的参数id解耦到组件的props属性上
+        id: String
+    },
+    mounted: {
+        console.log(this.id)
+    }
+}
+```
