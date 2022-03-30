@@ -109,7 +109,7 @@ let { a, b } = {
 
 3.1 Iterator 是什么？
 
-Iterator 是一种借口， interface, 为各种不宜硬的数据解构提供统一的访问机制。
+Iterator 是一种接口， interface, 为各种不宜硬的数据解构提供统一的访问机制。
 
 任何数据解构只要有 Iterator 接口。
 
