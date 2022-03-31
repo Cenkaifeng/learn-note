@@ -29,7 +29,24 @@ var deleteDuplicates = function (head) {
 };
 
 /* 双指针解
+ *
  * @param {ListNode} head
  * @return {ListNode}
  */
-var deleteDuplicates2 = function (head) {};
+var deleteDuplicates2 = function (head) {
+  if (head === null) {
+    return null;
+  }
+  // 初始化指针
+  let slow = head;
+  let fast = head;
+  while (fast !== null) {
+    if (slow.val !== fast.val) {
+      slow.next = fast;
+      slow = slow.next;
+    }
+    fast = fast.next;
+  }
+  slow.next = null;
+  return head;
+};
