@@ -233,3 +233,4 @@ function traverse(value, seen = new Set()) {
   return value;
 }
 //add some
+export default { effect: effect };
