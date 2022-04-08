@@ -28,7 +28,7 @@ var deleteDuplicates = function (head) {
   return head;
 };
 
-/* 双指针解
+/**  双指针解
  *
  * @param {ListNode} head
  * @return {ListNode}
