@@ -206,8 +206,22 @@ $server_freshness_limit = int($time_since_modify * $lm_factor);
 
 ### 如果一个缓存在代理服务器中长时间未引用，代理服务器是通过什么办法清空它的？
 
-LRU算法
-手动可以通过 purge 字段请求进行代理服务的缓存清空操作
+
+手动可以通过 `purge` 字段请求进行代理服务的缓存清空操作，这个方法几乎已经是缓存里的跟GET，HEAD，POST处于相同地位的重要方法。PURGE请求告诉缓存服务器，该url对应的文件需要从系统里删除；
+>There is an HTTP PURGE method, though it is not defined in the HTTP RFCs (which do allow for custom methods beyond the standard defined methods). Some HTTP servers and caching systems actually do implement PURGE, for instance Squid and Varnish:
+>
+
+代理服务器通过LRU算法来管理内存。LRU的原理是通过链表结构实现：
+1. 维护一个有序单链表，越靠近链表尾部的结点是越早之前访问的。当有一个新的数据被访问时，我们从链表头开始顺序遍历链表。
+2. 如果此数据之前已经被缓存在链表中了，我们遍历得到这个数据对应的结点，并将其从原来的位置删除，然后再插入到链表的头部。
+3. 如果此数据没有在缓存链表中，又可以分为两种情况：
+  a) 如果此时缓存未满，则将此结点直接插入到链表的头部；
+  b) 如果此时缓存已满，则链表尾结点删除，将新的数据结点插入链表的头部。
+
+> PS: 补充： 空间是有上限的，当缓存满了就需要缓存淘汰策略。常见三种：
+* 先进先出策略 FIFO(First In, First Out)
+* 最少使用策略 LFU (Least Frequently Used)
+* 最近最少使用策略 LRU (least Recently Used)
 
 ## 参考资料
 
@@ -216,3 +230,4 @@ LRU算法
 [彻底弄懂 Http 缓存机制 - 基于缓存策略三要素分解法](https://mp.weixin.qq.com/s/qOMO0LIdA47j3RjhbCWUEQ?)
 [HTTP强缓存和协商缓存](https://segmentfault.com/a/1190000008956069)
 《Web协议详解与抓包实战》
+[缓存服务器设计与实现](https://www.cnblogs.com/my_life/articles/7216603.html)
