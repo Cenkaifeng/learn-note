@@ -45,6 +45,25 @@ constant 的简写，它在 let 的基础上会报错。
 
 构造函数：改变this指向，指向新实例。
 箭头函数：this 是在定义的时候出现的。
+```js
+// 除了标题链接，也可看下列案例
+var name = 'haha'
+const teacher = {
+  name: 'teacher',
+  getName: function () {
+    return this.name;
+  }
+}
+console.log(teacher.getName());// teacher;
+
+// 如果 getName 改成箭头函数
+const teacher = {
+  name: 'teacher',
+  getName: () => {
+    return this.name;
+  }
+} // 这个时候 this 指向它所声明的作用域 window // 那么 this.name 就是 haha
+```
 
 ### [Class](./class.md)
 
