@@ -18,7 +18,7 @@ module.exports = function ({
             kind: "const",
           })
         ) {
-          node.kid = "let";
+          node.kind = "let";
           const inertNode = temp();
           path.insertBefore(inertNode);
         }

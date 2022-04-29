@@ -35,3 +35,21 @@ var twoSum = function (numbers, target) {
   }
   return [i, j];
 };
+/**
+ * hashMap 解法
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (nums, target) {
+  const map = new Map(); // 数组中同一元素不重复出现
+
+  for (let i = 0, len = nums.length; i < len; i++) {
+    if (map.has(target - nums[i])) {
+      let res = map.get(target - nums[i]);
+
+      return [i, res];
+    }
+    map.set(nums[i], i);
+  }
+};
