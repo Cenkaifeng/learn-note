@@ -15,7 +15,7 @@ var employee = {
 String.prototype.render = function (obj) {
   return this.replace(/\$\{(.*?)\}/g, (match, key) => {
     if (key.match(".")) {
-      return key.split(".").reduce((prev, curr, currIndex, arr) => {
+      return key.split(".").reduce((prev, curr) => {
         return prev[curr];
       }, obj);
     }
