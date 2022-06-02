@@ -32,7 +32,7 @@ var combinationSum = function (candidates, target) {
 
   let ans = [];
   let path = [];
-  candidates.sort((a, b) => a - b);
+  candidates.sort((a, b) => a - b); // 排序是剪枝的前提
   travals(candidates, target, 0, path, ans);
   return ans;
 };
@@ -52,7 +52,7 @@ var travals = function (arr, target, begin, currans, ans) {
     }
 
     currans.push(arr[i]);
-    travals(arr, target - arr[i], i, currans, ans);
+    travals(arr, target - arr[i], i, currans, ans); // 不用 i + 1 表示可以重复读取当前数
     currans.pop(); //回溯清理： 该节点下的所有路径都走完了，清理堆栈，准备下一个递归。例如弹出当前节点
   }
 };
