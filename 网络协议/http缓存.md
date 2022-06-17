@@ -78,6 +78,16 @@ last-modified 的问题在于
 （表现形式Etag:W/"xxx3423680412-d62serveav")
 [关于E-tag 的强弱：RFC7232](https://datatracker.ietf.org/doc/html/rfc7232#section-2.1)
 
+#### E-tag 的补充
+[参考链接：2022年Etag 还这么重要么？](https://www.zhihu.com/question/532057768/answer/2484183784)
+这里假设了一个大前提，大家都在使用 Nginx 的情况下，E-tag 使用建立在 Nginx 生成 E-tag 的前提，
+> `nginx` 中的 `etag` 由 `last_modified` 与 `content_length` 组成，而 `last_modified` 又由 
+> `mtime` 组成
+> 当编辑文件却未更改文件内容时，`mtime` 也会改变，此时 `etag` 改变，但是文件内容没有更改。
+
+nginx 不再依赖内容本身的哈希。使用内容长度加时间戳的格式生成 E-tag 也减小了服务器的消耗。
+[nginx 缓存E-tag 是怎么生成的](https://github.com/shfshanyue/Daily-Question/issues/112)
+
 ### Cache-control
 Cache-control 中的值，很多既能用在请求中也能用在响应中，但是它们的在不同语境下表述的内容是不同的，比如`max-age` 和 `no-cache`
 
