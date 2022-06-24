@@ -81,3 +81,9 @@ console.log(almostEqual(0.1 + 0.2, 0.3));
 TODO:
 - Promise
   1. 实现 Promise.all 
+
+
+
+### 手写题思考
+
+如何在一个题目中展现自己的能力？
