@@ -70,6 +70,24 @@ const deepCopy = target => {
 // https://juejin.cn/post/7017991655009566728
 // 上述链接考虑了 Function Symbol
 
+// demo2
+function cloneDeep2(obj) {
+  const keys = Object.keys(obj);
+  return keys.reduce((memo, current) => {
+    const value = obj[current];
+    if(typeof value === 'object') {
+      return {
+        ...memo,
+        [current]: cloneDeeps(obj[current])
+      };
+    }
+    return {
+      ...memo,
+      [current]: obj[current]
+    }
+  })
+}
+
 // 浅拷贝
 
 const user = {

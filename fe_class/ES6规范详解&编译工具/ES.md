@@ -181,7 +181,7 @@ const iterator = generateIterator([1, 2, 3])
 ```js
 // 面试题：你可以给我实现一个对象，让它进行for of 遍历吗？
 const obj = {
-  [Symbol.iterator]: () => {// 无参函数
+  [Symbol.iterator]: () => {// 无参函数 es6中，当对象中的key名称为一个变量时，需要用`[]`括起来
     return {
       next: () => {
         obj.count++;
