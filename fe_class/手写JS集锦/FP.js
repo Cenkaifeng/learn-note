@@ -6,11 +6,10 @@
 
 // 题目难度维度，1 增加本身深度【算法】 2增加题目扩展性【设计】
 
-
 function generateArray(arr) {
   let res = [];
-  for(let i = 0 ; i < arr.length; i++) {
-    if(arr[i]) res.push(arr[i] * 2)
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i]) res.push(arr[i] * 2);
   }
   return res;
 }
@@ -18,13 +17,13 @@ function generateArray(arr) {
 // 那么 增加一个函数每一位乘3 考察高价函数封装、函数柯里化
 
 function generateArray(num) {
-  return function(arr) {
+  return function (arr) {
     let res = [];
-    for(let i = 0 ; i < arr.length; i++) {
-      if(arr[i]) res.push(arr[i] * num)
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i]) res.push(arr[i] * num);
     }
-    return res;    
-  }
+    return res;
+  };
 }
 
 // 新需求：
@@ -39,11 +38,24 @@ const mutiply3 = mutiply(3);
 const filterBigger = num => arr => arr.filter(item => item <= num);
 const filterBigger10 = filterBigger(10);
 
-const compose = (...rest) => startNum => rest.reduce((total, item) => item(total), startNum);
+const compose =
+  (...rest) =>
+  startNum =>
+    rest.reduce((total, item) => item(total), startNum);
 // fn1, fn2, fn3 --> fn3(fn2(fn1(startNum)))
+// compose promise
+const promiseChain = proArr => {
+  proArr.reduce(
+    (proChain, pro) =>
+      proChain.then(res => {
+        return pro();
+      }),
+    Promise.resolve(-1)
+  );
+};
 
 const modifyArr = compose(filterBoolean, mutiply3, filterBigger10);
-let arr = [0, 1, 2, 3, 4]
+let arr = [0, 1, 2, 3, 4];
 console.log(modifyArr(arr));
 
-// 函数式编程中，compose 是一个非常重要的概念
+// 函数式编程中，compose(组合) 是一个非常重要的概念

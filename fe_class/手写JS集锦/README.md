@@ -40,6 +40,14 @@ function createObject(Con) {
     return typeof(ret) === 'object' ? ret: obj;
 }
 
+function newObj(Father) {
+  if(typeof Father !== 'function') {
+    throw new Error('new Operator Function this first param must be a function !')
+  }
+  var obj = Object.create(Father.prototype); // 省掉了 上个写法的 setPrototypeOf 的写法
+  var result = Father.applay(obj, Array.prototype.slice.call(arguments, 1)); // [].slice.call(arguments, 1)
+  return result && typeof result === 'object' && result !== null ? result : obj;
+}
 ```
   new 的优先级 [ref](https://www.jianshu.com/p/412ccd8c386e)
 ```js
@@ -87,3 +95,30 @@ TODO:
 ### 手写题思考
 
 如何在一个题目中展现自己的能力？
+
+
+### how to build a object
+
+- Object.create();
+- new Object();
+- var bar = {}
+
+new 做了啥？
+
+```js
+let a = {}
+let b = new Object();
+let c = Object.create({})
+let d = Object.create(null)
+let e = Object.create(Object.prototype)
+```
+一样么？
+
+判断一个对象有没有属性最安全做法
+```js
+if(Object.prototype.hasOwnProperty) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+```
+
+// ps hasOwn TC39 stage4 解决了我创建一个空对象，没有原型属性怎么办 var a = {}
