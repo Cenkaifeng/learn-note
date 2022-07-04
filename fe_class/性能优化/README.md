@@ -1,6 +1,18 @@
 
 TODO: 关于性能优化, 逐步把 processOn 对应性能优化的内容总结进来，逐步丰满这个笔记
 
+
+
+性能优化监听API
+
+1、Performance。performance.now()与new Date()区别，它是高精度的，且是相对时间，相对于页面加载的那一刻。但是不一定适合单页面场景。
+2、window.addEventListener("load", ""); window.addEventListener("domContentLoaded", "");
+3、Img的onload事件，监听首屏内的图片是否加载完成，判断首屏事件。
+4、RequestFrameAnmation 和 RequestIdleCallback。
+5、IntersectionObserver、MutationObserver，PostMessage。
+6、Web Worker，耗时任务放在里面执行。
+有特定业务需要特殊定制或者需要搭建性能监控平台造轮子的，需要上面的api封装成定制的监控模块。由于部分 api 由宿主环境对象提供，对于多段适配公共监听需求的开发需要特定的 polyfill 
+
 ### vue 为什么比 react 性能好？
 
 ### 图片格式优化
@@ -19,7 +31,7 @@ onLoad
 DCL
 
 
-### 维度1：从 url 开始
+### 优化维度1：从 url 开始
 - unload 阶段， redirect 阶段
 - app cache 阶段
   - 协商缓存，强缓存。(那种协商缓存好？好在哪？)
