@@ -1,8 +1,9 @@
 
 # 性能优化
-本篇性能优化总结了一个5年+前端应知应会的各项优化指标、方式。把各种优化相关的事务归纳汇总到这篇笔记里。方便工作学习过程中查漏补缺
+性能优化可以说是对前端所有分支学科汇总的一个集合，每个分支都有需要优化的地方，优化的目的不外乎提升体验，不论用户体验还是开发体验。
+本篇性能优化总结了一个5年+前端应知应会的各项优化指标、方式。从Website 运行各阶段的各种优化相关的事务归纳汇总到这篇笔记里，方便工作学习过程中查漏补缺。
 
-TODO: 关于性能优化, 逐步把 [processOn](https://www.processon.com/mindmap/601a31e707912901722406e9) 对应性能优化的内容总结进来，逐步丰满这个笔记
+关于性能优化, 逐步把 [processOn](https://www.processon.com/mindmap/601a31e707912901722406e9) 对应性能优化的内容总结进来，逐步丰满这个笔记
 
 ## 优化维度：从 url 开始
 
@@ -12,6 +13,8 @@ TODO: 关于性能优化, 逐步把 [processOn](https://www.processon.com/mindma
     - hash/ time 
     - 启发式缓存？
   - 持久化
+    localstorage
+    indexdb
 - dns 阶段
   - dns预解析
     1. `<meta http-equiv="x-dns-prefetch-control" content="off">` content="off"关闭隐式预解析 隐式预解析（默认情况下，对于a标签来说，浏览器会对当前页面中与当 前域名不在同一个域的域名进行预获取，并且缓存结果）但是对于https 就失效了使用方式 `<meta http-equiv="x-dns-prefetch-control" content="on"> `
@@ -21,6 +24,7 @@ TODO: 关于性能优化, 逐步把 [processOn](https://www.processon.com/mindma
   - http 1.1
   - http 2
   - http 3
+  - CDN加速
   - 包体积 main.min.js 如何缩小加载js到极致
     - code splitting
     - uglyfily
@@ -37,13 +41,6 @@ TODO: 关于性能优化, 逐步把 [processOn](https://www.processon.com/mindma
     link 标签 `rel = "preconnect | preload | prefetch | prerender"`
   - code splitting(不该加载的东西 参考 coverage指标)
 ---
-
-## 图片格式优化
-
-- png jpg jpeg gif webp base64 icon: svg
-这些格式特点是什么？
-为什么用 base64 什么时候用？
-为什么 大1/3
 
 ## Browser Performance 优化指标
 ![浏览器流程对应的事件节点](./浏览器流程对应的事件节点.png)
@@ -101,7 +98,10 @@ function getFirstPage() {
     
     解决方式：看 long task 执行的 O(n) 时间复杂度
 
-5. DCL TODO:
+5. DCL: domContentLoaded TODO:
+  与 onload 区别：
+    `DOMContentLoaded` 事件在页面文档加载解析完毕之后马上执行。而不会等待图片文件和子框架页面的加载，`load` 事件会在页面所有资源被加载进来之后才会触发load事件。
+    **load时间在DOMContentLoaded事件触发之后**
 
 6. [TTFB](https://web.dev/ttfb/) TODO:
 
@@ -189,6 +189,13 @@ long task 开启 web work 新起线程不影响main.js
 9. 防止渲染抖动，控制时序。	
 10. 减少组件层级。	
 11. 优先使用Flex布局。
+
+#### 图片格式优化
+
+- 老旧的雪碧图....
+- png jpg jpeg gif webp base64 icon: svg 这些格式特点是什么？
+- 为什么用 base64 什么时候用？
+- 为什么图片base64 之后会比原先的文件体积大1/3？
 
 
 **bigPipe** 服务端渲染的优化点
