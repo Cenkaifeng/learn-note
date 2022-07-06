@@ -1,6 +1,10 @@
 ## 持续交付持续部署
 
-ci / id
+记录部署学习的笔记
+
+
+
+### ci / id
 常见工具有 travis, circle 和 github actions 
 
 
