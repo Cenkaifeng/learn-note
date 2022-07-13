@@ -2,13 +2,19 @@
 # Docker & k8s learn-note
 
 ### docker
-类似 VM Work station 但是又有些不相似的地方
+类似 VM Work station 但是又有些不相似的地方。我们看一下几个关键词
 
-镜像：IOS 文件
-容器：正在运行的虚拟机
-tar: 类似VM 用的 vmdk 文件。可以将镜像保存成 tar 文件
-dockerfile: docker 的配置文件，可以用 build 指令将配置构建成一个镜像
+  * 镜像：ISO 文件
+  * 容器：正在运行的虚拟机
+  * tar: 类似VM 用的 vmdk 文件。可以将镜像保存成 tar 文件
+  * dockerfile: docker 的配置文件，可以用 build 指令将配置构建成一个镜像
 
+Docker镜像本身是由特殊的文件系统叠加而成，是一个分层文件系统。
+
+这时候有个问题，我们自己在服务器装个 CentOS 的iso 要几个G 但是用 docker 镜像只要200M.
+因为：CentOS的iso镜像包含bootfs和rootfs，而Docker的centos镜像复用操作系统的bootfs，只有rootfs和其它镜像层。
+同理很多 docker 特有的镜像也是靠复用相同服务或者底层结构来达到减小体积的目的。
+![镜像层级关系](./%E9%95%9C%E5%83%8F%E5%B1%82%E7%BA%A7%E5%85%B3%E7%B3%BB.png)
 #### docker 命令
 
 操作环境：https://labs.play-with-docker.com/
@@ -41,30 +47,33 @@ xx 指镜像哈希前两位
 `docker stop [name]` 停止容器
 
 ### dockerfile
-最常用的五个参数和其他
+1. 最常用的五个参数和其他
 
-`FROM`：基于xxx镜像
-`WORKDIR`：指定接下来 shell 语句运行的目录
-`COPY`：将当前宿主机的文件拷贝到镜像中去 类似`ADD`
-`RUN`：运行 shell 语句
-`CMD`：指定整个镜像运行的脚本，一般到这个命令也代表运行Dockerfile文件的周期进入结尾，所以都会用阻塞式脚本 .eg `tail -f xx.txt` 这类
-`ENTRYPOINT`
----
-`EXPOSE` 指定导出端口
-`VOLUME` 指定映射文件 （一般映射匿名卷）
----
-`ENV` V=10 指定环境变量 可以 CMD echo $V 取出 也可以 V=$B 赋值
-`ARG` B=1 全局变量，构建时生效（可以通过docker build -t xxx --build-arg B=1 来起到构建时临时修改内部变量的效果）
----
-`LABEL` k="v" k1="k" 用于看镜像表示，没有实际作用
-`ONBUILD` 另一个镜像基于当前镜像创建来执行脚本，执行位置在另一个镜像FROM后
+ * `FROM`：基于xxx镜像
+ * `WORKDIR`：指定接下来 shell 语句运行的目录
+ * `COPY`：将当前宿主机的文件拷贝到镜像中去 类似`ADD`
+ * `RUN`：运行 shell 语句
+ * `CMD`：指定整个镜像运行的脚本，一般到这个命令也代表运行Dockerfile文件的周期进入结尾，所以* 都会用阻塞式脚本 .eg `tail -f xx.txt` 这类
+ * `ENTRYPOINT`
 
-STOPSIGNAL 指定容器停止的信号
-HEALTHCHECK 容器健康检查配置
-SHELL /bin/sh 容器默认脚本
+2. 导出：
+  * `EXPOSE` 指定导出端口
+  * `VOLUME` 指定映射文件 （一般映射匿名卷）
+
+3. 全局变量
+  * `ENV` V=10 指定环境变量 可以 CMD echo $V 取出 也可以 V=$B 赋值
+  * `ARG` B=1 全局变量，构建时生效（可以通过docker build -t xxx --build-arg B=1 来起到构建时临时修改内部变量的效果）
+
+4. 其他不常用的
+  * `LABEL` k="v" k1="k" 用于看镜像表示，没有实际作用
+  * `ONBUILD` 另一个镜像基于当前镜像创建来执行脚本，执行位置在另一个镜像FROM后
+  * 
+  * `STOPSIGNAL` 指定容器停止的信号
+  * `HEALTHCHECK` 容器健康检查配置
+  * `SHELL` /bin/sh 容器默认脚本
+
 **ENTRYPOINT & CMD**
-
-ENTRYPOINT 如果非 json 则以 ENTRYPOINT 为准，如果 ENTRYPOINT 和 CMD 都是 json 则 ENTRYPOINT + CMD 拼成 shell 
+`ENTRYPOINT` 如果非 json 则以 ENTRYPOINT 为准，如果 ENTRYPOINT 和 CMD 都是 json 则 `ENTRYPOINT` + CMD 拼成 shell 
 
 ENTRYPOINT 指令可以在run的时候最佳参数
 ### 实际工程中的docker分配
