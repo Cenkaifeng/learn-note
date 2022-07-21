@@ -20,7 +20,8 @@ Docker镜像本身是由特殊的文件系统叠加而成，是一个分层文�
 操作环境：https://labs.play-with-docker.com/
 
 
-![docker命令结构](./docker%E5%91%BD%E4%BB%A4%E7%BB%93%E6%9E%84.png);
+![docker命令结构](./docker%E5%91%BD%E4%BB%A4%E7%BB%93%E6%9E%84.png)
+
 docker pull nginx 
 等效于
 docker pull nginx:latest
