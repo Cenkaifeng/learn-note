@@ -1,4 +1,4 @@
-# 现代 Hybrid 开发与原理解析
+# 现代 Hybrid 开发与原理解析(JSBridge 原理与实现)
 
 1. Native App
 
@@ -32,7 +32,7 @@ js/ts, vue/react/angular(rxjs)
 
 4. Flutter
 
-dart
+5. dart
 
 
 ## Hybrid 基本介绍
@@ -69,11 +69,11 @@ webview 到底有什么特点可以撑起双向通讯？
 
 具体的通讯流程又是什么样子的？
 
-A：主要有两种方式：
+**Native H5 bridge (JSBridge) 主要有两种方式：**
 
-1. URL Schema: 客户端通过拦截 webview 请求来完成通讯。xxxname://
+1. URL Scheme: 客户端通过拦截 webview 请求来完成通讯。xxxname://
 2. Native 向 webview 中的js 执行环境注入 Api, 以此来完成通讯。
-
+[参考文章链接](https://dailc.github.io/search/search#jsbridge)
 
 #### 一、URL Schema
 

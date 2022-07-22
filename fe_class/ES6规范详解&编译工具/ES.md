@@ -305,9 +305,15 @@ obj.something = 1;
 console.log(obj.something)
 ```
 
-Reflect 是什么？
+**Reflect 是什么？**
+>反射是指在程序运行期对程序本身进行访问和修改的能力。是指计算机程序在运行时（runtime）可以访问、检测和修改它本身状态或行为的一种能力。[1]用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。 --- wiki-反射
 
 这个说白了就是一种优化，它的提出是建立在期望把Object 上的一些方法比如 defineProperty这种，从Object 上抽离到 Reflect上
+
+
+
+
+[ES6  Proxy里面为什么要用Reflect？ - rambo的回答 - 知乎](https://www.zhihu.com/question/460133198/answer/2513044373)
 
 ```js
 const obj = { name: 111};
