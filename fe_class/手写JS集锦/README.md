@@ -1,7 +1,7 @@
 # JS 手写题集锦，主要记录高频的前端面试题
 
 
-## 实用性方法
+## 实用性方法-主要是对闭包和异步的应用
 
 1. 函数柯里化
   [Jump to demo](./README.md)
@@ -19,6 +19,74 @@
 7. 对象全等
 
 8. 字符串替换
+
+9. 如何写一个缓存函数
+```js
+function memoFun(fn) {
+  const buff = {};
+  return function (...rest) {
+    const key = [...rest].join('|')
+    // if(buff[key]) {
+    //   return buff[key];
+    // } else {
+    //   buff[key] = fn(rest);
+    // }
+    buff[key] || (dep[key] = fn(...rest));
+    return buff[key];
+  }
+}
+const add = function(a, b) {
+  return a + b 
+}
+const mAdd = memoFun(add);
+
+console.time('before buff')
+mAdd(10,200);
+console.timeEnd('before buff')
+
+console.time('after buff')
+mAdd(10,200);
+console.timeEnd('after buff')
+```
+
+10. 如何实现一个简易的生命周期？或者如下面用例
+```js
+function test(value) {
+  console.log('the test function is running...')
+}
+
+const list = [];
+
+function b1() {
+  console.log('b1 is running before test')
+}
+
+function b2() {
+  console.log('b2 is running before test')
+}
+
+function wrapped(fn) {
+  // TODO: 
+  fn.before = list;
+  return function (...arg) {
+    fn.before.forEach( item => item());
+    fn();
+  }
+}
+const newTest = wrapped(test);
+list.push(b1);
+newTest();
+// b1 is running before test
+// the test function is running...
+
+list.push(b2);
+newTest();
+// b2 is running before test
+// the test function is running...
+
+```
+
+
 ## 高频大厂手写
 * TX
   写一个 LRU 缓存函数
@@ -104,6 +172,8 @@ TODO:
   1. 实现 Promise.all 
 
 
+
+## 如何判空？ 延伸手写题
 
 ### 手写题思考
 
