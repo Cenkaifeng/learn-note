@@ -206,3 +206,5 @@ if(Object.prototype.hasOwnProperty) {
 ```
 
 // ps hasOwn TC39 stage4 解决了我创建一个空对象，没有原型属性怎么办 var a = {}
+
+引申阅读：[v8 中 Symbol() 、Object.create(null) 和 {} 的内存占用分别是多少？ - justjavac的回答 - 知乎](https://www.zhihu.com/question/425300093/answer/1523228095)
