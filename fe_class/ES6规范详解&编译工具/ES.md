@@ -101,7 +101,7 @@ console.log(str) // 2020-10-01
 
 function render(template) {
   return function(context) {
-    return template.replace(/\$\{(.*?)\}/g, (match, key) => context[key]})
+    return template.replace(/\$\{(.*?)\}/g, (match, key) => context[key])
   }
 }
 
@@ -201,7 +201,34 @@ const obj = {
 for(let item of obj) {
   console.log(item)
 }
+
+
 ```
+3.3.1   **[如何关闭一个迭代器？](https://www.zhihu.com/question/462012759/answer/1914177301)**
+`return` `continue` 在 `for-in/of` 里会报错的
+
+大多数都是用 `break` 但是 `break` 在对系统文件迭代读取的过程中会有打开后没关闭，占用资源管理器情况。
+
+所以需要在迭代协议里定制
+`return()` 方法 （就像 `next()` 一样）
+```js
+const foo = {
+  [Symbol.iterator]() {
+    // 这里打开硬盘或者网络上的文件
+    
+    return {
+      next() {
+        // 这里读取一部分打开的文件, 并返回 {value, done: false}
+        // 如果读完了，就做收尾工作，即关闭文件，并返回 {done: true}
+      }
+    }
+  }
+}
+```
+3.4
+// TODO: Generator / 生成器迭代器整合
+https://es6.ruanyifeng.com/#docs/generator
+
 
 ### 遍历
 
@@ -387,7 +414,15 @@ function PromiseAllSettled(promiseArray) {
   })
 }
 ```
+## async / await
+`async await` 本质就是 ES7 引入的使用 generator 函数实现对 Promise 异步封装的语法糖。它提供了在不阻塞主线程的情况下使用同步代码实现异步访问资源的能力，同时使得代码逻辑清晰简明。
 
+> 协程：是一种比线程更加轻量级的存在。你可以把协程看成是跑在线程上的任务，一个线程上可以存在多个协程，但是在线程上同时只能执行一个协程，比如当前执行的是 A 协程，要启动 B 协程，那么 A 协程就需要将主线程的控制权交给 B 协程，这就体现在 A 协程暂停执行，B 协程恢复执行；同样，也可以从 B 协程中启动 A 协程。通常，如果从 A 协程启动 B 协程，我们就把 A 协程称为 B 协程的父协程。
+![协程运行流程](./async_generator.png)
+
+
+
+参考：[手写async await的最简实现（20行）](https://juejin.cn/post/6844904102053281806)
 
 ## Array
 
@@ -438,9 +473,6 @@ console.log(Array.from([1, 2, 3], x => x + 1)); // 2, 3, 4
 
   还可以通过 Array.from(new Set(arr)) 做数组去重
 
-
-// TODO: Generator / 生成器迭代器整合
-https://es6.ruanyifeng.com/#docs/generator
 
 
 ## Map() Set() 区别

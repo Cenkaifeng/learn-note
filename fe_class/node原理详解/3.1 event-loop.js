@@ -30,15 +30,22 @@ new Promise(function (resolve) {
 })
 console.log('script end')
 
-// script start
-// async1 start
-// async2
-// promise1
-// promise2
-// script end
-// nextTick
-// async1 end
-// promise3
-// setTimeout0
-// setImmediate 
-// setTimeout1 
+// main: [script start] [ascync1 start] [async2] [promise1] [promise2] [script end]
+// microtask: [nextTick] [async1 end] [promise3]
+
+// next Task main: [setTimeout0] [setImmediate] [setTimeout1]
+
+/*
+script start
+async1 start
+async2
+promise1
+promise2
+script end
+nextTick
+async1 end
+promise3
+setTimeout0
+setImmediate 
+setTimeout1 
+*/
