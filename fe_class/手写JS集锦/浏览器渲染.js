@@ -22,6 +22,7 @@ new Promise((resolve, reject) => {
 });
 console.log("end");
 
+// 下题来源 Event Loop - Jake Archibald 的演讲
 button.addEventListener("click", () => {
   Promise.resolve().then(() => console.log("Microtask 1"));
   console.log("Listenner 1");
