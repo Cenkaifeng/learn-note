@@ -95,7 +95,7 @@ ABNF 描述的帧格式
     ...
 
   2. 然后服务器拿到base64 经过下面三步计算处理
-    1. 用 GUID连接(`${base64}${GUID}` 浏览器发的那个)，
+    1. 用 GUID连接(`${base64}${GUID}` 浏览器发的那个)，GUID = `258EAFA5-E914-47DA-95CA-C5AB0DC85B11`
     2. 然后服务器用 SHA-1 hash -> 
     3. 再base64-encode  
   Ps: GUID -> Globallly Unique Identifier 是一个**全局统一**固定值
@@ -207,3 +207,5 @@ https://www.piesocket.com/websocket-tester
 
 * [WebSocket RFC6455 官方文档](https://datatracker.ietf.org/doc/html/rfc6455)
 * [《Web 协议详解与抓包实战》](https://time.geekbang.org/course/intro/100026801?tab=catalog)
+
+https://juejin.cn/post/6844903544978407431#heading-11

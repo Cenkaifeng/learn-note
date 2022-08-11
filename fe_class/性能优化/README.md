@@ -17,7 +17,7 @@
     indexdb
 - dns 阶段
   - dns预解析
-    1. `<meta http-equiv="x-dns-prefetch-control" content="off">` content="off"关闭隐式预解析 隐式预解析（默认情况下，对于a标签来说，浏览器会对当前页面中与当 前域名不在同一个域的域名进行预获取，并且缓存结果）但是对于https 就失效了使用方式 `<meta http-equiv="x-dns-prefetch-control" content="on"> `
+    1. `<meta http-equiv="x-dns-prefetch-control" content="off">` `content="off"`的意思是关闭隐式预解析（默认情况下，对于a标签来说，浏览器会对当前页面中与当前域名不在同一个域的域名进行预获取，并且缓存结果）但是对于https 就失效了使用方式 `<meta http-equiv="x-dns-prefetch-control" content="on"> `
     2. `<link rel="dns-prefetch" href="http://www.test.com" />` 不知道协议情况下： `<link rel="dns-prefetch" href="//test.com" />` 不要写重复的预解析
 - tcp 阶段，request, response 阶段
   - connectStart -- responseEnd;
