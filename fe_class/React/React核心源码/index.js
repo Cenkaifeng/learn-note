@@ -63,22 +63,50 @@ let deadline = 0
 const now = () => performance.now();
 const peek = arr => arr[0];
 
-export function schedule(cb) {
-  queue.push({ cb });
+function shouldYield () {
+  // https://github.com/WICG/is-input-pending
+  // 超时、或用户输入时
+  return navigator.scheduling.isInputPending() || now() >= deadline;
+}
 
-  //...todo
-  startTranstion(flush)
+// 建立触发了一个宏任务
+const postMessage = (() => {
+  const cb = () => transtions.splice(0, 1).forEach( c => c());
+  const { port1, port2 } = new MessageChannel();
+  port1.onmessage = cb;
+  return () => port2.postMessage(null);
+})()
+
+export function startTransition(cb) {
+  transtions.push(cb) && postMessage();
+}
+// 二合一 push / exec
+export function schedule(cb) {
+  queue.push({ cb }); // 这任务最重会调和 reconciliation
+  startTransition(flush)
 }
 
 //requestIdleCallback 的最小实现
 function flush() {
-  deadline = now() + deadline
+  deadline = now() + threshold;
   let task = peek(queue)
 
   // shouldYield 表示要不要把控制权交还给主浏览器
   while(task && !shouldYield()) {
+    const { cb } = task;
+    task.cb = null;
+    const next = cb();
 
+    if( next && typeof next === 'function') {
+      task.cb = next;
+    } else {
+      queue.shift();
+    }
+
+    task = peek(queue)
   }
+
+  task && startTransition(flush); // 执行控制权翻转
 
 }
 
