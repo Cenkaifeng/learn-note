@@ -159,4 +159,7 @@ why not web-worker?
 数据传递用 web-worker 默认走一套结构化克隆算法，当数据量大的时候是非常消耗性能的
 （history.pushstate 里面的state 状态也是结构化克隆，属于深克隆）
 
+https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage
+> 将要发送到其他 window 的数据。它将会被结构化克隆算法序列化。 
+
 */
