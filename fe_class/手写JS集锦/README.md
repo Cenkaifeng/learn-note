@@ -37,7 +37,7 @@
 9. 如何写一个缓存函数
 ```js
 function memoFun(fn) {
-  const buff = {};
+  const buff = new WeakMap(); // WeakMap 比 Map / {} 好在哪？
   return function (...rest) {
     const key = [...rest].join('|')
     // if(buff[key]) {
@@ -45,7 +45,7 @@ function memoFun(fn) {
     // } else {
     //   buff[key] = fn(rest);
     // }
-    buff[key] || (dep[key] = fn(...rest));
+    buff[key] || (buff[key] = fn(...rest));
     return buff[key];
   }
 }
