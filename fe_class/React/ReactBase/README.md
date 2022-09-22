@@ -156,7 +156,7 @@ class App extends Component {
   clickHandle(e) {
     const text = e.currentTarget.innerText;
     setTimeout(function() {
-      // butto1
+      // button1
       console.log('button1 click', e.currentTarget.innerText)// 错误写法
       console.log('button1 click', text)
     })
