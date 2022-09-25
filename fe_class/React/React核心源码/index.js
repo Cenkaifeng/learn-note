@@ -1,24 +1,23 @@
-
-
 // 文件同 ../miniReact
 // jsx -- babel plugin 插件
 // eg const Empty = <div className='empty'></div>
 // -> createElement('div', {}, [])
 
 const isArr = Array.isArray;
-const toArray = arr => isArr(arr ?? []) ? arr : [arr];
-const isText = txt => typeof txt === 'string' || typeof txt === 'number';
-const flatten = arr => 
-  [...arr.map(ar => isArr(ar) 
-    ? [...flatten(ar)] 
-    : isText(ar) ? createTextVNode(ar) : ar)]
+const toArray = arr => (isArr(arr ?? []) ? arr : [arr]);
+const isText = txt => typeof txt === "string" || typeof txt === "number";
+const flatten = arr => [
+  ...arr.map(ar =>
+    isArr(ar) ? [...flatten(ar)] : isText(ar) ? createTextVNode(ar) : ar
+  ),
+];
 
-    //<div className='empty'>hello wrld!</div>
-    // babel-plugin-jsx-transform -> h('div', {className: 'empty'}, 'hello wrld!')
+//<div className='empty'>hello world!</div>
+// babel-plugin-jsx-transform -> h('div', {className: 'empty'}, 'hello wrld!')
 export function h(type, props, ...kids) {
   props = props ?? {};
   kids = flatten(toArray(props.children ?? kids)).filter(Boolean);
-  if(kids.length) props.children = kids.length === 1 ? kids[0] : kids;// React child可以是一个数组或对象
+  if (kids.length) props.children = kids.length === 1 ? kids[0] : kids; // React child可以是一个数组或对象
 
   const key = props.key ?? null;
   const ref = props.ref ?? null;
@@ -31,39 +30,41 @@ export function h(type, props, ...kids) {
 
 function createTextVNode(text) {
   return {
-    type: '',
-    props: { nodeValue: text + ''}
-  }
+    type: "",
+    props: { nodeValue: text + "" },
+  };
 }
 
 function createVNode(type, props, key, ref) {
   return {
-      type, props, key, ref 
-  }
+    type,
+    props,
+    key,
+    ref,
+  };
 }
 
 export function Fragment(props) {
-  return props.children
+  return props.children;
 }
-
 
 // scheduler
 /**
- * sheduler -> 把任务放进一个队列，然后开始（以某种节奏[ric (requestIdleCallback)]执行）
+ * scheduler -> 把任务放进一个队列，然后开始（以某种节奏[ric (requestIdleCallback)]执行）
  * -> 还可以拆成：两步 pushTask, schedule
  * shouldYield -> should yield -> generator yield (本质上是一个返回 true / false 的函数)
  */
-const queue = []
-const threshold = 1000 / 60
+const queue = [];
+const threshold = 1000 / 60;
 
 // git transtions
-const transtions = []
-let deadline = 0
+const transtions = [];
+let deadline = 0;
 
 const now = () => performance.now();
 const peek = arr => arr[0];
 
-function shouldYield () {
+function shouldYield() {
   // https://github.com/WICG/is-input-pending
   // 超时、或用户输入时
   return navigator.scheduling.isInputPending() || now() >= deadline;
@@ -71,11 +72,11 @@ function shouldYield () {
 
 // 建立触发了一个宏任务
 const postMessage = (() => {
-  const cb = () => transtions.splice(0, 1).forEach( c => c());
+  const cb = () => transtions.splice(0, 1).forEach(c => c());
   const { port1, port2 } = new MessageChannel();
   port1.onmessage = cb;
   return () => port2.postMessage(null);
-})()
+})();
 
 export function startTransition(cb) {
   transtions.push(cb) && postMessage();
@@ -83,31 +84,30 @@ export function startTransition(cb) {
 // 二合一 push / exec
 export function schedule(cb) {
   queue.push({ cb }); // 这任务最重会调和 reconciliation
-  startTransition(flush)
+  startTransition(flush);
 }
 
 //requestIdleCallback 的最小实现
 function flush() {
   deadline = now() + threshold;
-  let task = peek(queue)
+  let task = peek(queue);
 
   // shouldYield 表示要不要把控制权交还给主浏览器
-  while(task && !shouldYield()) {
+  while (task && !shouldYield()) {
     const { cb } = task;
     task.cb = null;
     const next = cb();
 
-    if( next && typeof next === 'function') {
+    if (next && typeof next === "function") {
       task.cb = next;
     } else {
       queue.shift();
     }
 
-    task = peek(queue)
+    task = peek(queue);
   }
 
   task && startTransition(flush); // 执行控制权翻转
-
 }
 
 // scheduler  React 的调度属于通用设计
@@ -133,19 +133,18 @@ why not rAF?
 ----task queue-------|--------micro-tasks---------|--------render--------|
 */
 //but why not setTimeout?  间隔时间 越往后越大
-let start = + new Date();
+let start = +new Date();
 let count = 0;
-console.log('start', 0, 0)
+console.log("start", 0, 0);
 function testSetTimeout() {
   setTimeout(() => {
-    console.log('exec time', ++count, +new Date() - start);
-    if(count === 50) return
+    console.log("exec time", ++count, +new Date() - start);
+    if (count === 50) return;
     testSetTimeout();
-  })    
+  });
 }
 
-
-testSetTimeout()
+testSetTimeout();
 
 /*
 
@@ -157,7 +156,7 @@ why not web-worker?
 
 
 数据传递用 web-worker 默认走一套结构化克隆算法，当数据量大的时候是非常消耗性能的
-（history.pushstate 里面的state 状态也是结构化克隆，属于深克隆）
+（history.pushState 里面的state 状态也是结构化克隆，属于深克隆）
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage
 > 将要发送到其他 window 的数据。它将会被结构化克隆算法序列化。 
