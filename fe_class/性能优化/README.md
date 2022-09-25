@@ -72,7 +72,6 @@ function getFirstPage() {
 }
 ```
 
-
 1. **FP** [(First Paint)](https://web.dev/fp/)首次绘制
   指页面上第一个像素、色块变动
 2. **FCP** [(First Content Paint)](https://web.dev/fcp/)首次内容绘制
@@ -148,7 +147,7 @@ function getFID() {
 文档结构相同：脱离文档流 VS 不脱离文档流
   文档结构相同，脱离文档：Position
     脱离之后 CLS： 0 对原本文档流没有影响
-  不脱离文档流: 使用 transform
+  不脱离文档流: 使用 transform 
   宽高相同
   指定图片高度
 
@@ -193,10 +192,11 @@ long task 开启 web work 新起线程不影响main.js
 #### 图片格式优化
 
 - 老旧的雪碧图....
-- png jpg jpeg gif webp base64 icon: svg 这些格式特点是什么？
+- png jpg jpeg gif webp base64 icon: svg 这些格式特点是什么？ // TODO: Render-raster 中对图形解码变成位图的过程
 - 为什么用 base64 什么时候用？
 - 为什么图片base64 之后会比原先的文件体积大1/3？
 
+// TODO: 默认背景色有助于对字体清晰显示，因为可以通过读取背景色对字体渲染时使用亚像素抗锯齿增加清晰度（适用于清晰度不高的屏幕）
 
 **bigPipe** 服务端渲染的优化点
 

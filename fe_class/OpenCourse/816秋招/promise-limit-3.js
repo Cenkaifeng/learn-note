@@ -39,7 +39,7 @@ class PromiseQueue {
   }
 }
 
-const queue = new PromiseQueue({ concurrency: 3 });
+const queue = new PromiseQueue({ concurrency: 3 }); // 限制处理上限
 
 // 优先级
 const formatTask = url => {
