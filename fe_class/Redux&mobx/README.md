@@ -12,10 +12,13 @@ redux 和 mobx 都是为状态管理⽽⽣，与 react 本身并⽆关联的两�
 
 主要的接口概念：
 redux：
-  store = createStore(reducer)
-  store.dispatch(action)
-  store.getState()
-  store.subscribe(listener)
+  `store = createStore(reducer)`
+  我们打断点看 store 其实可以发现 store 还有下面这些阿皮
+  `store.dispatch(action)`
+  `store.getState()`
+  `store.subscribe(listener)`
+  `store.replaceReducer(nextReducer)`*一般不用这个，很危险*
+  
   combineReducers
   bindActionCreators(actionCreator, dispatch)
 
@@ -23,6 +26,7 @@ react-redux:
   connect(mapStateToProps, mapDispatchToProps)(ViewComponent)
   Provider + createContext
   ViewComponent -> 开发者定义的容器组件/接受状态的根组件
+
 
 ### 简单讲下 redux 单向数据流？
 
