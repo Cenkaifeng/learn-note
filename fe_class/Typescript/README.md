@@ -157,7 +157,7 @@ type Page = "Home" | "about" | "contact";
 const x: Record<Page, PageInfo> = {
     about: { title: "about"},
     contact: {title: "contact"},
-    home: {title: "home"\}
+    home: {title: "home"}
 }
 ```
 
@@ -178,7 +178,7 @@ Extract<T, U>的作用是从 T 中提取 U, 大概是取 T 和 U 的交集的意
 
 type T0 = Extract<"a" | "b" | "c", "a" | "f"> // "a"
 
-type T1 = Extract<string | number | (() => void), Function>;// () => void // (() => void) 没有入参没有返回值的函数
+type T1 = Extract<string | number | (() => void),Function>;// () => void // (() => void) 没有入参没有返回值的函数
 ```
 
 ```ts
