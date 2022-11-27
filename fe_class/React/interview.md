@@ -277,10 +277,11 @@ export function hijackHoc<T extends { new (...args: any[]): any }>(component: T)
 
 什么是？ 钩子？
 
-可以在不写 class 组件的情况下， 使用 state 和其他 react 特性(主要是为了 推Fucntion components)
+可以在不写 class 组件的情况下， 使用 state 和其他 react 特性(主要是为了 推Function components)
 
 useState
-useEffectuseMemo
+useEffect
+useMemo
 
 那为什么不写 class 而转向了 hooks 的写法？
 
@@ -339,13 +340,13 @@ class App extends React.Component<any, any> {
     return (
       <div>
         {/* {render 中 bind() 每次都会返回新的函数，会造成ChildComponent 无意义的多次渲染 */}
-        <ChildCompoent onClick = {this.handleClick1.bind(this)}></ChildCompoent>
-        <ChildCompoent onClick = {this.handleClick2}></ChildCompoent>
+        <ChildComponent onClick = {this.handleClick1.bind(this)}></ChildComponent>
+        <ChildComponent onClick = {this.handleClick2}></ChildComponent>
 
         {/* 同第一种，还是会多次渲染 */}
-        <ChildCompoent onClick = {() => this.handleClick1()}></ChildCompoent>
+        <ChildComponent onClick = {() => this.handleClick1()}></ChildComponent>
         {/* 因为箭头函数在定义的时候指向定义上下文，所以不会引发重新渲染 */}
-        <ChildCompoent onClick = {this.handleClick3}></ChildCompoent>
+        <ChildComponent onClick = {this.handleClick3}></ChildComponent>
       </div>
     )
   }
