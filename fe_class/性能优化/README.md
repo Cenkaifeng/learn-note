@@ -79,36 +79,45 @@ function getFirstPage() {
 }
 ```
 
-1. **FP** [(First Paint)](https://web.dev/fp/)首次绘制
-   指页面上第一个像素、色块变动
-2. **FCP** [(First Content Paint)](https://web.dev/fcp/)首次内容绘制
-   值页面上绘制了第一个元素
+#### 1. **FP** [(First Paint)](https://web.dev/fp/)首次绘制
 
-  > FP 与 FCP 的最大的区别就在于： FP **指的是绘制像素**，比如说页面的背景色是灰色的，那么在显示会泽背景时就记录下了 FP 指标。但是此时 DOM 内容还没开始绘制，可能需要文件下载、解析等过程，只有当 DOM 内容发生变化才会触发，比如说渲染出了一段文字，此时就会记录下 FCP 指标。因此我们可以把这两个指标认为是和白屏时间相关的指标，所以肯定是越快越好。
+指页面上第一个像素、色块变动
 
-3. FMP (First Meaning Paint)首次有效绘制
-    有一定争议性，指的是页面中有效内容绘制，对于每个网站来说有效内容不同，一般不做研究。
-    TODO：对应争议链接
+#### 2. **FCP** [(First Content Paint)](https://web.dev/fcp/)首次内容绘制
 
-4. **TTI** [(Time To Interact)](https://web.dev/tti/)首次可交互时间
-    ps:也可以用`DomReady - domContentLoadedEventEnd`的时间节点
-    ![tti](./tti.svg)
-    需要满足已下条件： 1. 从 FCP 指标后开始计算; 2. 持续 5 秒内无长任务（执行时间超过 50 ms ) 且无两个以上正在进行中的 GET 请求; 3. 往前回溯至 5 秒前的最后一个长任务结束的时间
+值页面上绘制了第一个元素
 
-        通俗点说就是 FCP 完成后 5秒内没有超2个 50ms 的执行时间的任务，参考图 TODO: TTI 图片
+> FP 与 FCP 的最大的区别就在于： FP **指的是绘制像素**，比如说页面的背景色是灰色的，那么在显示会泽背景时就记录下了 FP 指标。但是此时 DOM 内容还没开始绘制，可能需要文件下载、解析等过程，只有当 DOM 内容发生变化才会触发，比如说渲染出了一段文字，此时就会记录下 FCP 指标。因此我们可以把这两个指标认为是和白屏时间相关的指标，所以肯定是越快越好。
 
-        解决方式：看 long task 执行的 O(n) 时间复杂度
+#### 3. FMP (First Meaning Paint)首次有效绘制
 
-5. DCL: domContentLoaded TODO:
-    与 onload 区别：
-    `DOMContentLoaded` 事件在页面文档加载解析完毕之后马上执行。而不会等待图片文件和子框架页面的加载，`load` 事件会在页面所有资源被加载进来之后才会触发 load 事件。
-    **load 时间在 DOMContentLoaded 事件触发之后**
+有一定争议性，指的是页面中有效内容绘制，对于每个网站来说有效内容不同，一般不做研究。
+TODO：对应争议链接
 
-6. [TTFB](https://web.dev/ttfb/) TODO:
+#### 4. **TTI** [(Time To Interact)](https://web.dev/tti/)首次可交互时间
+
+ps:也可以用`DomReady - domContentLoadedEventEnd`的时间节点
+![tti](./tti.svg)
+需要满足已下条件:
+
+  1. 从 FCP 指标后开始计算;
+  2. 持续 5 秒内无长任务（执行时间超过 50 ms ) 且无两个以上正在进行中的 GET 请求;
+  3. 往前回溯至 5 秒前的最后一个长任务结束的时间;
+
+通俗点说就是 FCP 完成后 5秒内没有超2个 50ms 的执行时间的任务，参考图 TODO: TTI 图片
+解决方式：看 long task 执行的 O(n) 时间复杂度
+
+#### 5. DCL: domContentLoaded TODO:
+
+与 onload 区别：
+  `DOMContentLoaded` 事件在页面文档加载解析完毕之后马上执行。而不会等待图片文件和子框架页面的加载，`load` 事件会在页面所有资源被加载进来之后才会触发 load 事件。
+**注意：load 时间在 DOMContentLoaded 事件触发之后**
+
+#### 6. [TTFB](https://web.dev/ttfb/) TODO:
 
 ### 2020 年中提出的新指标 (包括 CLS FID LCP)
 
-1. **CLS**: 累计位偏移量 = 位移影响面积 \* 位移距离
+#### 1. **CLS**: 累计位偏移量 = 位移影响面积 \* 位移距离
 
 ```js
 function getCLS() {
@@ -127,8 +136,9 @@ function getCLS() {
 }
 ```
 
-2. **FID**： 首次输入延迟
-   记录在 FCP 和 TTI 之间用户首次与页面交互时响应的延迟
+#### 2. **FID**： 首次输入延迟
+
+记录在 FCP 和 TTI 之间用户首次与页面交互时响应的延迟
 
 ```js
 function getFID() {
@@ -143,8 +153,11 @@ function getFID() {
 }
 ```
 
-3. **LCP** 最大内容绘制
-   用于记录视窗内最大的元素绘制的时间，该时间会随着页面渲染变化而变化，因为页面中的最大元素在渲染过程中可能发生改变，另外该指标会在用户第一次交互后停止记录。
+#### 3. **LCP** 最大内容绘制
+
+用于记录视窗内最大的元素绘制的时间，该时间会随着页面渲染变化而变化，因为页面中的最大元素在渲染过程中可能发生改变，另外该指标会在用户第一次交互后停止记录。
+
+### 优化
 
 #### CLS 优化
 
