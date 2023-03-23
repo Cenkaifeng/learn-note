@@ -58,7 +58,7 @@ const queue = [];
 const threshold = 1000 / 60;
 
 // git transtions
-const transtions = [];
+const transitions = [];
 let deadline = 0;
 
 const now = () => performance.now();
@@ -72,14 +72,14 @@ function shouldYield() {
 
 // 建立触发了一个宏任务
 const postMessage = (() => {
-  const cb = () => transtions.splice(0, 1).forEach(c => c());
+  const cb = () => transitions.splice(0, 1).forEach(c => c());
   const { port1, port2 } = new MessageChannel();
   port1.onmessage = cb;
   return () => port2.postMessage(null);
 })();
 
 export function startTransition(cb) {
-  transtions.push(cb) && postMessage();
+  transitions.push(cb) && postMessage();
 }
 // 二合一 push / exec
 export function schedule(cb) {

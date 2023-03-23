@@ -209,6 +209,8 @@ function getFID() {
 
 - 老旧的雪碧图....
 - png jpg jpeg gif webp base64 icon: svg 这些格式特点是什么？ // TODO: Render-raster 中对图形解码变成位图的过程
+  图片格式 jpg、png、gif各有什么优缺点？什么情况下用什么格式的图片呢？ - 赵鑫的回答 - 知乎
+  https://www.zhihu.com/question/20028452/answer/142593276
 - 为什么用 base64 什么时候用？
 - 为什么图片 base64 之后会比原先的文件体积大 1/3？
 
