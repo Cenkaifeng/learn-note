@@ -185,25 +185,26 @@ function getFID() {
    减小 js
    url-loader 小图标 base64 || 图片转 font 字体
 3. 路由懒加载，只有在使用的时候进行路由加载
-4. CDN 加速
+4. 对网络资源进行 CDN 加速
 5. app cache
-6. gzip: 具体说就是————客户端 Gzip 离线包，服务器资源 Gzip 压缩
+6. gzip: 具体说就是————客户端 Gzip 离线包，服务器资源 Gzip 压缩 （也可通过br压缩）
 7. 对于少量小图标（单个尽量不要超过 10k), 我们可以用 url-loader 打包。或者使用将图标转化非字体库，异步进行加载
 8. 对于大图标的话，需要做到在展示的时候再去加载。也就是当图片出现到浏览器窗口的时候再去加载，而不是首屏的图片全部加载（Chrome 本身在光栅化阶段有视口优先渲染的优化）
 
----
 
-1. 图片，图片占位，图片懒加载。 雪碧图
-2. 使用 prefetch / preload 预加载等新特性
+1. 图片，图片占位，图片懒加载。 雪碧图  图片压缩以及 进行图片Webp打包（结合静态页面可以上传对象存储进行cdn管理）
+2. 使用框架的 prefetch / preload 预加载等新特性
 3. 服务器合理设置缓存策略
 4. async（加载完当前 js 立即执行）/defer(所有资源加载完之后执行 js)
 5. 减少 Dom 的操作，减少重排重绘
 6. 从客户端层面，首屏减少和客户端交互，合并接口请求。
-7. 数据缓存。
+7. 数据缓存：前端数据持久化 + 缓存策略
 8. 首页不加载不可视组件。
 9. 防止渲染抖动，控制时序。
 10. 减少组件层级。
 11. 优先使用 Flex 布局。
+12. 组件库按需加载和异步引入
+13. 国际化项目的词条按需加载
 
 #### 图片格式优化
 
@@ -261,7 +262,7 @@ GPU 如何触发渲染？
 3. [PageSpeed](https://developers.google.com/speed/pagespeed/) 插件: 需要服务器环境
 
 4. [WebPageTest](https://webpagetest.org/easy) 一个测试 Performance 指标的网站，输入指定网站来测试指标，自带 `Site Performance | Core Web Vitals | Lighthouse ...` 选项；
-5. siteSpeed
+5. [siteSpeed](https://www.sitespeed.io/)
 6. [Measure](https://web.dev/measure/) 和 webPageTest 类似的在线测试网站
 7. [JsPref](https://github.com/jsperf/jsperf.com) 一个用于测试 js 代码性能的工具（相关在线网站需要 Github 进行登录），可以本地按照脚本来使用.
 
