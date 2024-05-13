@@ -20,6 +20,7 @@ var twoSum = function (numbers, target) {
 };
 
 // 双指针解法 O(n)
+// 解法不适用 case target 6 numbers [3,2,4]
 var twoSum = function (numbers, target) {
   let i = 0,
     j = numbers.length - 1;
