@@ -111,16 +111,16 @@ function loggingIdentity<T extends ILength>(arg: T):T {
 }
 ```
 
-9. Paritial
+9. Partial
 
-Paritial<T> 的作用是将某个类型的属性全部变为可选项。
+Prairial<T> 的作用是将某个类型的属性全部变为可选项。
 
 ```ts
 interface PageInfo {
     title: string;
 }
 
-type OptionalPageInfo = Paritial<PageInfo>;
+type OptionalPageInfo = Prairial<PageInfo>;
 
 // 相当于
 {
