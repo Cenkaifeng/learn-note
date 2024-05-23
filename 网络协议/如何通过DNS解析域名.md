@@ -1,22 +1,27 @@
-# DNS 
+# DNS
+
 ## 什么是DNS
+
 DNS（Domain Name System，域名系统），因特网上作为域名和IP地址互相映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。
 
->说白了就是一个用于将人类可读“域名”（例如www.qq.com)与服务器的IP地址（例如101.91.42.232) 进行映射的数据库，把不好记的 ip 映射成对人类语言友好的语义化域名方便记忆。
-
+>说白了就是一个用于将人类可读“域名”（例如www.qq.com ） 与服务器的IP地址（例如101.91.42.232） 进行映射的数据库，把不好记的 ip 映射成对人类语言友好的语义化域名方便记忆。
 
 ## DNS 查询
 
 ### 域名结构
+
 要了解整个DNS 的查询过程，首先需要把域名理解成一个树状态结构
-//TODO:  这里改个图
-          "."
+
+           "."
+          /   \
          /     \
         /       \
-      ".com"     ".org"
-     /      \         \
+     ".com"     ".org"
+      /    \          \
+     /      \          \
     /        \          \
 "google.com" "apple.com" "test.org"
+
 * 根域名：所有域名的起点都是根域名，它写作一个点`.`，放在域名的结尾。.eg: 比如`example.com`等同于`example.com.`
 * 顶级域名：根域名的下一级是顶级域名。它分成两种：通用顶级域名（gTLD，比如 `.com` 和 `.net`）和国别顶级域名（ccTLD，比如 `.cn` 和 `.us`）顶级域名由国际域名管理机构 ICANN 控制，它委托商业公司管理 gTLD，委托各国管理自己的国别域名
 * 一级域名：一级域名就是你在某个顶级域名下面，自己注册的域名。比如 `jervis.cn` 就是在顶级域名`.cn`下面注册的
@@ -31,7 +36,7 @@ DNS（Domain Name System，域名系统），因特网上作为域名和IP地址
 
 * 递归查询步骤
     1. 首先查询本地host文件是否有缓存映射
-    2.  然后通过本地网络、服务器、LDNS等
+    2. 然后通过本地网络、服务器、LDNS等
 
     （DNS劫持，通过返回错误ip地址对我们进行攻击）
 * 迭代查询步骤
@@ -39,30 +44,35 @@ DNS（Domain Name System，域名系统），因特网上作为域名和IP地址
     2. 权威/授权服务器（权威服务器其实可以配置成递归查询或者迭代查询）
 
 这里介绍一个能够和 DNS 服务器互动的命令行工具 DIG (或者用 nslookup)
+
 ```shell
-$ dig @[DNS 服务器] [域名] 
+dig @[DNS 服务器] [域名] 
 ```
+
 比如向 1.1.1.1 ( Cloudflare 公司提供)查询域名就需要执行如下命令
+
 ```shell
-$ dig @1.1.1.1 test.jervis.com
+dig @1.1.1.1 test.jervis.com
 ```
 
 ## DNS 记录类型
 
-* A : 把主机名解析为IP地址 （www.jervis.com -> 1.1.1.1)
-* 指针 PTR: 反向查询，把 IP 地址解析为主机名 （1.1.1.1 -> www.jervis.com)
+* A : 把主机名解析为IP地址 （www.jervis.com -> 1.1.1.1）
+* 指针 PTR: 反向查询，把 IP 地址解析为主机名 （1.1.1.1 -> <www.jervis.com>）
 * SOA: SOA 叫**起始授权机构**记录，SOA 记录用于在众多 NS 记录中哪一台是主服务器。（SOA 记录还设置一些数据版本和更新以及过期时间的信息）
 * 名字服务器 NS: 为一个域指定授权域名服务器，该域的所有子域也被委派给这个服务器（比如某个区域由 ns1.domain.com 进行解析）
 * 邮件服务器 MX: 指明区域的邮件服务器以及优先级。（简历电子邮件服务，需要MX记录将指向邮件服务器地址）
 * 别名 CNAME: 指定主机名的别名，把主机名解析为另一个主机名（www.jervis.com 别名为 webserver2.jervis.com)
 
 ## 如何优化 DNS?
+
 作为前端所能够优化 DNS 的操作比较有限，一般来说是利用协议预留给 html 标签的预留属性进行dns 预解析
 
-1. meta：`<meta http-equiv="x-dns-prefetch-control" content="off">` `content="off"`的意思是关闭隐式预解析（默认情况下，对于a标签来说，浏览器会对当前页面中与当前域名不在同一个域的域名进行预获取，并且缓存结果）但是对于https 就失效了使用方式 `<meta http-equiv="x-dns-prefetch-control" content="on"> `
+1. meta：`<meta http-equiv="x-dns-prefetch-control" content="off">` `content="off"`的意思是关闭隐式预解析（默认情况下，对于a标签来说，浏览器会对当前页面中与当前域名不在同一个域的域名进行预获取，并且缓存结果）但是对于https 就失效了使用方式 `<meta http-equiv="x-dns-prefetch-control" content="on">`
 2. link: `<link rel="dns-prefetch" href="http://www.test.com" />` 不知道协议情况下： `<link rel="dns-prefetch" href="//test.com" />` 不要写重复的预解析。
 
 注意：使用上述方法时留意一点**代理不解析HTML内容本身**
+
 ## 如何防止DNS劫持
 
 1. 局限性
@@ -77,6 +87,7 @@ $ dig @1.1.1.1 test.jervis.com
 （5）采用分层的DNS体系结构
 
 ## 参考资料
+
 * [DNS 查询原理详解-阮一峰](https://mp.weixin.qq.com/s/Kur84cigXkiTs3vimS3wQA)
 * 《2021年软考(网络工程师)模拟强化训练题》
 * [DNS RFCs](https://rfcs.io/dns)
