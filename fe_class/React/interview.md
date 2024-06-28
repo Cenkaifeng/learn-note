@@ -520,3 +520,26 @@ export function render() {
 ### react 中组件销毁时会自动回收 ref 么？
 
 在 React 中，组件销毁时并不会自动回收 ref。ref 是一个特殊的属性，用于引用组件实例或 DOM 元素，在组件销毁时，ref 引用的对象并不会自动被销毁，而是需要手动进行清理操作。
+
+```jsx
+import React, { useEffect, useRef, useState } from 'react';
+
+function MyComponent(
+) {
+  const refContainer = useRef({});
+  const [elementRef] = useState(null);
+
+  useEffect(() => {
+    // 将 ref 存储在 refContainer 中
+refContainer.current[elementRef] = elementRef;
+
+    return () => {
+      // 在组件卸载时，清空 ref 引用
+delete refContainer.current[elementRef];
+    };
+  }, [elementRef]);
+
+  return <div ref={el => (elementRef = el)} />;
+}
+
+```
