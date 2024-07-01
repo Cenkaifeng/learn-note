@@ -543,3 +543,17 @@ delete refContainer.current[elementRef];
 }
 
 ```
+
+### TODO: React Hook 中 useState 异步回调获取不到最新值
+
+解决方案：
+https://www.cnblogs.com/hymenhan/p/14991789.html
+
+原因：
+https://zh-hans.legacy.reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
+
+### 如何消除JS异步传染性
+
+[https://bbs.tampermonkey.net.cn/thread-5526-1-1.html](https://bbs.tampermonkey.net.cn/thread-5526-1-1.html)
+
+[https://juejin.cn/post/7272751454497996815?searchId=202406281818126DFC17003BFE5586BAED](https://juejin.cn/post/7272751454497996815?searchId=202406281818126DFC17003BFE5586BAED)
