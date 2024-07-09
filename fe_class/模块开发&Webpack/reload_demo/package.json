@@ -1,0 +1,12 @@
+{
+  "name": "reload-demo",
+  "version": "1.0.0",
+  "description": "My project using ESM",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}

@@ -516,3 +516,44 @@ export function render() {
   cursor = 0;// 为啥要赋值 0 ？当渲染完成后需要归零，每次渲染游标应该重新开始，否则下次就会指向一个不存在数据的空间
 }
 ```
+
+### react 中组件销毁时会自动回收 ref 么？
+
+在 React 中，组件销毁时并不会自动回收 ref。ref 是一个特殊的属性，用于引用组件实例或 DOM 元素，在组件销毁时，ref 引用的对象并不会自动被销毁，而是需要手动进行清理操作。
+
+```jsx
+import React, { useEffect, useRef, useState } from 'react';
+
+function MyComponent(
+) {
+  const refContainer = useRef({});
+  const [elementRef] = useState(null);
+
+  useEffect(() => {
+    // 将 ref 存储在 refContainer 中
+refContainer.current[elementRef] = elementRef;
+
+    return () => {
+      // 在组件卸载时，清空 ref 引用
+delete refContainer.current[elementRef];
+    };
+  }, [elementRef]);
+
+  return <div ref={el => (elementRef = el)} />;
+}
+
+```
+
+### TODO: React Hook 中 useState 异步回调获取不到最新值
+
+解决方案：
+https://www.cnblogs.com/hymenhan/p/14991789.html
+
+原因：
+https://zh-hans.legacy.reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
+
+### 如何消除JS异步传染性
+
+[https://bbs.tampermonkey.net.cn/thread-5526-1-1.html](https://bbs.tampermonkey.net.cn/thread-5526-1-1.html)
+
+[https://juejin.cn/post/7272751454497996815?searchId=202406281818126DFC17003BFE5586BAED](https://juejin.cn/post/7272751454497996815?searchId=202406281818126DFC17003BFE5586BAED)
