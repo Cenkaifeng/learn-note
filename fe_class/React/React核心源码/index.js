@@ -74,12 +74,14 @@ function shouldYield() {
 const postMessage = (() => {
   const cb = () => transitions.splice(0, 1).forEach(c => c());
   const { port1, port2 } = new MessageChannel();
+  // port2.postMessage → 相当于下个时间片 setTimeout 里执行了 port1.onmessage ( ) 中的函数
+  // 
   port1.onmessage = cb;
   return () => port2.postMessage(null);
 })();
 
 export function startTransition(cb) {
-  transitions.push(cb) && postMessage();
+  transitions.push(cb) && postMessage(); // 为了下一个时间片拿回执行权
 }
 // 二合一 push / exec
 export function schedule(cb) {
@@ -125,8 +127,14 @@ React 的调度器是基于 IDLE -- requestIdleCallback 时间切片实现的调
 _requestIdleCallback 用什么实现？
 messageChannel
 postMessage ?? 为了把任务放到 event-loop 的某个队列
+最后为啥选择 messageChannel ?
 
-but why not setTimeout? 
+but why not setTimeout?  有4ms 延迟
+
+为什么要制定这4ms的延时
+因为浏览器本身也是基于event loop的，所以如果浏览器允许0ms，可能会导致一个很慢的js引擎不断被唤醒，从而引起event loop阻塞，对于用户来说就是网站无响应，这是让人很难接受的。
+所以chrome 1.0 beta限制为1ms。
+但是后来发现1ms也会导致CPU spinning，计算机无法进入睡眠模式，经过多次实验后，Chrome团队选定了4ms，之后主流浏览器纷纷采用了这个4ms的设定。
 
 why not rAF?
 也有时间上的问题，执行权由浏览器决定，而且需要递归自身调用
