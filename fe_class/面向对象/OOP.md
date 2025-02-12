@@ -280,7 +280,7 @@
     function LOL(arg){
         Game.call(this, arg);
     }
-    LOL.prototype = new Game();// 父类实例挂载
+    LOL.prototype = new Game();// 父类实例挂载 **调用第二次**
     LOL.prototype.constructor = LOL;
     // LOL 继承 Game类
     const game3 = new LOL();
