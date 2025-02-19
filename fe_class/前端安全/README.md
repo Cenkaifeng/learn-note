@@ -2,17 +2,15 @@
 
 ---
 
-## 一、网络安全基础
+## 一、网络安全基础（攻击类型）
 
-### 1. 攻击类型
-
-#### **被动攻击**
+### **被动攻击**
 
 - **特点**：隐蔽性强，难以检测  
 - **典型形式**：网络监听（如明文传输窃取）  
 - **防御手段**：加密传输（SSH/HTTPS）
 
-#### **主动攻击**
+### **主动攻击**
 
 - **常见形式**：  
   - 假冒身份、重放攻击、消息篡改  
@@ -21,15 +19,7 @@
   - 防火墙、入侵检测系统（IDS）  
   - SYN攻击防御（缩短超时时间、SYN Cookies技术）
 
-#### **SYN攻击示例**
-
-```bash
-# 检测SYN攻击（Linux）
-netstat -nap | grep SYN_RECV
-```
-
 ---
-
 
 ## 二、前端攻击与防御
 
@@ -70,6 +60,22 @@ netstat -nap | grep SYN_RECV
 2. 诱导用户访问恶意网站B  
 3. 网站B伪造A的请求（携带用户Cookie）  
 
+#### **攻击类型**
+
+- **GET型**：
+  在页面中的某个img发起一个get请求
+  `<img src='xxxxx'/>`
+
+- **POST型**：
+  自动提交表单到恶意网站
+
+  ```html
+    <form methdo="POST">
+      <input type="hidden" name="account" value="jervis"/>
+    </form>
+    <script>document.forms[0].submit()</script>
+  ```
+
 #### **防御策略**
 
 - **CSRF Token**：动态Token验证请求  
@@ -79,10 +85,25 @@ netstat -nap | grep SYN_RECV
   <input type="hidden" name="csrf_token" value="随机字符串">
   ```
 
+- **同源检测**:
+
+  - request header 对下面两个字段的监测
+      [origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Origin)
+      [referer](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Referer)
+      referer 中也有不同的策略
+
+  - [Referer-Policy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Referer)
+    如果请求中没有referer相当于被安全策略`Referer-Policy`拦下了，所以可以不去访问这个请求
+    [Referer-Policy 的新默认值](https://cloud.tencent.com/developer/article/1748911)
+
+    > Origin 属性只包含了域名信息，并没有包含具体的 URL 路径，这是 Origin 和 Referer 的一个主要区别。在这里需要补充一点，Origin 的值之所以不包含详细路径信息，是有些站点因为安全考虑，不想把源站点的详细路径暴露给服务器。因此，服务器的策略是优先判断 Origin，如果请求头中没有包含 Origin 属性，再根据实际情况判断是否使用 Referer 值。
 - **Cookie策略**：设置 `SameSite=Strict`  
+  完全禁用第三方 cookie
 
   ```http
-  Set-Cookie: sessionId=abc123; SameSite=Strict
+  Set-Cookie: sessionId=abc123; SameSite=Strict 
+  Lax: POST / img / iframe 不会携带 cookie
+  None: 不设置，默认
   ```
 
 ### 3. SQL注入与防范(偏后端，但前端也要留意)
@@ -98,7 +119,6 @@ netstat -nap | grep SYN_RECV
   - 前端：输入格式校验（正则限制）  
   - 后端：参数化查询、特殊字符转义  
   - 部署WAF防火墙  
-
 
 ---
 
@@ -152,7 +172,7 @@ netstat -nap | grep SYN_RECV
   const safePath = resolve('./public/', userInput);
   ```
 
-### 2. ReDoS（正则表达式攻击）
+### 2. ReDoS（正则表达式攻击）[demo:](./redos.js)
 
 - **恶意正则示例**：  
 
@@ -163,6 +183,9 @@ netstat -nap | grep SYN_RECV
 
 - **防御**：简化正则或使用检测工具  
   [ReDoS测试工具](https://regex.rip/)
+
+参考：
+[一个正则的地狱回溯](https://snyk.io/node-js/connect)
 
 ### 3. 时序攻击
 
@@ -196,6 +219,25 @@ netstat -nap | grep SYN_RECV
   const crypto = require('crypto');
   crypto.timingSafeEqual(aBuffer, bBuffer);
   ```
+
+### 4. DoS/DDoS
+
+SYN攻击示例
+
+- **SYN攻击是什么？**：
+服务器端的资源分配是在二次握手时分配的，而客户端的资源是在完成三次握手时分配的，所以服务器容易受到SYN洪泛攻击。SYN攻击就是Client在短时间内伪造大量不存在的IP地址，并向Server不断地发送SYN包，Server则回复确认包，并等待Client确认，由于源地址不存在，因此Server需要不断重发直至超时，这些伪造的SYN包将长时间占用未连接队列，导致正常的SYN请求因为队列满而被丢弃，从而引起网络拥塞甚至系统瘫痪。SYN 攻击是一种典型的 DoS/DDoS 攻击。
+
+检测 SYN 攻击非常的方便，当你在服务器上看到大量的半连接状态时，特别是源IP地址是随机的，基本上可以断定这是一次SYN攻击。在 Linux/Unix 上可以使用系统自带的 netstat 命令来检测 SYN 攻击。
+
+```bash
+# 检测SYN攻击（Linux）
+netstat -nap | grep SYN_RECV
+```
+
+- **SYN攻击的防御**：
+
+1. 缩短超时（SYN Timeout）时间增加最大半连接数过滤网关防护SYN cookies技术，
+2. 直接用 https
 
 ---
 
@@ -239,7 +281,7 @@ netstat -nap | grep SYN_RECV
 
 ### 3 XFF 协议头伪造ip注入攻击
 
-- **原理**：payload：X-Forwarded-For: 协议头伪造ip注入攻击 [HTTP X-Forwarded-For ](https://www.runoob.com/w3cnote/http-x-forwarded-for.html)
+- **原理**：payload：X-Forwarded-For: 协议头伪造ip注入攻击 [HTTP X-Forwarded-For](https://www.runoob.com/w3cnote/http-x-forwarded-for.html)
 
 ### 4. 输入验证
 
@@ -258,14 +300,9 @@ netstat -nap | grep SYN_RECV
 
 ---
 
-
 ## 八、附录：攻击模拟与测试工具
 
 - **XSS攻击模拟**：  
   [XSS挑战平台](https://alf.nu/alert1)
 - **正则表达式测试**：  
   [regex.rip](https://regex.rip/)
-
----
-
-通过以上结构化整理，所有原文内容均被保留并分类归纳，示例与代码片段以高亮形式呈现，便于快速定位关键信息。
