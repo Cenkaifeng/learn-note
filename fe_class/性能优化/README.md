@@ -115,13 +115,57 @@ ps:也可以用`DomReady - domContentLoadedEventEnd`的时间节点
 
 #### 6. [TTFB](https://web.dev/ttfb/) TODO
 
-### 2020 年中提出的新指标 (包括 CLS FID LCP)
+### 2020年 google 提出了 Core Web Vitals (网页核心性能指标) (包括 CLS FID LCP)
 
-2020年 google 提出了 Core Web Vitals (网页核心性能指标)
+每个CWV代表用户体验的一个不同方面—加载、交互、视觉稳定性
 
-#### 1. **CLS**: 累计位偏移量 = 位移影响面积 \* 位移距离
+#### 1. **LCP** Largest Contentful Paint (最大内容绘制)
+
+用于记录视窗内最大的元素绘制的时间，该时间会随着页面渲染变化而变化，因为页面中的最大元素在渲染过程中可能发生改变，另外该指标会在用户第一次交互后停止记录。
+
+LCP应该再页面首次开始加载后2.5s内发
+
+##### **最大内容包括哪些？**
+
+- `<img>`
+- `<svg>`
+- `<video></video>`
+- 通过 url() 加载背景图片元素
+- 包含了大块内嵌内容的块级元素
+
+##### **LCP值低下的原因**
+
+- 服务器响应慢
+- 阻断渲染的 Javascript | css
+- 资源的加载时间过长
+- 客户端渲染机器的影响（硬件性能）
+
+##### **针对性的改造**
+
+- 服务器优化
+  缓存HTML离线页面，缓存页面资源，减少浏览器直接对资源的请求=> 缓存机制
+  对图片的优化，进行图片合理化使用，降低图片大小，加快请求速度
+  => 图片上传格式|云资源管
+
+  重写、压缩、注释过滤，减少最终文件大小，加快加载速度=> webpack vite 工程化打包
+  使用CDN — 物理上接近请求点
+
+- 渲染阻断优化
+  CSS + JS =>
+  延迟处理
+  首屏优化 => 懒加载、异步加载
+  CSS模块优化
+  SSR服务端渲染
+
+
+#### 2. **CLS**: Cumulative Layout 累计位偏移量 = 位移影响面积 \* 位移距离
 
 CLS 指标的计算
+测量视觉稳定性 - 页面稳定性在加载过程中以及渲染后CLS小于0.1
+
+* 整体布局的移动可能发生在可见元素从一帧到下一帧改变位置的任何阶段
+
+会带来偏移的因素：图片、内容插入、字体
 
 ```js
 function getCLS() {
@@ -140,7 +184,20 @@ function getCLS() {
 }
 ```
 
-#### 2. **FID**： 首次输入延迟
+##### CLS 优化
+
+文档结构相同：脱离文档流 VS 不脱离文档流
+文档结构相同，脱离文档：Position
+脱离之后 CLS： 0 对原本文档流没有影响
+不脱离文档流: 使用 transform
+宽高相同
+指定图片高度
+
+1. 如果经常需要变动的元素，脱离文档流，或者是占据位置，只是隐藏
+2. 对于唯一等操作，使用动画代替
+3. 在定义图片的时候，就应该给出具体的宽高(不使用无尺寸元素)
+
+#### 3. **FID**： First Input Delay 首次输入延迟
 
 记录在 FCP 和 TTI 之间用户首次与页面交互时响应的延迟
 
@@ -157,31 +214,65 @@ function getFID() {
 }
 ```
 
-#### 3. **LCP** 最大内容绘制
+衡量交互性，页面的FID应该小于100ms
 
-用于记录视窗内最大的元素绘制的时间，该时间会随着页面渲染变化而变化，因为页面中的最大元素在渲染过程中可能发生改变，另外该指标会在用户第一次交互后停止记录。
+（页面首次输入延迟应该小于100ms）
+
+执行阻塞
+
+TTI/FID 优化
+
+##### a. 减少JS的执行时间
+
+1. long task 开启 web work 新起线程不影响 main.js
+2. 缩小压缩JS文件
+3. 延迟加载不需要的JS => 模块懒加载| tree shaking
+4. 尽量减少未使用的polyfill
+
+```js
+// web worker | service worker
+// 1. web worker
+// main.js
+// 新增 worker
+const myWorker = new Worker('worker.js');
+
+// 与main thread之间通信
+myWorker.postMessage( 'hello'); 
+myWorker.onmessage = function (e) {
+  console.log(e.data);
+}
+
+// worker.js
+//接受消息
+self.onmessage = function(e){
+  console. log (e.data);
+//回调逻辑
+  let workResult = ''
+  self.postMessage(workResult);
+}
+
+// 2. service worker
+// main. js
+navigator.serviceWorker.register('./service-worker.js');
+// service-worker-js
+self.addEventListener('install', function (event) {
+//...
+})
+self.addEventListener('fetch', function (event) {
+})
+// => 面向网络和cache处
+
+```
+
+##### b.分解耗时任务
+
+- 減少长逻辑
+- 异步（异步引入或者按需加载高 TTI 的脚本）
+
 
 ### 优化
 
-#### CLS 优化
-
-文档结构相同：脱离文档流 VS 不脱离文档流
-文档结构相同，脱离文档：Position
-脱离之后 CLS： 0 对原本文档流没有影响
-不脱离文档流: 使用 transform
-宽高相同
-指定图片高度
-
-1. 如果经常需要变动的元素，脱离文档流，或者是占据位置，只是隐藏
-2. 对于唯一等操作，使用动画代替
-3. 在定义图片的时候，就应该给出具体的宽高
-
-#### TTI/FID 优化
-
-1. long task 开启 web work 新起线程不影响 main.js
-2. 异步引入或者按需加载高 TTI 的脚本
-
-#### 其他解决方案
+#### 其他优化解决方案归纳
 
 ##### 一、网络与传输优化
 
