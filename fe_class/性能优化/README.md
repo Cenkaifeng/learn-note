@@ -107,6 +107,8 @@ ps:也可以用`DomReady - domContentLoadedEventEnd`的时间节点
 通俗点说就是 FCP 完成后 5秒内没有超2个 50ms 的执行时间的任务，参考图 TODO: TTI 图片
 解决方式：看 long task 执行的 O(n) 时间复杂度
 
+实际看long task 执行，还是需要借助浏览器 devtools performance 录制工具，火焰图堆栈调用关系查找运行时间异常脚本。
+
 #### 5. DCL: domContentLoaded TODO
 
 与 onload 区别：
