@@ -92,7 +92,7 @@ function getFirstPage() {
 #### 3. FMP (First Meaning Paint)首次有效绘制
 
 有一定争议性，指的是页面中有效内容绘制，对于每个网站来说有效内容不同，一般不做研究。
-TODO：对应争议链接
+[对应争议链接](https://developer.chrome.com/docs/lighthouse/performance/first-meaningful-paint?hl=zh-cn)
 
 #### 4. **TTI** [(Time To Interact)](https://web.dev/tti/)首次可交互时间
 
@@ -104,18 +104,19 @@ ps:也可以用`DomReady - domContentLoadedEventEnd`的时间节点
   2. 持续 5 秒内无长任务（执行时间超过 50 ms ) 且无两个以上正在进行中的 GET 请求;
   3. 往前回溯至 5 秒前的最后一个长任务结束的时间;
 
-通俗点说就是 FCP 完成后 5秒内没有超2个 50ms 的执行时间的任务，参考图 TODO: TTI 图片
+通俗点说就是 FCP 完成后 5秒内没有超2个 50ms 的执行时间的任务，[参考图](https://web.dev/articles/tti/image/a-page-load-timeline-show-762f93f25ad4b.svg)
+![alt text](./tti.png)
 解决方式：看 long task 执行的 O(n) 时间复杂度
 
 实际看long task 执行，还是需要借助浏览器 devtools performance 录制工具，火焰图堆栈调用关系查找运行时间异常脚本。
 
-#### 5. DCL: domContentLoaded TODO
+#### 5. DCL: domContentLoaded 
 
 与 onload 区别：
   `DOMContentLoaded` 事件在页面文档加载解析完毕之后马上执行。而不会等待图片文件和子框架页面的加载，`load` 事件会在页面所有资源被加载进来之后才会触发 load 事件。
 **注意：load 时间在 DOMContentLoaded 事件触发之后**
 
-#### 6. [TTFB](https://web.dev/ttfb/) TODO
+#### 6. [TTFB](https://web.dev/ttfb/) 
 
 ### 2020年 google 提出了 Core Web Vitals (网页核心性能指标) (包括 CLS FID LCP)
 
@@ -468,3 +469,5 @@ RAIL 是一种以用户为中心的性能模型，它提供了一种考虑性能
 
 // TODO: 业务指标、技术指标
 // 提测前的验收 e2e 报告 、 性能报告平台
+
+![alt text](./image.png)
