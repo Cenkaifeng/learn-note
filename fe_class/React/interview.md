@@ -418,7 +418,7 @@ function Counter() {
 let stateArray: any[] = []; // 真正的源码用的不是数组，而是单向链表
 let cursor = 0; // 游标、索引
 function useState<T>(initialState: T): [T, (newState:T) => void] {
-  const currentCursor = curcor; // 每次调用都更新游标
+  const currentCursor = cursor; // 每次调用都更新游标
 
   stateArray[currentCursor] = stateArray[currentCursor] || initialState;
   // state = state || initialState;
@@ -428,7 +428,7 @@ function useState<T>(initialState: T): [T, (newState:T) => void] {
     reender();
   }
 
-  ++curcor;// 游标自增
+  ++cursor;// 游标自增
   return [stateArray[currentCursor], setState];
 }
 
