@@ -3,6 +3,7 @@
 ps: 上下文在执行时确定，作用域在定义时确定
 
 #### 作用域链
+
 ```js
 let a = 'global';
 console.log(a);
@@ -31,13 +32,28 @@ if( true) {
     let e = 111;
     console.log(e);
 }
+
+// 声明提升优先级 变量 > 函数
+// 变量后赋值优先级，函数先提升，变量会覆盖函数
+
+console.log('first',firstCount) // 函数体
+function firstCount () {
+    console.log('fn firstCount')
+}
+
+firstCount = 'first'
+console.log('second',firstCount) // first
 ```
 
 ### this 上下文 context
+
 * 我家门前有条河，我家门前的和尚有座桥，我家门前河里有群鸭
 ** 我家门前有条河，「这河」上有座桥
+
 #### this 是在执行时动态读取上下文决定的，不是在定义时决定的（执行时赋值）
+
 #### 函数直接调用 - this 指向 window
+
 ```js
 function foo() {
     console.log('函数内部的this:', this)
@@ -45,6 +61,7 @@ function foo() {
 
 foo();
 ```
+
 #### 隐式绑定 - this指向调用堆栈的上一级
 
 ```js
@@ -60,6 +77,7 @@ obj.fn();
 ```
 
 ### 实战：
+
 ```js
 const foo = {
     bar: 10,
@@ -133,10 +151,12 @@ bindFoo();
 ```
 
 #### 追问：call、apply、bind 有啥区别
+
 * 1. 传参不同
 * 2. 返回不同，最终执行返回相同
 
 #### new - 
+
 ```js
 class Course {
     constructor(name) {
@@ -153,6 +173,7 @@ course.test();
 ```
 
 #### 追问： 异步方法中的this有区别么
+
 ```js
 class Course {
     constructor(name) {
@@ -197,10 +218,23 @@ Function.prototype.newBind = function() {
 
     const newTis = args.shift();// shift 会改变原数组
     return function() {
-        return _this.apply(newThis, args);
+        return _this.newApply(newThis, args);
     }
 }
 
+Function.prototype.newApply = function(context) {
+    context = context || window;
+
+    context.fn = this;
+
+    let result = arguments[1] 
+        ? context.fn(...arguments[1])
+        : context.fn()
+
+    delete context.fn
+    return result
+
+}
 ```
 * 2. apply的应用 - 多传参数组化
 ```js
@@ -245,6 +279,7 @@ console.log(baz.a); // 3
 
 
 ### 聊完上下文作用域如何突破闭包(突破作用域的束缚？)？
+
 ### 闭包：一个函数和它周围状态的引用捆绑在一起的组合
 
 #### 函数作为返回值场景
@@ -266,6 +301,7 @@ envelo();
 * 函数外部获取到了函数作用域内的变量值
 
 #### 函数作为参数
+
 ```js
 function envelop(fn) {
     let content = 1;
@@ -283,6 +319,7 @@ envelop(mail);
 ```
 
 #### 函数嵌套
+
 ```js
 let counter = 0;
 function outerFn() {
@@ -316,6 +353,7 @@ for (var i = 0; i < lis.length; i ++) {
 #### 追问：
 
 #### 立即执行嵌套(本质也是上下查找作用域链)
+
 ```js
     (function immediateA(a){
         return (function immediateB(b) {
@@ -364,6 +402,7 @@ increment();
 increment();
 log(); // count is 0;
 ```
+
 #### 实现私有变量
 
 ```js
