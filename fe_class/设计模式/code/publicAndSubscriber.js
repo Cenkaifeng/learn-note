@@ -1,16 +1,14 @@
-
 var publisher = {
-
   events: {},
 
-  addEvent: function(event, callback) {
+  addEvent: function (event, callback) {
     if (!this.events[event]) {
       this.events[event] = [];
     }
     this.events[event].push(callback);
   },
 
-  removeEvent: function(event, callback) {
+  removeEvent: function (event, callback) {
     if (this.events[event]) {
       for (var i = 0; i < this.events[event].length; i++) {
         if (this.events[event][i] === callback) {
@@ -21,24 +19,23 @@ var publisher = {
     }
   },
 
-  publishEvent: function(event, data) {
+  publishEvent: function (event, data) {
     if (this.events[event]) {
       for (var i = 0; i < this.events[event].length; i++) {
         this.events[event][i](data);
       }
     }
-  }
+  },
 };
 
 var subscriber = {
-
-  handleEvent: function(data) {
+  handleEvent: function (data) {
     console.log(data);
-  }
+  },
 };
 
-publisher.addEvent('event1', subscriber.handleEvent);
+publisher.addEvent("event1", subscriber.handleEvent);
 
-publisher.publishEvent('event1', 'Hello, world!');
+publisher.publishEvent("event1", "Hello, world!");
 
-publisher.removeEvent('event1', subscriber.handleEvent);
+publisher.removeEvent("event1", subscriber.handleEvent);
