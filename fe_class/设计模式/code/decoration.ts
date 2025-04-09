@@ -1,4 +1,4 @@
-
+import { AboutParam } from "./../../Typescript/routerHelper";
 // 装饰器模式应用
 // ts 预防加持下的装饰器模式应用 需要打开配置
 /*
@@ -10,54 +10,61 @@
 */
 
 function log() {
-    return function (target: Object, propertyKey: string | Symbol, descriptor:TypedPropertyDescriptor<(num:number)=> number > ) {
-        const originMethod = descriptor.value
+  return function (
+    target: Object,
+    propertyKey: string | Symbol,
+    descriptor: TypedPropertyDescriptor<(num: number) => number>
+  ) {
+    const originMethod = descriptor.value;
 
-        descriptor.value = function (...args) {
+    descriptor.value = function (...args) {
+      console.log(propertyKey as string, "调用:", args);
 
-            console.log(propertyKey as string, '调用:', args);
+      const res = originMethod.apply(this, args);
 
-            const res = originMethod.apply(this, args);
+      console.log(propertyKey as string, "调用完成, 结果", res);
 
-            console.log(propertyKey as string, '调用完成, 结果', res);
-
-            return res
-        }
-        return descriptor
-    }
+      return res;
+    };
+    return descriptor;
+  };
 }
 
 class Ops {
-    public amount = 100;
-    
-    @log()
-    deposit(num) {
-        console.log('用户存了', num)
-        this.amount = this.amount + num
-        return this.amount
-    }
+  public amount = 100;
 
-    @log()
-    withDraw(num) {
-        console.log('用户取了', num)
-        this.amount = this.amount - num
-        return this.amount
-    }
+  @log()
+  deposit(num) {
+    console.log("用户存了", num);
+    this.amount = this.amount + num;
+    return this.amount;
+  }
+
+  @log()
+  withDraw(num) {
+    console.log("用户取了", num);
+    this.amount = this.amount - num;
+    return this.amount;
+  }
 }
+
+const ops = new Ops();
+ops.deposit(100);
+ops.withDraw(50);
+// 装饰器模式应用场景
 
 // js 用法
 
-
 const obj = {
   foo() {
-    console.log('foo');
-  }
-}
+    console.log("foo");
+  },
+};
 
 function barDecorator(obj) {
-  obj.bar = function() {
-    console.log('bar');
-  }
+  obj.bar = function () {
+    console.log("bar");
+  };
   return obj;
 }
 
