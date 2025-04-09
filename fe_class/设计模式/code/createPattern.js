@@ -80,7 +80,7 @@ class PackageBuilder {
 }
 // 每个模块独立解耦，而建造者负责创建串联整体系统
 
-// 3 单例模式
+// 3 单例模式 singleton 模式
 // 全局只有一个实例
 
 PlayStation.instance = undefined;

@@ -223,18 +223,43 @@ Function.prototype.newBind = function() {
 }
 
 Function.prototype.newApply = function(context) {
-    context = context || window;
+    // 1. 绑定执行上下文
+    context = context || window;         
+    // 2. 将调用函数挂载到上下文对象, 调用函数（点前对象）挂载在上下文里
+    context.fn = this;                   
 
-    context.fn = this;
-
+    // 3. 处理参数并执行函数
     let result = arguments[1] 
-        ? context.fn(...arguments[1])
+        ? context.fn(...arguments[1]) // apply 第一个参数是指向对象，第二个是参数数组，而call 是第一个是指向对象，二三四后续都是参数
         : context.fn()
 
-    delete context.fn
-    return result
+    // 4. 清理临时属性
+    delete context.fn;                   
+    // 5. 返回结果
+    return result;                       
+};
 
-}
+Function.prototype.myCall = function (context, ...args) {
+    // 1. 判断调用者是否为函数
+    if (typeof this !== 'function') {
+        throw new TypeError('Type Error: myCall must be called by a function');
+    }
+
+    // 2. 处理上下文对象（若为 null/undefined 则指向全局对象）
+    context = context ? Object(context) : (typeof window !== 'undefined' ? window : global);
+    
+    // 3. 创建唯一标识符避免属性冲突（使用 Symbol 或随机字符串）
+    const fnKey = Symbol('fnKey');
+    context[fnKey] = this; // this 指向调用 myCall 的原始函数
+    
+    // 4. 执行函数并获取结果
+    const result = context[fnKey](...args);
+    
+    // 5. 清理临时属性
+    delete context[fnKey];
+    
+    return result;
+};
 ```
 * 2. apply的应用 - 多传参数组化
 ```js
