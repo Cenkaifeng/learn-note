@@ -5,6 +5,15 @@
 
 关于性能优化, 逐步把 [processOn](https://www.processon.com/mindmap/601a31e707912901722406e9) 对应性能优化的内容总结进来，逐步丰满这个笔记
 
+### 99% 能优化的最大效率原则
+
+1. 少请求
+2. 多内存（多缓冲）
+3. 预加载
+
+细看这个逗号
+`<script src=L/g.alicdn.com/22jstracker/sdk-assests/5.6.29/index.js,universal/polyfill/0.0.2/p/index/index.js crossorigin></script>`
+
 ## 优化维度：从 url 开始
 
 - unload 阶段 redirect 阶段
