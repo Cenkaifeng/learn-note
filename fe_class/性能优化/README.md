@@ -200,9 +200,27 @@ function getCLS() {
 
 文档结构相同：脱离文档流 VS 不脱离文档流
 文档结构相同，脱离文档：Position
+box-sizing: border-box (默认是content-box), 减少padding溢出带来的偏移
 脱离之后 CLS： 0 对原本文档流没有影响
 不脱离文档流: 使用 transform
 宽高相同
+查一句过度使用 less sass 的层级选择器
+```less
+.box{
+  .son {
+   .grandson {
+    // 定位
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    .grandson2 {
+      
+    }
+   }
+  }
+}
+```
+最后生成大量.xx .xx .xx .xx 嵌套选择器，而css 读取选择器是从右往左，从而导致渲染性能的损耗
 指定图片高度
 
 1. 如果经常需要变动的元素，脱离文档流，或者是占据位置，只是隐藏
