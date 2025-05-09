@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4285f4">
+  <title>PWA 示例</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <!-- 关键点，告诉浏览器他的特性 -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./images/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="./images/icons/icon-192x192.png">
+</head>
+<body>
+  <header>
+    <h1>PWA 示例应用</h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>PWA 核心特性</h2>
+      <ul>
+        <li>✅ 可安装到主屏幕</li>
+        <li>✅ 离线工作能力</li>
+        <li>✅ 后台同步</li>
+        <li>✅ 推送通知</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>网络状态</h2>
+      <p id="network-status">检查中...</p>
+      <button id="cache-button">缓存当前页面</button>
+    </div>
+
+    <div class="card">
+      <h2>推送通知</h2>
+      <button id="notification-button">发送测试通知</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>PWA 技术演示 - Service Worker 示例</p>
+  </footer>
+
+  <script src="./js/app.js"></script>
+  <script>
+    // 注册 Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log('Service Worker 注册成功:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Service Worker 注册失败:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
